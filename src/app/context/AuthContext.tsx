@@ -19,12 +19,13 @@ interface AuthStorage {
     };
   };
   setUser: (user: User & { org_id?: string }) => void;
-  setOrgInfo: (props: { imgUrl: string; orgId: string; name: string }) => void;
+  setOrg: (props: { imgUrl: string; orgId: string; name: string }) => void;
 }
 
 export const AuthContext = createContext<AuthStorage>({} as AuthStorage);
 
 export function AuthProvider({ children }: AuthProviderProps) {
+  const [user, setUser] = useState<User & { org: { id: string; image_url: string; name: string } } | undefined>(undefined);
 
   const [signedIn, setSignedIn] = useState<boolean>(() => {
     const storedAccessToken = localStorage.getItem(
@@ -38,13 +39,39 @@ export function AuthProvider({ children }: AuthProviderProps) {
     setSignedIn(true);
   }
 
-  
   const signOut = () => {
     localStorage.removeItem(localStorageKeys.ACCESS_TOKEN);
     setSignedIn(false);
   }
 
-  const value: AuthStorage = { signedIn, signIn, signOut, setOrgInfo: () => {}, setUser: () => {}, user: undefined };
+  const setOrg = (props: { imgUrl: string; orgId: string; name: string }) => {
+   if(user) {
+    setUser(prev => {
+      if(!prev) return prev;
+      return {
+        ...prev,
+        org: {
+          id: props.orgId,
+          image_url: props.imgUrl,
+          name: props.name
+        }
+      }
+    })
+   }
+  }
+
+  const setUserFn = (user: User & { org_id?: string }) => {
+    setUser({
+      ...user,
+      org: {
+        id: user.org_id || '',
+        image_url: '',
+        name: ''
+      }
+    })
+  }
+
+  const value: AuthStorage = { signedIn, signIn, signOut, setOrg, setUser: setUserFn, user };
 
   return (
     <AuthContext.Provider value={value}>
