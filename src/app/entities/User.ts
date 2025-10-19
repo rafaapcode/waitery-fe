@@ -1,4 +1,4 @@
-const UserRole = {
+export const UserRole = {
   ADMIN: 'ADMIN',
   CLIENT: 'CLIENT',
   WAITER: 'WAITER',

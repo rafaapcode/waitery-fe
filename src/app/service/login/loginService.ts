@@ -28,13 +28,11 @@ export namespace LoginService {
 
   export type LoginOutput = User & {
     access_token: string;
-    refresh_token: string;
   };
 
-  export type RegisterInput = { name: string, email: string; password: string };
+  export type RegisterInput = { name: string; email: string; password: string };
 
   export type RegisterOutput = User & {
     access_token: string;
-    refresh_token: string;
   };
 }

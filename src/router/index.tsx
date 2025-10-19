@@ -1,5 +1,7 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Layout from "../view/layout/Layout";
 import LoginPage from "../view/page/login";
+import NotFoundPage from "../view/page/notFound";
 import RegisterPage from "../view/page/register";
 import AuthGuard from "./AuthGuard";
 // import { Layout } from "lucide-react";
@@ -23,7 +25,7 @@ function Router() {
           </Route>
           {/* <Route path="/org/register" element={<p>Registrar Org</p>} /> */}
         </Route>
-        {/* <Route path="*" element={<NotFoundPage />} />  */}
+        <Route path="*" element={<NotFoundPage />} /> 
       </Routes>
     </BrowserRouter>
   );
