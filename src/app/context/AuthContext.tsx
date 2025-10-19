@@ -44,7 +44,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     setSignedIn(false);
   }
 
-  const value = { signedIn, signIn, signOut }
+  const value: AuthStorage = { signedIn, signIn, signOut, setOrgInfo: () => {}, setUser: () => {}, user: undefined };
 
   return (
     <AuthContext.Provider value={value}>
