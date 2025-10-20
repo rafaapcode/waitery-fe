@@ -21,7 +21,7 @@ function Layout() {
   return (
     <main className="bg-[#FAFAFA] w-full flex h-screen">
         {(role === UserRole.OWNER || role === UserRole.ADMIN) && <Sidebar />}
-        <section className="w-full h-full">
+        <section className="w-full h-full p-6 overflow-y-auto rounded-tl-4xl rounded-bl-4xl bg-white shadow">
           {(role === UserRole.WAITER || role === UserRole.CLIENT) && <Unpermissionless />}
           {/* {!user.org.id && <NotFoundOrgPage />} */}
           {/*

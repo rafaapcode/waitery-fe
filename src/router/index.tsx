@@ -17,11 +17,11 @@ function Router() {
         <Route element={<AuthGuard isPrivate/>}>
           <Route element={<Layout />}>
             <Route path="/" element={<p>home !</p>} />
-            {/* <Route path="/historico" element={<p>historico !</p>} />
+            <Route path="/historico" element={<p>historico !</p>} />
             <Route path="/cardapio" element={<p>Cardapio !</p>} />
             <Route path="/usuarios" element={<p>Usuarios !</p>} />
             <Route path="/profile" element={<p>Profile !</p>} />
-            <Route path="/org" element={<p>Orgs !</p>} /> */}
+            <Route path="/org" element={<p>Orgs !</p>} />
           </Route>
           {/* <Route path="/org/register" element={<p>Registrar Org</p>} /> */}
         </Route>
