@@ -1,29 +1,26 @@
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
-import { Building, LogOut, User2Icon } from "lucide-react";
-import { useState } from "react";
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
-import { useAuth } from "../../app/hooks/useAuth";
+import { useState, type ElementType, type ReactNode } from "react";
+import { NavLink } from "react-router-dom";
 import { cn } from "../../app/lib/utils";
 
+export type OptionsType = {
+  type: "link" | "button";
+  label: string;
+  icon: ElementType;
+  isSelected?: () => boolean;
+  to?: string;
+  onClick?: () => void;
+};
+
 interface DropDownMenuProps {
-  children: React.ReactNode;
+  children: ReactNode;
+  options: OptionsType[];
 }
 
-const DropDownMenu = ({ children }: DropDownMenuProps) => {
-  const { pathname } = useLocation();
-  const navigate = useNavigate();
-  const { signOut } = useAuth();
-
+const DropDownMenu = ({ children, options }: DropDownMenuProps) => {
   const [open, setIsOpen] = useState(false);
 
   const handleOpen = () => setIsOpen((prev) => !prev);
-  const logout = () => {
-    signOut();
-    navigate("/signin");
-  }
-
-  const isProfileSelected = pathname === "/profile";
-  const isOrgSelected = pathname === "/org";
 
   return (
     <DropdownMenu.Root open={open} onOpenChange={setIsOpen}>
@@ -36,47 +33,38 @@ const DropDownMenu = ({ children }: DropDownMenuProps) => {
           alignOffset={10}
           className="bg-gray-100 shadow border border-gray-300 rounded-lg p-4 space-y-4"
         >
-          <DropdownMenu.Item
-            className="hover:bg-gray-100 cursor-pointer"
-            onClick={handleOpen}
-          >
-            <NavLink
-              to="/profile"
-              className={cn(
-                "w-full text-gray-400 hover:text-red-700 flex gap-2 transition-colors duration-200",
-                isProfileSelected && "border-red-400 text-red-700"
-              )}
+          {options.map((opt, idx) => (
+            <DropdownMenu.Item
+              key={idx}
+              className="hover:bg-gray-100 cursor-pointer"
+              onClick={handleOpen}
             >
-              <User2Icon size={20} />
-              Seu perfil
-            </NavLink>
-          </DropdownMenu.Item>
-
-          <DropdownMenu.Item
-            className="hover:bg-gray-100 cursor-pointer"
-            onClick={handleOpen}
-          >
-            <NavLink
-              to="/org"
-              className={cn(
-                "w-full text-gray-400 hover:text-red-700 flex gap-2 transition-colors duration-200",
-                isOrgSelected && "border-red-400 text-red-700"
+              {opt.type === "link" && opt.to && (
+                <NavLink
+                  to={opt.to}
+                  className={cn(
+                    "w-full text-gray-400 hover:text-red-700 flex gap-2 transition-colors duration-200",
+                    opt.isSelected?.() && "border-red-400 text-red-700"
+                  )}
+                >
+                  <opt.icon size={20} />
+                  {opt.label}
+                </NavLink>
               )}
-            >
-              <Building size={20} />
-              Organização
-            </NavLink>
-          </DropdownMenu.Item>
-
-          <DropdownMenu.Item
-            asChild
-            className="hover:bg-gray-100 cursor-pointer"
-          >
-            <button onClick={logout} className="w-full text-gray-400 hover:text-red-700 flex gap-2 transition-colors duration-200">
-              <LogOut size={20} />
-              Sair
-            </button>
-          </DropdownMenu.Item>
+              {opt.type === "button" && opt.onClick && (
+                <button
+                  onClick={opt.onClick}
+                  className={cn(
+                    "w-full text-gray-400 hover:text-red-700 flex gap-2 transition-colors duration-200 cursor-pointer",
+                    opt.isSelected?.() && "border-red-400 text-red-700"
+                  )}
+                >
+                  <opt.icon size={20} />
+                  {opt.label}
+                </button>
+              )}
+            </DropdownMenu.Item>
+          ))}
         </DropdownMenu.Content>
       </DropdownMenu.Portal>
     </DropdownMenu.Root>
