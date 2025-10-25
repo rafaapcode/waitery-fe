@@ -10,6 +10,7 @@ import { LoginService } from "../../../app/service/login/loginService";
 
 const registerSchema = z.object({
   name: z.string().nonempty({error:  'O nome é obrigatório'}).min(4, 'O nome deve ter no mínimo 4 caracteres'),
+  cpf: z.string().nonempty({error: 'O CPF é obrigatório'}).length(11, 'O CPF deve ter 11 dígitos'),
   email: z.email({error: 'E-mail inválido'}),
   password: z.string().min(8, 'A senha deve ter ao menos 8 caracteres')
 });

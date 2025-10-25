@@ -44,6 +44,14 @@ function RegisterPage() {
                 error={errors.email?.message}
               />
             </div>
+            <div className="w-full flex flex-col gap-2">
+              <Input
+                type="text"
+                placeholder="Cpf"
+                {...register("cpf")}
+                error={errors.cpf?.message}
+              />
+            </div>
             <div className="w-full flex flex-col gap-2  relative">
               <Input
                 type={passwordVisibility}

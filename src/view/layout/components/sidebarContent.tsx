@@ -59,8 +59,9 @@ function SidebarContent({ isOpen }: SidebarContentProps) {
         isOpen && "items-start"
       )}
     >
-      {sidebarOptions.map((opt) => (
+      {sidebarOptions.map((opt, idx) => (
         <NavLink
+          key={idx}
           to={opt.path}
           className={cn(
             "flex text-gray-500 border border-transparent  rounded-md p-2 text-sm items-center gap-2 transition-colors duration-200",

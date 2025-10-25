@@ -36,7 +36,6 @@ export function useLoginController() {
   const handleSubmit = hookHandleSubmit(async (data) => {
     try {
       const user = await mutateAsync(data);
-      console.log(user);
       signIn(user.access_token);
       setUser(user);
       navigate('/');
