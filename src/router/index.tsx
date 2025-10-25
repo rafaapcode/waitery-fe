@@ -1,5 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Layout from "../view/layout/Layout";
+import Home from "../view/page/home";
 import LoginPage from "../view/page/login";
 import NotFoundPage from "../view/page/notFound";
 import RegisterPage from "../view/page/register";
@@ -16,7 +17,7 @@ function Router() {
         </Route>
         <Route element={<AuthGuard isPrivate/>}>
           <Route element={<Layout />}>
-            <Route path="/" element={<p>home !</p>} />
+            <Route path="/" element={<Home />} />
             <Route path="/historico" element={<p>historico !</p>} />
             <Route path="/cardapio" element={<p>Cardapio !</p>} />
             <Route path="/usuarios" element={<p>Usuarios !</p>} />
