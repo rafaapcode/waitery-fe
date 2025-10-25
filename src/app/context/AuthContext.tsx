@@ -1,11 +1,14 @@
-import { createContext, useState, type ReactNode } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { createContext, useEffect, useState, type ReactNode } from "react";
+import toast from "react-hot-toast";
+import SplashScreen from "../../components/SplashScreen";
 import { localStorageKeys } from "../config/constants";
 import type { User } from "../entities/User";
+import { UsersService } from "../service/users/userServices";
 
 interface AuthProviderProps {
   children: ReactNode;
 }
-
 
 interface AuthStorage {
   signedIn: boolean;
@@ -25,7 +28,10 @@ interface AuthStorage {
 export const AuthContext = createContext<AuthStorage>({} as AuthStorage);
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const [user, setUser] = useState<User & { org: { id: string; image_url: string; name: string } } | undefined>(undefined);
+  const [user, setUser] = useState<
+    | (User & { org: { id: string; image_url: string; name: string } })
+    | undefined
+  >(undefined);
 
   const [signedIn, setSignedIn] = useState<boolean>(() => {
     const storedAccessToken = localStorage.getItem(
@@ -34,48 +40,72 @@ export function AuthProvider({ children }: AuthProviderProps) {
     return !!storedAccessToken;
   });
 
+  const { isError, isFetching, isSuccess } = useQuery({
+    enabled: signedIn,
+    queryKey: ["users", "me"],
+    queryFn: async () => {
+      return await UsersService.getMe();
+    },
+    staleTime: Infinity,
+  });
+
   const signIn = (access_token: string) => {
     localStorage.setItem(localStorageKeys.ACCESS_TOKEN, access_token);
     setSignedIn(true);
-  }
+  };
 
   const signOut = () => {
     localStorage.removeItem(localStorageKeys.ACCESS_TOKEN);
     setSignedIn(false);
-  }
+  };
 
   const setOrg = (props: { imgUrl: string; orgId: string; name: string }) => {
-   if(user) {
-    setUser(prev => {
-      if(!prev) return prev;
-      return {
-        ...prev,
-        org: {
-          id: props.orgId,
-          image_url: props.imgUrl,
-          name: props.name
-        }
-      }
-    })
-   }
-  }
+    if (user) {
+      setUser((prev) => {
+        if (!prev) return prev;
+        return {
+          ...prev,
+          org: {
+            id: props.orgId,
+            image_url: props.imgUrl,
+            name: props.name,
+          },
+        };
+      });
+    }
+  };
 
   const setUserFn = (user: User & { org_id?: string }) => {
     setUser({
       ...user,
       org: {
-        id: user.org_id || '',
-        image_url: '',
-        name: ''
-      }
-    })
-  }
+        id: user.org_id || "",
+        image_url: "",
+        name: "",
+      },
+    });
+  };
 
-  const value: AuthStorage = { signedIn, signIn, signOut, setOrg, setUser: setUserFn, user };
+  useEffect(() => {
+    if (isError) {
+      toast.error("Sua sessão expirou.");
+      signOut();
+    }
+  }, [isError, signOut]);
+
+  const value: AuthStorage = {
+    signedIn: isSuccess && signedIn,
+    signIn,
+    signOut,
+    setOrg,
+    setUser: setUserFn,
+    user,
+  };
 
   return (
     <AuthContext.Provider value={value}>
-      {children}
+      <SplashScreen isLoading={isFetching} />
+      {!isFetching && children}
     </AuthContext.Provider>
-  )
-};
+  );
+}
