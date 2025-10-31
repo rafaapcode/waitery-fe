@@ -1,9 +1,13 @@
 import { HomeIcon, RotateCcwIcon } from "lucide-react";
+import Modal from "../../../components/molecules/Modal";
 import Column from "./components/Column";
 
 function Home() {
   return (
     <main className="w-full h-full">
+      <Modal open >
+        <h1>Testando</h1>
+      </Modal>
       <header className="w-full flex justify-between items-center">
         <div className="flex flex-col gap-4">
           <span className="flex items-center gap-2">
