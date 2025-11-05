@@ -1,13 +1,19 @@
 import { HomeIcon, RotateCcwIcon } from "lucide-react";
-import Modal from "../../../components/molecules/Modal";
+import Button from "../../../components/atoms/Button";
 import Column from "./components/Column";
+import RestartDayModal from "./components/RestartDayModal";
+import { useHomeController } from "./useHomeController";
 
 function Home() {
+  const {
+    isRestartModalOpen,
+    onCloseRestartModal,
+    onOpenRestartModal,
+  } = useHomeController();
+
   return (
     <main className="w-full h-full">
-      <Modal open >
-        <h1>Testando</h1>
-      </Modal>
+      <RestartDayModal open={isRestartModalOpen} onClose={onCloseRestartModal} />
       <header className="w-full flex justify-between items-center">
         <div className="flex flex-col gap-4">
           <span className="flex items-center gap-2">
@@ -16,10 +22,10 @@ function Home() {
           </span>
           <p className="text-gray-400">Acompanhe os pedidos dos clientes</p>
         </div>
-        <button className="flex items-center gap-2 text-red-700 hover:text-red-600 transition-colors duration-150">
+        <Button variant="secondary" size="sm" onClick={onOpenRestartModal}>
           <RotateCcwIcon size={20} />
           Reiniciar Dia
-        </button>
+        </Button>
       </header>
 
       <section className="flex w-full mt-6 h-[500px] gap-6">

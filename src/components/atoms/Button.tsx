@@ -16,6 +16,7 @@ const buttonVariants = cva(
           "bg-tranparent hover:tranparent text-[#D73035] disabled:text-[#c74e52] font-bold hover:text-red-400",
       },
       size: {
+        icon: "p-1 rounded-full",
         sm: "py-[6px] px-3 rounded-[35px]",
         md: "py-[10px] px-5 rounded-[40px]",
         lg: "py-[14px] px-7 rounded-[44px]",
