@@ -1,17 +1,18 @@
 import { useState } from "react";
+import type { Order } from "../../../../app/entities/Order";
 import OrderDetailModal from "../../../../components/OrderDetailModal";
 import ColumnItem from "./ColumnItem";
 
 interface ColumnProps {
   icon: string;
   name: string;
-  orders: {table: string; status: string; itens: string[]}[];
+  orders: Order[];
 }
 
 function Column({ icon, name, orders }: ColumnProps) {
-  const [order, setSelectOrder] = useState<{table: string; status: string; itens: string[]} | null>(null);
+  const [order, setSelectOrder] = useState<Order | null>(null);
 
-  const handleSelectOrder = (selectedOrder: {table: string; status: string; itens: string[]}) => {
+  const handleSelectOrder = (selectedOrder: Order) => {
     setSelectOrder(selectedOrder);
   };
 

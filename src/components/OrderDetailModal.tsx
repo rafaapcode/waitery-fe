@@ -1,9 +1,10 @@
+import type { Order } from "../app/entities/Order";
 import Modal, { ModalContent, ModalFooter, ModalHeader } from "./molecules/Modal";
 
 interface OrderDetailModalProps {
   open: boolean
   onClose: () => void
-  order: {table: string; status: string; itens: string[]} | null;
+  order: Order | null;
 }
 
 function OrderDetailModal({ open, onClose, order }: OrderDetailModalProps) {
