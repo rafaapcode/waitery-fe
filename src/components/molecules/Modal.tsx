@@ -6,7 +6,7 @@ import Button from "../atoms/Button";
 const Modal = ({ open, children }: { children: ReactNode; open: boolean;}) => (
   createPortal(<Activity mode={open ? "visible" : "hidden"}>
     <div className="bg-black/70 absolute top-0 left-0 w-full h-full flex justify-center items-center">
-      <div className="bg-white p-6 rounded-md max-w-[930px] max-h-[970px] min-w-[400px]">
+      <div className="flex flex-col gap-6 bg-white p-6 rounded-md max-w-[95%] max-h-[97%] min-w-1/6">
         {children}
       </div>
     </div>
@@ -27,7 +27,7 @@ export function ModalHeader({ title, icon: Icon, onClose }: ModalHeaderProps) {
     <header className="w-full flex justify-between items-center">
       <span className="flex items-center gap-2">
         {Icon && <Icon className="text-gray-600" size={18} />}
-        <h2 className="text-lg font-semibold">{title}</h2>
+        <h2 className="text-xl font-semibold">{title}</h2>
       </span>
       <Button onClick={onClose} variant="secondary" size="icon" className="text-gray-400 hover:text-gray-600">
         <X size={18} />
