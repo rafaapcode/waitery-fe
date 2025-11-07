@@ -138,7 +138,7 @@ function Home() {
           price: 5.00,
           category: "Bebidas",
           discount: true,
-        },
+        }
       ],
     },
     {

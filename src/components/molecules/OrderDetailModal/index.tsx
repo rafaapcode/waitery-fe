@@ -58,13 +58,15 @@ function OrderDetailModal({
             ) : (
               <>
                 <p className="text-sm text-gray-500">Data do Pedido</p>
-                <span className="font-bold text-gray-600">{formatDate(order.created_at)}</span>
+                <span className="font-bold text-gray-600">
+                  {formatDate(order.created_at)}
+                </span>
               </>
             )}
           </div>
           <div className="space-y-4">
             <p className="text-sm text-gray-500">Itens</p>
-            <div className="space-y-4">
+            <div className="space-y-4 overflow-y-auto max-h-[270px]">
               {products.map((order) => (
                 <OrderItem order={order} />
               ))}
@@ -79,30 +81,28 @@ function OrderDetailModal({
         </div>
       </ModalContent>
 
-      <Activity
-        mode={
-          columnName !== "✅ Pronto" && isOrderVariant
-            ? "visible"
-            : "hidden"
-        }
-      >
-        <ModalFooter>
+      <ModalFooter>
+
+        <Activity
+          mode={
+            columnName !== "✅ Pronto" && isOrderVariant ? "visible" : "hidden"
+          }
+        >
           <div className="w-full flex  justify-between items-center">
             <Button variant="secondary" onClick={onClose}>
               Cancelar Pedido
             </Button>
             <Button onClick={() => {}}>{nextButtonTitle}</Button>
           </div>
-        </ModalFooter>
-      </Activity>
+        </Activity>
 
-      <Activity mode={isOrderVariant ? "hidden" : "visible"}>
-        <ModalFooter>
+        <Activity mode={isOrderVariant ? "hidden" : "visible"}>
           <Button variant="secondary" onClick={onClose}>
             Excluir Registro
           </Button>
-        </ModalFooter>
-      </Activity>
+        </Activity>
+
+      </ModalFooter>
     </Modal>
   );
 }
