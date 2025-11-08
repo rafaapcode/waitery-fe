@@ -1,7 +1,7 @@
 import { HomeIcon, RotateCcwIcon } from "lucide-react";
 import type { Order } from "../../../app/entities/Order";
 import { OrderStatus } from "../../../app/entities/Order";
-import Button from "../../../components/atoms/Button";
+import PageHeader from "../../../components/molecules/PageHeader";
 import Column from "./components/Column";
 import RestartDayModal from "./components/RestartDayModal";
 import { useHomeController } from "./useHomeController";
@@ -171,19 +171,18 @@ function Home() {
   return (
     <main className="w-full h-full">
       <RestartDayModal open={isRestartModalOpen} onClose={onCloseRestartModal} />
-      <header className="w-full flex justify-between items-center">
-        <div className="flex flex-col gap-4">
-          <span className="flex items-center gap-2">
-            <HomeIcon size={32} className="text-gray-600" />
-            <h1 className="text-2xl font-semibold">Home</h1>
-          </span>
-          <p className="text-gray-400">Acompanhe os pedidos dos clientes</p>
-        </div>
-        <Button variant="secondary" size="sm" onClick={onOpenRestartModal}>
-          <RotateCcwIcon size={20} />
-          Reiniciar Dia
-        </Button>
-      </header>
+      <PageHeader 
+        icon={HomeIcon}
+        title="Home"
+        subtitle="Acompanhe os pedidos dos clientes"
+        button={{
+          onClick: onOpenRestartModal,
+          label: "Reiniciar Dia",
+          icon: RotateCcwIcon,
+          variant: "secondary",
+          size: "sm",
+        }}
+      />
 
       <section className="flex w-full mt-6 h-[500px] gap-6">
         <Column icon="🕛" name="Fila de Espera" orders={waitingOrders}/>
