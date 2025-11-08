@@ -1,5 +1,5 @@
 import { formatCurrency } from "../../../app/lib/formatCurrency";
-import DefaultImage from "../../../assets/images/default-image.png";
+import { Image } from "../../atoms/Image";
 
 interface OrderItemProps {
   order: {
@@ -14,10 +14,10 @@ function OrderItem({ order }: OrderItemProps) {
   const { name, quantity, price, image } = order;
   return (
     <div className="flex gap-2 items-center">
-      <img
-        src={image || DefaultImage}
+      <Image
+        size="xs"
+        src={image}
         alt="Image of Product"
-        className="w-12 h-10 rounded-md object-cover"
       />
       <span className="text-xs text-gray-500 self-start">{quantity}x</span>
       <div className="flex flex-col">
