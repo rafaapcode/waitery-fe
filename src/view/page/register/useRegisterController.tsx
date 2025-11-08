@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
@@ -25,19 +24,13 @@ export function useRegisterController() {
   >("password");
 
 
-  const { handleSubmit: hookHandleSubmit, register, formState: {errors, isValid} } = useForm<RegisterBody>({
+  const { handleSubmit: hookHandleSubmit, register, formState: {errors, isValid, isSubmitting} } = useForm<RegisterBody>({
     resolver: zodResolver(registerSchema)
-  });
-
-  const { mutateAsync, isPending } = useMutation({
-    mutationFn: async (data: RegisterBody) => {
-      return await LoginService.registerUser(data);
-    }
   });
 
   const handleSubmit = hookHandleSubmit(async (data) => {
     try {
-      const {access_token,  ...userdata} = await mutateAsync(data);
+      const {access_token,  ...userdata} = await LoginService.registerUser(data);
       signIn(access_token);
       setUser(userdata);
       navigate('/');
@@ -54,6 +47,6 @@ export function useRegisterController() {
     errors,
     handleSubmit,
     register,
-    isPending,
+    isPending: isSubmitting,
   };
 }

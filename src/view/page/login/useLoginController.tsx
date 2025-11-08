@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
@@ -7,6 +6,7 @@ import { useNavigate } from "react-router";
 import { z } from "zod";
 import { useAuth } from "../../../app/hooks/useAuth";
 import { LoginService } from "../../../app/service/login/loginService";
+import { Service } from "../../../app/service/service";
 
 const loginSchema = z.object({
   email: z.email(),
@@ -23,19 +23,14 @@ export function useLoginController() {
   >("password");
 
 
-  const { handleSubmit: hookHandleSubmit, register, formState: {errors, isValid} } = useForm<LoginBody>({
+  const { handleSubmit: hookHandleSubmit, register, formState: {errors, isValid, isSubmitting} } = useForm<LoginBody>({
     resolver: zodResolver(loginSchema)
-  });
-
-  const { mutateAsync, isPending } = useMutation({
-    mutationFn: async (data: LoginBody) => {
-      return await LoginService.loginUser(data);
-    }
   });
 
   const handleSubmit = hookHandleSubmit(async (data) => {
     try {
-      const user = await mutateAsync(data);
+      const user = await LoginService.loginUser(data);
+      Service.SetAccessToken(user.access_token);
       signIn(user.access_token);
       setUser(user);
       navigate('/');
@@ -52,6 +47,6 @@ export function useLoginController() {
     errors,
     handleSubmit,
     register,
-    isPending,
+    isPending: isSubmitting,
   };
 }

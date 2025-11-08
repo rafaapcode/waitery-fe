@@ -1,11 +1,11 @@
 import type { User } from "../../entities/User";
-import { httpClient } from "../httpClient";
+import { Service } from "../service";
 
-export class LoginService {
+export class LoginService extends Service {
   static async loginUser(
     data: LoginService.LoginInput
   ): Promise<LoginService.LoginOutput> {
-    const { data: res } = await httpClient.post<LoginService.LoginOutput>(
+    const { data: res } = await this.client.post<LoginService.LoginOutput>(
       "/auth/signin",
       data
     );
@@ -15,7 +15,7 @@ export class LoginService {
   static async registerUser(
     data: LoginService.RegisterInput
   ): Promise<LoginService.RegisterOutput> {
-    const { data: res } = await httpClient.post<LoginService.RegisterOutput>(
+    const { data: res } = await this.client.post<LoginService.RegisterOutput>(
       "/auth/signup",
       data
     );

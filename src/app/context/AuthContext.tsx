@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import SplashScreen from "../../components/SplashScreen";
 import { localStorageKeys } from "../config/constants";
 import type { User } from "../entities/User";
+import { Service } from "../service/service";
 import { UsersService } from "../service/users/userServices";
 
 interface AuthProviderProps {
@@ -51,11 +52,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const signIn = (access_token: string) => {
     localStorage.setItem(localStorageKeys.ACCESS_TOKEN, access_token);
+    Service.SetAccessToken(access_token);
     setSignedIn(true);
   };
 
   const signOut = () => {
     localStorage.removeItem(localStorageKeys.ACCESS_TOKEN);
+    Service.RemoveAccessToken();
     setSignedIn(false);
   };
 
