@@ -14,6 +14,7 @@ import OrderItem from "./OrderItem";
 interface OrderDetailModalProps {
   open: boolean;
   onClose: () => void;
+  onDelete?: () => void;
   columnName?: string;
   order: Order | null;
   variant?: "ORDER" | "HISTORY";
@@ -25,6 +26,7 @@ function OrderDetailModal({
   order,
   columnName = "",
   variant = "ORDER",
+  onDelete
 }: OrderDetailModalProps) {
   if (!order) {
     return null;
@@ -97,7 +99,7 @@ function OrderDetailModal({
         </Activity>
 
         <Activity mode={isOrderVariant ? "hidden" : "visible"}>
-          <Button variant="secondary" onClick={onClose}>
+          <Button variant="secondary" onClick={onDelete}>
             Excluir Registro
           </Button>
         </Activity>

@@ -1,6 +1,7 @@
 import { X } from "lucide-react";
-import { Activity, type ElementType, type ReactNode } from "react";
+import { Activity, type ComponentProps, type ElementType, type ReactNode } from "react";
 import { createPortal } from "react-dom";
+import { cn } from "../../app/lib/utils";
 import Button from "../atoms/Button";
 
 const Modal = ({ open, children }: { children: ReactNode; open: boolean;}) => (
@@ -45,9 +46,13 @@ export function ModalContent({ children }: {children: ReactNode}) {
   )
 }
 
-export function ModalFooter({ children }: {children: ReactNode}) {
+interface ModalFooterProps extends ComponentProps<"footer"> {
+  children: ReactNode;
+}
+
+export function ModalFooter({ children, className, ...props }: ModalFooterProps) {
   return (
-    <footer className="w-full mt-4">
+    <footer className={cn("w-full mt-4", className)} {...props}>
       {children}
     </footer>
   )
