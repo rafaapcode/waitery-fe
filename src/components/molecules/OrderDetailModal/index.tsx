@@ -14,7 +14,7 @@ import OrderItem from "./OrderItem";
 interface OrderDetailModalProps {
   open: boolean;
   onClose: () => void;
-  columnName: string;
+  columnName?: string;
   order: Order | null;
   variant?: "ORDER" | "HISTORY";
 }
@@ -23,7 +23,7 @@ function OrderDetailModal({
   open,
   onClose,
   order,
-  columnName,
+  columnName = "",
   variant = "ORDER",
 }: OrderDetailModalProps) {
   if (!order) {

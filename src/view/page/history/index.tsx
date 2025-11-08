@@ -11,6 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from "../../../components/molecules/Table";
+import HistoryActionComponent from "./components/HistoryActionComponent";
 
 const orders = [
   {
@@ -83,6 +84,9 @@ function History() {
 
   return (
     <main className="w-full h-full">
+      {/* <OrderDetailModal 
+        
+      /> */}
       <PageHeader
         icon={FileText}
         title="Histórico"
@@ -105,12 +109,11 @@ function History() {
                   <TableRow className="border-none" key={headerGroup.id}>
                     {headerGroup.headers.map((header) => {
                       const isTableHeader = header.isHeader("table");
-                      const isTotalHeader = header.isHeader("total");
                       const isActionHeader = header.isHeader("actions");
 
                       const headerStyle = cn(
                         isTableHeader && "w-[100px]",
-                        (isTotalHeader || isActionHeader) && "text-right"
+                        isActionHeader && "text-right"
                       );
 
                       return (
@@ -133,7 +136,8 @@ function History() {
                     <TableCell>{order.date}</TableCell>
                     <TableCell>{order.name}</TableCell>
                     <TableCell>{order.category}</TableCell>
-                    <TableCell className="text-right">{order.total}</TableCell>
+                    <TableCell>{order.total}</TableCell>
+                    <TableCell className="flex justify-end"><HistoryActionComponent /></TableCell>
                   </TableRow>
                 ))}
               </TableBody>
