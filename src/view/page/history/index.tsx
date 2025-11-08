@@ -1,6 +1,7 @@
 import { FileText } from "lucide-react";
 import TableProvider from "../../../app/context/TableContext";
 import useCreateTable from "../../../app/hooks/useCreateTable";
+import { cn } from "../../../app/lib/utils";
 import PageHeader from "../../../components/molecules/PageHeader";
 import {
   Table,
@@ -11,57 +12,73 @@ import {
   TableRow,
 } from "../../../components/molecules/Table";
 
-const invoices = [
+const orders = [
   {
-    invoice: "INV001",
-    paymentStatus: "Paid",
-    totalAmount: "$250.00",
-    paymentMethod: "Credit Card",
+    table: "INV001",
+    date: "07/12/2022",
+    name: "Frango, Cerveja e Batata Frita",
+    category: "🥩 Carne",
+    total: "R$250,00",
+    actions: "Ações",
   },
   {
-    invoice: "INV002",
-    paymentStatus: "Pending",
-    totalAmount: "$150.00",
-    paymentMethod: "PayPal",
+    table: "INV002",
+    date: "08/12/2022",
+    name: "Pizza Margherita e Refrigerante",
+    category: "🍕 Pizza",
+    total: "R$150,00",
+    actions: "Ações",
   },
   {
-    invoice: "INV003",
-    paymentStatus: "Unpaid",
-    totalAmount: "$350.00",
-    paymentMethod: "Bank Transfer",
+    table: "INV003",
+    date: "09/12/2022",
+    name: "Hambúrguer Clássico e Batata",
+    category: "🍔 Lanches",
+    total: "R$350,00",
+    actions: "Ações",
   },
   {
-    invoice: "INV004",
-    paymentStatus: "Paid",
-    totalAmount: "$450.00",
-    paymentMethod: "Credit Card",
+    table: "INV004",
+    date: "10/12/2022",
+    name: "Lasanha à Bolonhesa e Suco",
+    category: "🍝 Massas",
+    total: "R$450,00",
+    actions: "Ações",
   },
   {
-    invoice: "INV005",
-    paymentStatus: "Paid",
-    totalAmount: "$550.00",
-    paymentMethod: "PayPal",
+    table: "INV005",
+    date: "11/12/2022",
+    name: "Picanha na Chapa Completa",
+    category: "🥩 Carne",
+    total: "R$550,00",
+    actions: "Ações",
   },
   {
-    invoice: "INV006",
-    paymentStatus: "Pending",
-    totalAmount: "$200.00",
-    paymentMethod: "Bank Transfer",
+    table: "INV006",
+    date: "12/12/2022",
+    name: "Salada Caesar e Água Mineral",
+    category: "🥗 Saladas",
+    total: "R$200,00",
+    actions: "Ações",
   },
   {
-    invoice: "INV007",
-    paymentStatus: "Unpaid",
-    totalAmount: "$300.00",
-    paymentMethod: "Credit Card",
+    table: "INV007",
+    date: "13/12/2022",
+    name: "Sushi Variado e Chá Gelado",
+    category: "🍱 Japonesa",
+    total: "R$300,00",
+    actions: "Ações",
   },
 ];
 
 function History() {
-  const table = useCreateTable(invoices, [
-    { accessorKey: "invoice" },
-    { accessorKey: "paymentStatus" },
-    { accessorKey: "paymentMethod" },
-    { accessorKey: "totalAmount" },
+  const table = useCreateTable(orders, [
+    { accessorKey: "table", header: "Mesa" },
+    { accessorKey: "date", header: "Data" },
+    { accessorKey: "name", header: "Nome" },
+    { accessorKey: "category", header: "Categoria" },
+    { accessorKey: "total", header: "Total" },
+    { accessorKey: "actions", header: "Ações" },
   ]);
 
   return (
@@ -77,34 +94,46 @@ function History() {
           <h2 className="font-semibold">
             Pedidos{" "}
             <span className="bg-gray-200 px-1 py-0.5 text-sm rounded-md">
-              3
+              {orders.length}
             </span>
           </h2>
 
           <div className="w-full mt-4 h-[400px] overflow-y-auto">
             <Table className="w-full h-full border border-gray-300 shadow">
               <TableHeader className="bg-gray-100 rounded-md">
-                <TableRow className="border-none">
-                  <TableHead className="w-[100px]">Invoice</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Method</TableHead>
-                  <TableHead className="text-right">Amount</TableHead>
-                </TableRow>
+                {table.headerGroups.map((headerGroup) => (
+                  <TableRow className="border-none" key={headerGroup.id}>
+                    {headerGroup.headers.map((header) => {
+                      const isTableHeader = header.isHeader("table");
+                      const isTotalHeader = header.isHeader("total");
+                      const isActionHeader = header.isHeader("actions");
+
+                      const headerStyle = cn(
+                        isTableHeader && "w-[100px]",
+                        (isTotalHeader || isActionHeader) && "text-right"
+                      );
+
+                      return (
+                        <TableHead key={header.id} className={headerStyle}>
+                          {header.headerTitle}
+                        </TableHead>
+                      );
+                    })}
+                  </TableRow>
+                ))}
               </TableHeader>
+
               <TableBody>
-                {invoices.map((invoice) => (
+                {orders.map((order) => (
                   <TableRow
-                    key={invoice.invoice}
+                    key={order.table}
                     className="border-b border-gray-300"
                   >
-                    <TableCell className="font-medium">
-                      {invoice.invoice}
-                    </TableCell>
-                    <TableCell>{invoice.paymentStatus}</TableCell>
-                    <TableCell>{invoice.paymentMethod}</TableCell>
-                    <TableCell className="text-right">
-                      {invoice.totalAmount}
-                    </TableCell>
+                    <TableCell className="font-medium">{order.table}</TableCell>
+                    <TableCell>{order.date}</TableCell>
+                    <TableCell>{order.name}</TableCell>
+                    <TableCell>{order.category}</TableCell>
+                    <TableCell className="text-right">{order.total}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
