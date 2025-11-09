@@ -91,9 +91,9 @@ function Users() {
   return (
     <main className="w-full h-full">
       <CreateUserModal
-          onClose={onCloseCreateUserModal}
-          open={createUserModalOpen}
-        />
+        onClose={onCloseCreateUserModal}
+        open={createUserModalOpen}
+      />
       <PageHeader
         icon={UsersIcon}
         title="Usuários"

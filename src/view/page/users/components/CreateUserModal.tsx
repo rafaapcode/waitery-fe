@@ -1,5 +1,6 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { UserPen } from "lucide-react";
-import { Controller } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import Button from "../../../../components/atoms/Button";
 import Input from "../../../../components/atoms/Input";
 import Modal, {
@@ -10,7 +11,10 @@ import Modal, {
 import RadioGroup, {
   RadioGroupItem,
 } from "../../../../components/molecules/RadioGroup";
-import { useUsersController } from "../useUsersController";
+import {
+  createUserForm,
+  type CreateUserFormData,
+} from "../schemas/createUserSchema";
 
 interface CreateUserModalProps {
   open: boolean;
@@ -18,14 +22,21 @@ interface CreateUserModalProps {
 }
 
 function CreateUserModal({ open, onClose }: CreateUserModalProps) {
-  const { formCreateUser } = useUsersController();
-
   const {
     handleSubmit,
     register,
+    reset,
     formState: { errors, isSubmitting, isDirty, isValid },
     control,
-  } = formCreateUser;
+  } = useForm<CreateUserFormData>({
+    resolver: zodResolver(createUserForm),
+    mode: "onChange",
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+    },
+  });
 
   const onSubmit = handleSubmit((data) => {
     console.log(data);
@@ -34,7 +45,14 @@ function CreateUserModal({ open, onClose }: CreateUserModalProps) {
 
   return (
     <Modal open={open}>
-      <ModalHeader title="Criar Usuário" icon={UserPen} onClose={onClose} />
+      <ModalHeader
+        title="Criar Usuário"
+        icon={UserPen}
+        onClose={() => {
+          onClose();
+          reset();
+        }}
+      />
 
       <ModalContent>
         <div className="w-[416px] space-y-6">

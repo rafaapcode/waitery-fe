@@ -1,5 +1,6 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { UserPen } from "lucide-react";
-import { Controller } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import type { User } from "../../../../app/entities/User";
 import Button from "../../../../components/atoms/Button";
 import Input from "../../../../components/atoms/Input";
@@ -11,7 +12,7 @@ import Modal, {
 import RadioGroup, {
   RadioGroupItem,
 } from "../../../../components/molecules/RadioGroup";
-import { useUsersController } from "../useUsersController";
+import { editUserFormSchema, type EditUserFormData } from "../schemas/editUserSchema";
 
 interface EditUserModalProps {
   open: boolean;
@@ -20,14 +21,24 @@ interface EditUserModalProps {
 }
 
 function EditUserModal({ open, onClose, user }: EditUserModalProps) {
-  const { formEditUser } = useUsersController(user);
-  
   const {
     handleSubmit,
     register,
+    reset,
     formState: { errors, isSubmitting, isValid, isDirty },
     control,
-  } = formEditUser;
+  } = useForm<EditUserFormData>({
+    resolver: zodResolver(editUserFormSchema),
+    mode: "onChange",
+    defaultValues: {
+      name: user?.name || "",
+      email: user?.email || "",
+      role:
+        user?.role === "ADMIN" || user?.role === "WAITER"
+          ? user.role
+          : "WAITER",
+    },
+  });
 
   const onSubmit = handleSubmit((data) => {
     console.log(data);
@@ -36,7 +47,10 @@ function EditUserModal({ open, onClose, user }: EditUserModalProps) {
 
   return (
     <Modal open={open}>
-      <ModalHeader title="Editar Usuário" icon={UserPen} onClose={onClose} />
+      <ModalHeader title="Editar Usuário" icon={UserPen} onClose={() => {
+        onClose();
+        reset();
+      }} />
 
       <ModalContent>
         <div className="w-[416px] space-y-6">
