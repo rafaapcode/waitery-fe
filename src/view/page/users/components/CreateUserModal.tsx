@@ -1,4 +1,5 @@
 import { UserPen } from "lucide-react";
+import { useFormContext } from "react-hook-form";
 import Button from "../../../../components/atoms/Button";
 import Modal, {
   ModalContent,
@@ -6,6 +7,7 @@ import Modal, {
   ModalHeader,
 } from "../../../../components/molecules/Modal";
 import CreateUserForm from "../forms/CreateUserForm";
+import type { CreateUserFormData } from "../forms/schema";
 
 interface CreateUserModalProps {
   open: boolean;
@@ -13,6 +15,16 @@ interface CreateUserModalProps {
 }
 
 function CreateUserModal({ open, onClose }: CreateUserModalProps) {
+  const {
+    handleSubmit,
+    formState: { isSubmitting },
+  } = useFormContext<CreateUserFormData>();
+
+  const onSubmit = handleSubmit((data) => {
+    console.log(data);
+    onClose();
+  });
+
   return (
     <Modal open={open}>
       <ModalHeader title="Criar Usuário" icon={UserPen} onClose={onClose} />
@@ -22,7 +34,14 @@ function CreateUserModal({ open, onClose }: CreateUserModalProps) {
       </ModalContent>
 
       <ModalFooter className="w-full flex justify-between items-center">
-        <Button className="w-full">Cadastrar usuário</Button>
+        <Button
+          className="w-full"
+          onClick={onSubmit}
+          disabled={isSubmitting}
+          isLoading={isSubmitting}
+        >
+          Cadastrar usuário
+        </Button>
       </ModalFooter>
     </Modal>
   );
