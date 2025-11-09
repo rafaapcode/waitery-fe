@@ -28,8 +28,19 @@ function useCreateTable<TData>(data: TData[], columns: ColumnDef<TData>[], optio
     }
   });
 
+  const rows = table.getRowModel().rows.map(row => {
+    const cells = row.getAllCells().map(cell => ({
+      ...cell,
+      value: flexRender(cell.column.columnDef.cell, cell.getContext())
+    }));
+    return {
+      ...row,
+      cells
+    }
+  });
+
       
-  return {...table, headerGroups };
+  return {...table, headerGroups, rows };
 }
 
 export default useCreateTable;

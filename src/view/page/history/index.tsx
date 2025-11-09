@@ -1,4 +1,3 @@
-import { flexRender } from "@tanstack/react-table";
 import { FileText } from "lucide-react";
 import TableProvider from "../../../app/context/TableContext";
 import { fromHistoryOrder, OrderStatus, toHistoryOrder, type Order } from "../../../app/entities/Order";
@@ -142,15 +141,15 @@ function History() {
               </TableHeader>
 
               <TableBody>
-                {table.getRowModel().rows.map((row) => (
+                {table.rows.map((row) => (
                   <TableRow
                     key={row.id}
                     className="border-b border-gray-300"
                   >
                     {
-                      row.getAllCells().map(cell => (
+                      row.cells.map(cell => (
                         <>
-                          <TableCell>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+                          <TableCell>{cell.value}</TableCell>
                         </>
                       ))
                     }
