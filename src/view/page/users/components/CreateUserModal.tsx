@@ -23,7 +23,7 @@ function CreateUserModal({ open, onClose }: CreateUserModalProps) {
   const {
     handleSubmit,
     register,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isDirty, isValid },
     control,
   } = formCreateUser;
 
@@ -82,7 +82,7 @@ function CreateUserModal({ open, onClose }: CreateUserModalProps) {
         <Button
           className="w-full"
           onClick={onSubmit}
-          disabled={isSubmitting}
+          disabled={!isValid || !isDirty || isSubmitting}
           isLoading={isSubmitting}
         >
           Cadastrar usuário

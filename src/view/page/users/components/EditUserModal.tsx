@@ -1,5 +1,6 @@
 import { UserPen } from "lucide-react";
 import { Controller } from "react-hook-form";
+import type { User } from "../../../../app/entities/User";
 import Button from "../../../../components/atoms/Button";
 import Input from "../../../../components/atoms/Input";
 import Modal, {
@@ -15,15 +16,16 @@ import { useUsersController } from "../useUsersController";
 interface EditUserModalProps {
   open: boolean;
   onClose: () => void;
+  user: User;
 }
 
-function EditUserModal({ open, onClose }: EditUserModalProps) {
-  const { formEditUser } = useUsersController();
-
+function EditUserModal({ open, onClose, user }: EditUserModalProps) {
+  const { formEditUser } = useUsersController(user);
+  
   const {
     handleSubmit,
     register,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isValid, isDirty },
     control,
   } = formEditUser;
 
@@ -83,7 +85,7 @@ function EditUserModal({ open, onClose }: EditUserModalProps) {
           Excluir Usuário
         </Button>
         <Button
-          disabled={isSubmitting}
+          disabled={!isValid || !isDirty || isSubmitting}
           isLoading={isSubmitting}
           size="md"
           onClick={onSubmit}

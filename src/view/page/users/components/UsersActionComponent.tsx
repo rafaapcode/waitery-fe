@@ -23,6 +23,7 @@ function UsersActionComponent({ user }: UsersActionComponentProps) {
      <div className="flex gap-1.5 items-center justify-end">
         {user  && (
           <EditUserModal
+            user={user}
             open={isOpenEditUserModal}
             onClose={onCloseEditUserModal}
           />

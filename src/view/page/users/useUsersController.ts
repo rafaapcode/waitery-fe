@@ -37,7 +37,10 @@ export function useUsersController(user?: User) {
 
   // Create User Modal Handlers
   const onOpenCreateUserModal = () => setCreateUserModalOpen(true);
-  const onCloseCreateUserModal = () => setCreateUserModalOpen(false);
+  const onCloseCreateUserModal = () => {
+    setCreateUserModalOpen(false);
+    formCreateUser.reset();
+  }
 
   // Edit User Modal Handlers
   const onOpenEditUserModal = () => setIsOpenEditUserModal(true);
