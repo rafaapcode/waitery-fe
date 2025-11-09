@@ -86,7 +86,7 @@ function Users() {
       <TableProvider table={table}>
         <section className="mt-12">
           <h2 className="font-semibold">
-            Usuários
+            Usuários{" "}
             <span className="bg-gray-200 px-1 py-0.5 text-sm rounded-md">
               {users.length}
             </span>
