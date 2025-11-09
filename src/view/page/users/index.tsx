@@ -1,7 +1,5 @@
-import { zodResolver } from "@hookform/resolvers/zod";
 import { UsersIcon } from "lucide-react";
-import { useState } from "react";
-import { FormProvider, useForm } from "react-hook-form";
+import { FormProvider } from "react-hook-form";
 import TableProvider from "../../../app/context/TableContext";
 import type { User } from "../../../app/entities/User";
 import { UserRole } from "../../../app/entities/User";
@@ -19,7 +17,7 @@ import {
 } from "../../../components/molecules/Table";
 import CreateUserModal from "./components/CreateUserModal";
 import UsersActionComponent from "./components/UsersActionComponent";
-import { createUserForm } from "./forms/schema";
+import { useUsersController } from "./useUsersController";
 
 const users: User[] = [
   {
@@ -74,7 +72,13 @@ const users: User[] = [
 ];
 
 function Users() {
-  const [createUserModalOpen, setCreateUserModalOpen] = useState(false);
+  const {
+    createUserModalOpen,
+    formCreateUser,
+    onCloseCreateUserModal,
+    onOpenCreateUserModal
+  } = useUsersController();
+
   const table = useCreateTable(users, [
     { accessorKey: "name", header: "Nome" },
     { accessorKey: "email", header: "E-mail" },
@@ -86,16 +90,11 @@ function Users() {
     },
   ]);
 
-  const form = useForm({
-    resolver: zodResolver(createUserForm),
-    mode: "onChange",
-  });
-
   return (
     <main className="w-full h-full">
-      <FormProvider {...form}>
+      <FormProvider {...formCreateUser}>
         <CreateUserModal
-          onClose={() => setCreateUserModalOpen(false)}
+          onClose={onCloseCreateUserModal}
           open={createUserModalOpen}
         />
       </FormProvider>
@@ -117,7 +116,7 @@ function Users() {
             <Button
               variant="secondary"
               size="sm"
-              onClick={() => setCreateUserModalOpen(true)}
+              onClick={onOpenCreateUserModal}
             >
               Novo Usuário
             </Button>
