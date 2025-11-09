@@ -43,14 +43,14 @@ const users: User[] = [
     id: "4",
     name: "Ana Costa",
     email: "ana.costa@email.com",
-    role: UserRole.CLIENT,
+    role: UserRole.WAITER,
     cpf: "456.789.012-33",
   },
   {
     id: "5",
     name: "Carlos Ferreira",
     email: "carlos.ferreira@email.com",
-    role: UserRole.OWNER,
+    role: UserRole.ADMIN,
     cpf: "567.890.123-44",
   },
   {
@@ -64,7 +64,7 @@ const users: User[] = [
     id: "7",
     name: "Roberto Lima",
     email: "roberto.lima@email.com",
-    role: UserRole.CLIENT,
+    role: UserRole.WAITER,
     cpf: "789.012.345-66",
   },
 ];
@@ -130,7 +130,7 @@ function Users() {
                   <TableRow key={row.id} className="border-b border-gray-300">
                     {row.cells.map((cell) => (
                       <>
-                        <TableCell>{cell.value}</TableCell>
+                        <TableCell key={cell.id} className="p-3">{cell.value}</TableCell>
                       </>
                     ))}
                   </TableRow>

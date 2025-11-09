@@ -149,7 +149,7 @@ function History() {
                     {
                       row.cells.map(cell => (
                         <>
-                          <TableCell>{cell.value}</TableCell>
+                          <TableCell className="p-3">{cell.value}</TableCell>
                         </>
                       ))
                     }
