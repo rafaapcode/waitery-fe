@@ -5,6 +5,7 @@ import Home from "../view/page/home";
 import LoginPage from "../view/page/login";
 import NotFoundPage from "../view/page/notFound";
 import RegisterPage from "../view/page/register";
+import Users from "../view/page/users";
 import AuthGuard from "./AuthGuard";
 
 function Router() {
@@ -20,7 +21,7 @@ function Router() {
             <Route path="/" element={<Home />} />
             <Route path="/historico" element={<History />} />
             <Route path="/cardapio" element={<p>Cardapio !</p>} />
-            <Route path="/usuarios" element={<p>Usuarios !</p>} />
+            <Route path="/usuarios" element={<Users />} />
             <Route path="/profile" element={<p>Profile !</p>} />
             <Route path="/org" element={<p>Orgs !</p>} />
           </Route>
