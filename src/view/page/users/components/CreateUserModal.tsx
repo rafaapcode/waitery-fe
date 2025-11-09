@@ -5,6 +5,7 @@ import Modal, {
   ModalFooter,
   ModalHeader,
 } from "../../../../components/molecules/Modal";
+import CreateUserForm from "../forms/CreateUserForm";
 
 interface CreateUserModalProps {
   open: boolean;
@@ -17,13 +18,11 @@ function CreateUserModal({ open, onClose }: CreateUserModalProps) {
       <ModalHeader title="Criar Usuário" icon={UserPen} onClose={onClose} />
 
       <ModalContent>
-        <h3 className="text-lg font-medium text-gray-700">
-          Formulário de criação
-        </h3>
+        <CreateUserForm />
       </ModalContent>
 
       <ModalFooter className="w-full flex justify-between items-center">
-        <Button>Cadastrar usuário</Button>
+        <Button className="w-full">Cadastrar usuário</Button>
       </ModalFooter>
     </Modal>
   );

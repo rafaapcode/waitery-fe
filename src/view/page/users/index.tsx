@@ -1,10 +1,13 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { UsersIcon } from "lucide-react";
 import { useState } from "react";
+import { FormProvider, useForm } from "react-hook-form";
 import TableProvider from "../../../app/context/TableContext";
 import type { User } from "../../../app/entities/User";
 import { UserRole } from "../../../app/entities/User";
 import useCreateTable from "../../../app/hooks/useCreateTable";
 import { cn } from "../../../app/lib/utils";
+import Button from "../../../components/atoms/Button";
 import PageHeader from "../../../components/molecules/PageHeader";
 import {
   Table,
@@ -16,6 +19,7 @@ import {
 } from "../../../components/molecules/Table";
 import CreateUserModal from "./components/CreateUserModal";
 import UsersActionComponent from "./components/UsersActionComponent";
+import { createUserForm } from "./forms/schema";
 
 const users: User[] = [
   {
@@ -82,12 +86,19 @@ function Users() {
     },
   ]);
 
+  const form = useForm({
+    resolver: zodResolver(createUserForm),
+    mode: "onChange",
+  });
+
   return (
     <main className="w-full h-full">
-      <CreateUserModal
-        onClose={() => setCreateUserModalOpen(false)}
-        open={createUserModalOpen}
-      />
+      <FormProvider {...form}>
+        <CreateUserModal
+          onClose={() => setCreateUserModalOpen(false)}
+          open={createUserModalOpen}
+        />
+      </FormProvider>
       <PageHeader
         icon={UsersIcon}
         title="Usuários"
@@ -96,13 +107,20 @@ function Users() {
 
       <TableProvider table={table}>
         <section className="mt-12">
-          <div>
+          <div className="flex justify-between items-center">
             <h2 className="font-semibold">
               Usuários{" "}
               <span className="bg-gray-200 px-1 py-0.5 text-sm rounded-md">
                 {users.length}
               </span>
             </h2>
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => setCreateUserModalOpen(true)}
+            >
+              Novo Usuário
+            </Button>
           </div>
 
           <div className="w-full mt-4 h-[400px] overflow-y-auto">
@@ -130,7 +148,9 @@ function Users() {
                   <TableRow key={row.id} className="border-b border-gray-300">
                     {row.cells.map((cell) => (
                       <>
-                        <TableCell key={cell.id} className="p-3">{cell.value}</TableCell>
+                        <TableCell key={cell.id} className="p-3">
+                          {cell.value}
+                        </TableCell>
                       </>
                     ))}
                   </TableRow>
