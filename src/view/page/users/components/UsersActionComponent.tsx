@@ -1,5 +1,4 @@
 import { PencilIcon, Trash } from "lucide-react";
-import { FormProvider } from "react-hook-form";
 import type { User } from "../../../../app/entities/User";
 import Button from "../../../../components/atoms/Button";
 import ConfirmModal from "../../../../components/molecules/ConfirmModal";
@@ -16,14 +15,12 @@ function UsersActionComponent({ user }: UsersActionComponentProps) {
     onCloseEditUserModal,
     isOpenConfirmModal,
     onCloseconfirmModal,
-    formEditUser,
     onOpenConfirmModal,
     onOpenEditUserModal
   } = useUsersController(user);
 
   return (
-    <FormProvider {...formEditUser}>
-      <div className="flex gap-1.5 items-center justify-end">
+     <div className="flex gap-1.5 items-center justify-end">
         {user  && (
           <EditUserModal
             open={isOpenEditUserModal}
@@ -54,7 +51,6 @@ function UsersActionComponent({ user }: UsersActionComponentProps) {
           <Trash size={18} />
         </Button>
       </div>
-    </FormProvider>
   );
 }
 

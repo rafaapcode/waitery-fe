@@ -2,7 +2,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import type { User } from "../../../app/entities/User";
-import { createUserForm, editUserFormSchema } from "./forms/schema";
+import { createUserForm, type CreateUserFormData } from "./schemas/createUserSchema";
+import { editUserFormSchema, type EditUserFormData } from "./schemas/editUserSchema";
 
 export function useUsersController(user?: User) {
   // Create User Modal State
@@ -15,13 +16,13 @@ export function useUsersController(user?: User) {
   const [isOpenConfirmModal, setIsOpenConfirmModal] = useState(false);
 
   // Create User Form
-  const formCreateUser = useForm({
+  const formCreateUser = useForm<CreateUserFormData>({
     resolver: zodResolver(createUserForm),
     mode: "onChange",
   });
 
   // Edit User Form
-  const formEditUser = useForm({
+  const formEditUser = useForm<EditUserFormData>({
     resolver: zodResolver(editUserFormSchema),
     mode: "onChange",
     defaultValues: {

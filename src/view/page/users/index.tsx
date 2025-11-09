@@ -1,5 +1,4 @@
 import { UsersIcon } from "lucide-react";
-import { FormProvider } from "react-hook-form";
 import TableProvider from "../../../app/context/TableContext";
 import type { User } from "../../../app/entities/User";
 import { UserRole } from "../../../app/entities/User";
@@ -74,7 +73,6 @@ const users: User[] = [
 function Users() {
   const {
     createUserModalOpen,
-    formCreateUser,
     onCloseCreateUserModal,
     onOpenCreateUserModal
   } = useUsersController();
@@ -92,12 +90,10 @@ function Users() {
 
   return (
     <main className="w-full h-full">
-      <FormProvider {...formCreateUser}>
-        <CreateUserModal
+      <CreateUserModal
           onClose={onCloseCreateUserModal}
           open={createUserModalOpen}
         />
-      </FormProvider>
       <PageHeader
         icon={UsersIcon}
         title="Usuários"
