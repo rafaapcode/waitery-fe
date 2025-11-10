@@ -117,7 +117,7 @@ function History() {
           </h2>
 
           <div className="w-full mt-4 h-[400px] overflow-y-auto">
-            <Table className="w-full h-full border border-gray-300 shadow">
+            <Table className="w-full h-full border border-gray-300">
               <TableHeader className="bg-gray-100 rounded-md">
                 {table.headerGroups.map((headerGroup) => (
                   <TableRow className="border-none" key={headerGroup.id}>

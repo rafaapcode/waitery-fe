@@ -3,6 +3,7 @@ import Layout from "../view/layout/Layout";
 import History from "../view/page/history";
 import Home from "../view/page/home";
 import LoginPage from "../view/page/login";
+import Menu from "../view/page/menu";
 import NotFoundPage from "../view/page/notFound";
 import RegisterPage from "../view/page/register";
 import Users from "../view/page/users";
@@ -20,7 +21,7 @@ function Router() {
           <Route element={<Layout />}>
             <Route path="/" element={<Home />} />
             <Route path="/historico" element={<History />} />
-            <Route path="/cardapio" element={<p>Cardapio !</p>} />
+            <Route path="/cardapio" element={<Menu />} />
             <Route path="/usuarios" element={<Users />} />
             <Route path="/profile" element={<p>Profile !</p>} />
             <Route path="/org" element={<p>Orgs !</p>} />
