@@ -1,4 +1,6 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import type { Product } from "../../../../../app/entities/Product";
 import Button from "../../../../../components/atoms/Button";
 import Input from "../../../../../components/atoms/Input";
@@ -11,6 +13,10 @@ import Modal, {
   ModalFooter,
   ModalHeader,
 } from "../../../../../components/molecules/Modal";
+import {
+  editProductFormSchema,
+  type EditProductFormData,
+} from "../../schemas/editProductSchema";
 import IngredientsList from "./IngredientsList";
 
 interface EditProductModalProps {
@@ -20,25 +26,30 @@ interface EditProductModalProps {
 }
 
 function EditProductModal({ open, onClose, product }: EditProductModalProps) {
-  const [category, setCategory] = useState<string>("");
-  // const {
-  //   handleSubmit,
-  //   register,
-  //   reset,
-  //   formState: { errors, isSubmitting, isValid, isDirty },
-  // } = useForm<EditCategoryFormData>({
-  //   resolver: zodResolver(editCategoryFormSchema),
-  //   mode: "onChange",
-  //   defaultValues: {
-  //     name: category.name,
-  //     icon: category.icon,
-  //   },
-  // });
+  const [category, setCategory] = useState<string>(product.category.name);
+  const {
+    handleSubmit,
+    register,
+    reset,
+    control,
+    formState: { errors, isSubmitting, isValid, isDirty },
+  } = useForm<EditProductFormData>({
+    resolver: zodResolver(editProductFormSchema),
+    mode: "onChange",
+    defaultValues: {
+      category: product.category.name,
+      description: product.description,
+      name: product.name,
+      price: product.price,
+      ingredients: product.ingredients.map((ing) => ing),
+    },
+  });
 
-  // const onSubmit = handleSubmit((data) => {
-  //   console.log(data);
-  //   onClose();
-  // });
+  const onSubmit = handleSubmit((data) => {
+    console.log(data);
+    onClose();
+  });
+
   const categoriesOptions: OptionsType[] = [
     {
       icon: "🍔",
@@ -72,7 +83,7 @@ function EditProductModal({ open, onClose, product }: EditProductModalProps) {
         title="Editar Produto"
         onClose={() => {
           onClose();
-          // reset();
+          reset();
         }}
       />
 
@@ -83,38 +94,51 @@ function EditProductModal({ open, onClose, product }: EditProductModalProps) {
             <ImageInput url={product.image_url} />
 
             <Input
-              name="product-name"
               type="text"
               placeholder="Nome do Produto"
-              // {...register("name")}
-              // error={errors.name?.message}
+              {...register("name")}
+              error={errors.name?.message}
             />
 
             <Input
-              name="description"
               type="text"
               placeholder="Descrição do Produto"
               max={110}
-              // {...register("description")}
-              // error={errors.description?.message}
+              {...register("description")}
+              error={errors.description?.message}
+            />
+
+            <Input
+              type="number"
+              placeholder="Preço do Produto"
+              {...register("price")}
+              error={errors.price?.message}
             />
 
             <div className="flex flex-col gap-2">
-              <span  className="text-gray-600 text-sm">Categoria</span>
-              <DropDownMenu
-                options={categoriesOptions}
-                onSelect={(e) => setCategory(e?.label || "")}
-              >
-                <span className="w-full border border-red-500 px-2 py-3 text-sm rounded-md hover:bg-red-50 cursor-pointer transition-colors duration-200">
-                  {!category ? "Selecionar Categoria" : category}
-                </span>
-              </DropDownMenu>
+              <span className="text-gray-600 text-sm">Categoria</span>
+              <Controller
+                control={control}
+                name="category"
+                render={({ field }) => (
+                  <DropDownMenu
+                    options={categoriesOptions}
+                    onSelect={(e) => {
+                      setCategory(e?.label || "");
+                      field.onChange(e?.value);
+                    }}
+                  >
+                    <span className="w-full border border-red-500 px-2 py-3 text-sm rounded-md hover:bg-red-50 cursor-pointer transition-colors duration-200">
+                      {!category ? "Selecionar Categoria" : category}
+                    </span>
+                  </DropDownMenu>
+                )}
+              />
             </div>
           </div>
 
-
           {/* Segunda Coluna */}
-          <div className="w-full max-h-[300px]">
+          <div className="w-full max-h-[350px]">
             <IngredientsList />
           </div>
         </div>
@@ -124,14 +148,14 @@ function EditProductModal({ open, onClose, product }: EditProductModalProps) {
         <Button size="md" variant="secondary">
           Excluir Produto
         </Button>
-        {/* <Button
+        <Button
           disabled={!isValid || !isDirty || isSubmitting}
           isLoading={isSubmitting}
           size="md"
           onClick={onSubmit}
         >
           Salvar Alterações
-        </Button> */}
+        </Button>
       </ModalFooter>
     </Modal>
   );

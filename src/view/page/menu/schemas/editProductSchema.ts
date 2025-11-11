@@ -1,8 +1,12 @@
 import z from "zod";
 
-export const editCategoryFormSchema = z.object({
-  name: z.string().min(2, "O nome deve ter no mínimo 2 caracteres"),
-  icon: z.emoji("O ícone deve ser um emoji válido").min(1, "O ícone é obrigatório"),
+export const editProductFormSchema = z.object({
+  image: z.file("A imagem do produto é obrigatória").optional(),
+  name: z.string().min(1, "O nome do produto é obrigatório"),
+  description: z.string().min(1, "A descrição do produto é obrigatória"),
+  price: z.number("O preço do produto é obrigatório").min(0, "O preço deve ser maior ou igual a zero"),
+  category: z.string().min(1, "A categoria do produto é obrigatória"),
+  ingredients: z.string().min(1).array(),
 });
 
-export type EditCategoryFormData = z.infer<typeof editCategoryFormSchema>;
+export type EditProductFormData = z.infer<typeof editProductFormSchema>;

@@ -18,11 +18,11 @@ function ProductsActionComponent({ product }: ProductsActionComponentProps) {
 
   return (
     <div className="flex gap-1.5 items-center justify-end">
-      <EditProductModal 
+      {isOpenEditModal && <EditProductModal 
         open={isOpenEditModal}
         onClose={onCloseEditModal}
         product={product}
-      />
+      />}
       <ConfirmModal 
         open={isOpenConfirmModal}
         title="Excluir produto"
