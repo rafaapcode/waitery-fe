@@ -1,15 +1,16 @@
-import type { ElementType } from "react";
+import type { ElementType, ReactNode } from "react";
 import Button from "../atoms/Button";
 import Modal, { ModalContent, ModalFooter, ModalHeader } from "./Modal";
 
 interface ConfirmModalProps {
   open: boolean;
   title: string;
-  description: string;
+  description?: string;
   icon?: ElementType;
   onConfirm: () => void;
   onCancel: () => void;
   isLoading?: boolean;
+  children?: ReactNode;
 }
 
 function ConfirmModal({
@@ -20,15 +21,20 @@ function ConfirmModal({
   onConfirm,
   onCancel,
   isLoading = false,
+  children,
 }: ConfirmModalProps) {
+
   return (
     <Modal open={open}>
       <ModalHeader title={title} icon={icon} onClose={onCancel} />
 
       <ModalContent>
-        <div className="w-full flex justify-center items-center">
-          <p className="text-gray-600 w-[60%] text-center">{description}</p>
-        </div>
+        {children && children}
+        {description && (
+          <div className="w-full flex justify-center items-center">
+            <p className="text-gray-600 w-[60%] text-center">{description}</p>
+          </div>
+        )}
       </ModalContent>
 
       <ModalFooter className="flex justify-between">

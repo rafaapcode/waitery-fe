@@ -4,9 +4,26 @@ import { createPortal } from "react-dom";
 import { cn } from "../../app/lib/utils";
 import Button from "../atoms/Button";
 
-const Modal = ({ open, children }: { children: ReactNode; open: boolean;}) => (
+type ModalPriority = "low" | "medium" | "high" | "critical";
+
+const priorityZIndex: Record<ModalPriority, string> = {
+  low: "z-0",
+  medium: "z-20",
+  high: "z-30",
+  critical: "z-40",
+};
+
+const Modal = ({ 
+  open, 
+  children, 
+  priority = "low" 
+}: { 
+  children: ReactNode; 
+  open: boolean; 
+  priority?: ModalPriority;
+}) => (
   createPortal(<Activity mode={open ? "visible" : "hidden"}>
-    <div className="bg-black/70 absolute top-0 left-0 w-full h-full flex justify-center items-center">
+    <div className={cn("bg-black/70 absolute top-0 left-0 w-full h-full flex justify-center items-center", priorityZIndex[priority])}>
       <div className="flex flex-col gap-6 bg-white p-6 rounded-md max-w-[95%] max-h-[97%] min-w-1/6">
         {children}
       </div>

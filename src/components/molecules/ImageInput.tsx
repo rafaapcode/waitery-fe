@@ -8,9 +8,10 @@ interface ImageInputProps {
   alt?: string;
   className?: string;
   label?: string;
+  onChange?: (file: File) => void;
 }
 
-function ImageInput({ url, alt, className, label = "Imagem" }: ImageInputProps) {
+function ImageInput({ url, alt, className, label = "Imagem", onChange }: ImageInputProps) {
   let imageSrc = DefaultImage;
   if(url && typeof url !== 'string') {
     imageSrc = URL.createObjectURL(url);
@@ -31,7 +32,7 @@ function ImageInput({ url, alt, className, label = "Imagem" }: ImageInputProps) 
         <div className="absolute group-hover:flex bg-black/80 hidden bottom-0 w-full h-full rounded-md justify-center items-center gap-2 cursor-pointer">
           <ImageIcon className="text-white"/>
           <span className="text-white">Alterar imagem</span>
-          <input type="file" className="absolute inset-0 opacity-0 cursor-pointer" />
+          <input type="file" className="absolute inset-0 opacity-0 cursor-pointer" onChange={(e) => onChange && e.target.files && onChange(e.target.files[0])}/>
         </div>
       </div>
     </div>

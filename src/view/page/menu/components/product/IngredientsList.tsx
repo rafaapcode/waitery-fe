@@ -3,6 +3,7 @@ import { useState } from "react";
 import Button from "../../../../../components/atoms/Button";
 import Input from "../../../../../components/atoms/Input";
 import IngredientOption from "../../../../../components/molecules/IngredientOption";
+import CreateIngredientModal from "./CreateIngredientModal";
 
 const ingredients = [
   { id: "1", name: "🧀 Mussarela" },
@@ -19,12 +20,24 @@ const ingredients = [
 
 function IngredientsList() {
   const [searchTerm, setSearchTerm] = useState("");
+  const [isOpenCreateIngredientModal, setIsOpenCreateIngredientModal] = useState(false);
+
+  const toggleCreateIngredientModal = () => setIsOpenCreateIngredientModal((prev) => !prev);
 
   return (
     <div className="w-full h-full">
+      <CreateIngredientModal 
+        open={isOpenCreateIngredientModal}
+        onClose={toggleCreateIngredientModal}
+      />
       <header className="flex justify-between items-center">
         <p className="text-gray-500">Ingredientes</p>
-        <Button variant="secondary" size="xs" className="text-sm">
+        <Button 
+          variant="secondary" 
+          size="xs" 
+          className="text-sm"
+          onClick={toggleCreateIngredientModal}
+        >
           Novo Ingrediente
         </Button>
       </header>

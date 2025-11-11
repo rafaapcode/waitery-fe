@@ -41,7 +41,7 @@ function Menu() {
         subtitle="Gerencie os produtos do seu estabelecimento"
       />
 
-      <Tabs deafultValue="PRODUTOS" className="mt-6 flex-1">
+      <Tabs deafultValue="PRODUTOS" className="mt-4 flex-1">
         <TabsOptions
           options={[
             { label: "Produtos", value: "PRODUTOS" },
@@ -50,7 +50,7 @@ function Menu() {
         />
 
         <TabsContent value="PRODUTOS" className="mt-2">
-          <div className="p-4 flex justify-between items-center">
+          <div className="p-2 flex justify-between items-center">
             <div className="flex items-center gap-2">
               <h2 className="font-semibold">Produtos</h2>
               <span className="px-1 py-0.5 bg-gray-300 rounded-md text-xs font-semibold">
@@ -65,7 +65,7 @@ function Menu() {
         </TabsContent>
 
         <TabsContent value="CATEGORIA" className="mt-2">
-          <div className="p-4 flex justify-between items-center">
+          <div className="p-2 flex justify-between items-center">
             <div className="flex items-center gap-2">
               <h2 className="font-semibold">Categorias</h2>
               <span className="px-1 py-0.5 bg-gray-300 rounded-md text-xs font-semibold">
