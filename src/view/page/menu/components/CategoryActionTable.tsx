@@ -1,26 +1,37 @@
 import { PencilIcon, Trash } from "lucide-react";
 import { useState } from "react";
+import type { Category } from "../../../../app/entities/Category";
 import Button from "../../../../components/atoms/Button";
 import ConfirmModal from "../../../../components/molecules/ConfirmModal";
+import EditCategoryModal from "./EditUserModal";
 
-function CategoryActionComponent() {
-  const [isOpenViewerModal, setIsOpenViewerModal] = useState(false);
+interface CategoryActionComponentProps {
+  category: Category;
+}
+
+function CategoryActionComponent({ category }: CategoryActionComponentProps) {
+  const [isOpenEditModal, setIsOpenEditModal] = useState(false);
   const [isOpenConfirmModal, setIsOpenConfirmModal] = useState(false);
 
-  const onCloseViewerModal = () => setIsOpenViewerModal(false);
-  const onCloseconfirmModal = () => setIsOpenConfirmModal(false);
+  const onCloseEditModal = () => setIsOpenEditModal(false);
+  const onCloseConfirmModal = () => setIsOpenConfirmModal(false);
 
   return (
     <div className="flex gap-1.5 items-center justify-end">
+      <EditCategoryModal 
+        open={isOpenEditModal}
+        onClose={onCloseEditModal}
+        category={category}
+      />
       <ConfirmModal 
         open={isOpenConfirmModal}
-        title="Excluir pedido"
-        description={`Tem certeza que deseja excluir o pedido  da mesa  ?  Esta ação não pode ser desfeita.`}
+        title="Excluir categoria"
+        description={`Tem certeza que deseja excluir a categoria ? ${category.icon} ${category.name}. `}
         onConfirm={() => {}}
-        onCancel={onCloseconfirmModal}
+        onCancel={onCloseConfirmModal}
       />
       <Button
-        onClick={() => setIsOpenViewerModal(true)}
+        onClick={() => setIsOpenEditModal(true)}
         size="icon"
         variant="secondary"
         className="text-gray-500 hover:text-gray-400"

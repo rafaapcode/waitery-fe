@@ -28,7 +28,7 @@ export function TabsOptions({ className, options }: TabsOptionsProps) {
         <TabsRDX.Trigger 
           key={value} 
           className={cn(
-            "bg-gray-100 rounded-tl-md px-10 py-4 transition-colors duration-200",
+            "bg-gray-100 rounded-tl-md px-8 py-2 text-sm transition-colors duration-200",
             "data-[state=active]:bg-gray-100 data-[state=active]:rounded-t-md data-[state=active]:font-semibold data-[state=active]:text-[#D73035]",
             "data-[state=inactive]:text-gray-300 data-[state=inactive]:hover:text-gray-400 data-[state=inactive]:bg-transparent",
             value === "CATEGORIA" && "rounded-tr-md rounded-tl-none"
