@@ -1,6 +1,6 @@
-import type { Category } from "../../../../app/entities/Category";
-import useCreateTable from "../../../../app/hooks/useCreateTable";
-import { cn } from "../../../../app/lib/utils";
+import type { Category } from "../../../../../app/entities/Category";
+import useCreateTable from "../../../../../app/hooks/useCreateTable";
+import { cn } from "../../../../../app/lib/utils";
 import {
   Table,
   TableBody,
@@ -8,7 +8,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "../../../../components/molecules/Table";
+} from "../../../../../components/molecules/Table";
 import CategoryActionComponent from "./CategoryActionTable";
 
 const categories: Category[] = [

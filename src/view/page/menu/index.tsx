@@ -6,9 +6,9 @@ import Tabs, {
   TabsContent,
   TabsOptions,
 } from "../../../components/molecules/Tabs";
-import CategoryTable from "./components/CategoryTable";
-import CreateCategoryModal from "./components/CreateCategoryModal";
-import ProductsTable from "./components/ProductsTable";
+import CategoryTable from "./components/category/CategoryTable";
+import CreateCategoryModal from "./components/category/CreateCategoryModal";
+import ProductsTable from "./components/product/ProductsTable";
 
 function Menu() {
   const [newCategoryModalOpen, setNewCategoryModalOpen] = useState(false);

@@ -1,9 +1,9 @@
 import { PencilIcon, Trash } from "lucide-react";
 import { useState } from "react";
-import type { Category } from "../../../../app/entities/Category";
-import Button from "../../../../components/atoms/Button";
-import ConfirmModal from "../../../../components/molecules/ConfirmModal";
-import EditCategoryModal from "./EditUserModal";
+import type { Category } from "../../../../../app/entities/Category";
+import Button from "../../../../../components/atoms/Button";
+import ConfirmModal from "../../../../../components/molecules/ConfirmModal";
+import EditCategoryModal from "./EditCategoryModal";
 
 interface CategoryActionComponentProps {
   category: Category;

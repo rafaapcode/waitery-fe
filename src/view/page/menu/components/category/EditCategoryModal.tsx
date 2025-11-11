@@ -1,14 +1,14 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import type { Category } from "../../../../app/entities/Category";
-import Button from "../../../../components/atoms/Button";
-import Input from "../../../../components/atoms/Input";
+import type { Category } from "../../../../../app/entities/Category";
+import Button from "../../../../../components/atoms/Button";
+import Input from "../../../../../components/atoms/Input";
 import Modal, {
   ModalContent,
   ModalFooter,
   ModalHeader,
-} from "../../../../components/molecules/Modal";
-import { editCategoryFormSchema, type EditCategoryFormData } from "../schemas/editCategorySchema";
+} from "../../../../../components/molecules/Modal";
+import { editCategoryFormSchema, type EditCategoryFormData } from "../../schemas/editCategorySchema";
 
 interface EditCategoryModalProps {
   open: boolean;
