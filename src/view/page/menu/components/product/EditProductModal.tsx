@@ -11,6 +11,7 @@ import Modal, {
   ModalFooter,
   ModalHeader,
 } from "../../../../../components/molecules/Modal";
+import IngredientsList from "./IngredientsList";
 
 interface EditProductModalProps {
   open: boolean;
@@ -76,9 +77,9 @@ function EditProductModal({ open, onClose, product }: EditProductModalProps) {
       />
 
       <ModalContent>
-        <div className="w-[800px] h-[600px] grid grid-cols-2 gap-2">
+        <div className="w-[800px] max-h-[600px] grid grid-cols-2 gap-2">
           {/* Primeira Coluna */}
-          <div className="flex flex-col justify-between">
+          <div className="flex flex-col w-full h-full gap-2">
             <ImageInput url={product.image_url} />
 
             <Input
@@ -104,7 +105,7 @@ function EditProductModal({ open, onClose, product }: EditProductModalProps) {
                 options={categoriesOptions}
                 onSelect={(e) => setCategory(e?.label || "")}
               >
-                <span className="w-full border border-red-500 p-4 rounded-md hover:bg-red-50 cursor-pointer transition-colors duration-200">
+                <span className="w-full border border-red-500 px-2 py-3 text-sm rounded-md hover:bg-red-50 cursor-pointer transition-colors duration-200">
                   {!category ? "Selecionar Categoria" : category}
                 </span>
               </DropDownMenu>
@@ -113,8 +114,8 @@ function EditProductModal({ open, onClose, product }: EditProductModalProps) {
 
 
           {/* Segunda Coluna */}
-          <div className="bg-red-400">
-            <h1>teste 2</h1>
+          <div className="w-full max-h-[300px]">
+            <IngredientsList />
           </div>
         </div>
       </ModalContent>
