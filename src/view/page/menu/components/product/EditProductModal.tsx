@@ -78,7 +78,7 @@ function EditProductModal({ open, onClose, product }: EditProductModalProps) {
   ];
 
   return (
-    <Modal open={open}>
+    <Modal open={open}  nativeHidden={false}>
       <ModalHeader
         title="Editar Produto"
         onClose={() => {
