@@ -8,13 +8,19 @@ import Tabs, {
 } from "../../../components/molecules/Tabs";
 import CategoryTable from "./components/category/CategoryTable";
 import CreateCategoryModal from "./components/category/CreateCategoryModal";
+import CreateProductModal from "./components/product/CreateProductModal";
 import ProductsTable from "./components/product/ProductsTable";
 
 function Menu() {
   const [newCategoryModalOpen, setNewCategoryModalOpen] = useState(false);
+  const [newProductModalOpen, setNewProductModalOpen] = useState(false);
 
   const toggleNewCategoryModal = () => {
     setNewCategoryModalOpen((prev) => !prev);
+  };
+
+  const toggleNewProductModal = () => {
+    setNewProductModalOpen((prev) => !prev);
   };
 
   return (
@@ -22,6 +28,11 @@ function Menu() {
       <CreateCategoryModal
         open={newCategoryModalOpen}
         onClose={toggleNewCategoryModal}
+      />
+
+      <CreateProductModal 
+        onClose={toggleNewProductModal}
+        open={newProductModalOpen}
       />
 
       <PageHeader
@@ -39,6 +50,17 @@ function Menu() {
         />
 
         <TabsContent value="PRODUTOS" className="mt-2">
+          <div className="p-4 flex justify-between items-center">
+            <div className="flex items-center gap-2">
+              <h2 className="font-semibold">Produtos</h2>
+              <span className="px-1 py-0.5 bg-gray-300 rounded-md text-xs font-semibold">
+                3
+              </span>
+            </div>
+            <Button variant="secondary" onClick={toggleNewProductModal}>
+              Novo Produto
+            </Button>
+          </div>
           <ProductsTable />
         </TabsContent>
 
