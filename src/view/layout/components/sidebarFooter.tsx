@@ -11,19 +11,6 @@ interface SidebarFooterProps {
   isOpen: boolean;
 }
 
-{
-  /* <NavLink
-              to="/profile"
-              className={cn(
-                "w-full text-gray-400 hover:text-red-700 flex gap-2 transition-colors duration-200",
-                isProfileSelected && "border-red-400 text-red-700"
-              )}
-            >
-              <User2Icon size={20} />
-              Seu perfil
-            </NavLink> */
-}
-
 function SidebarFooter({ isOpen }: SidebarFooterProps) {
   const { pathname } = useLocation();
   const { signOut } = useAuth();

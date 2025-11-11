@@ -4,20 +4,22 @@ import { NavLink } from "react-router-dom";
 import { cn } from "../../app/lib/utils";
 
 export type OptionsType = {
-  type: "link" | "button";
+  type: "link" | "button" | "option";
   label: string;
-  icon: ElementType;
+  icon: ElementType | string;
   isSelected?: () => boolean;
   to?: string;
   onClick?: () => void;
+  value?: string;
 };
 
 interface DropDownMenuProps {
   children: ReactNode;
   options: OptionsType[];
+  onSelect?: (value: {value?: string , label: string} | undefined) => void;
 }
 
-const DropDownMenu = ({ children, options }: DropDownMenuProps) => {
+const DropDownMenu = ({ children, options, onSelect }: DropDownMenuProps) => {
   const [open, setIsOpen] = useState(false);
 
   const handleOpen = () => setIsOpen((prev) => !prev);
@@ -38,6 +40,7 @@ const DropDownMenu = ({ children, options }: DropDownMenuProps) => {
               key={idx}
               className="hover:bg-gray-100 cursor-pointer"
               onClick={handleOpen}
+              onSelect={() => onSelect?.({value: opt.value, label: opt.label})}
             >
               {opt.type === "link" && opt.to && (
                 <NavLink
@@ -47,7 +50,11 @@ const DropDownMenu = ({ children, options }: DropDownMenuProps) => {
                     opt.isSelected?.() && "border-red-400 text-red-700"
                   )}
                 >
-                  <opt.icon size={20} />
+                  {typeof opt.icon === "string" ? (
+                    <span>{opt.icon}</span>
+                  ) : (
+                    <opt.icon size={20} />
+                  )}
                   {opt.label}
                 </NavLink>
               )}
@@ -59,9 +66,16 @@ const DropDownMenu = ({ children, options }: DropDownMenuProps) => {
                     opt.isSelected?.() && "border-red-400 text-red-700"
                   )}
                 >
-                  <opt.icon size={20} />
+                   {typeof opt.icon === "string" ? (
+                    <span>{opt.icon}</span>
+                  ) : (
+                    <opt.icon size={20} />
+                  )}
                   {opt.label}
                 </button>
+              )}
+              {opt.type === "option" && (
+                <span className="w-full px-4 py-2 hover:bg-white rounded transition-all duration-150">{typeof opt.icon === "string" ? opt.icon : <opt.icon size={20} />} {opt.label}</span>
               )}
             </DropdownMenu.Item>
           ))}
