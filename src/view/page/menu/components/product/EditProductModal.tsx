@@ -46,7 +46,7 @@ function EditProductModal({ open, onClose, product }: EditProductModalProps) {
   });
 
   const onSubmit = handleSubmit((data) => {
-    console.log(data);
+    console.log("dados", data);
     onClose();
   });
 
@@ -91,7 +91,11 @@ function EditProductModal({ open, onClose, product }: EditProductModalProps) {
         <div className="w-[800px] max-h-[600px] grid grid-cols-2 gap-2">
           {/* Primeira Coluna */}
           <div className="flex flex-col w-full h-full gap-2">
-            <ImageInput url={product.image_url} />
+            <Controller 
+              control={control}
+              name="image"
+              render={({ field }) => <ImageInput onChange={field.onChange} url={field.value || product.image_url} />}
+            />
 
             <Input
               type="text"
