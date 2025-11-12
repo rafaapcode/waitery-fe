@@ -6,7 +6,6 @@ import { useNavigate } from "react-router";
 import { z } from "zod";
 import { useAuth } from "../../../app/hooks/useAuth";
 import { LoginService } from "../../../app/service/login/loginService";
-import { Service } from "../../../app/service/service";
 
 const loginSchema = z.object({
   email: z.email(),
@@ -30,7 +29,6 @@ export function useLoginController() {
   const handleSubmit = hookHandleSubmit(async (data) => {
     try {
       const user = await LoginService.loginUser(data);
-      Service.SetAccessToken(user.access_token);
       signIn(user.access_token);
       setUser(user);
       navigate('/');

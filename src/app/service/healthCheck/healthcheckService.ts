@@ -1,7 +1,7 @@
-import { Service } from "../service";
+import { client } from "../client";
 
-export class HealthCheckService extends Service {
+export class HealthCheckService {
   static async status() {
-    await this.client.get<{status: string}>('/health');
+    await client.get<{status: string}>('/health');
   }
 }

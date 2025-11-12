@@ -1,8 +1,8 @@
-import { Service } from "../service";
+import { client } from "../client";
 
-export class UsersService extends Service {
+export class UsersService  {
   static async getMe() {
-    const info = await this.client.get<UsersService.GetMeResponse>("/user/me");
+    const info = await client.get<UsersService.GetMeResponse>("/user/me");
     return info.data as UsersService.GetMeResponse;
   }
 }

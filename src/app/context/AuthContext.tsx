@@ -4,7 +4,6 @@ import SplashScreen from "../../components/SplashScreen";
 import { localStorageKeys } from "../config/constants";
 import type { User } from "../entities/User";
 import { useAccount } from "../hooks/queries/useAccount";
-import { Service } from "../service/service";
 
 interface AuthProviderProps {
   children: ReactNode;
@@ -40,18 +39,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
     return !!storedAccessToken;
   });
 
-  const { isError, isFetching, isSuccess, loadAccount} = useAccount({enabled: false});
+  const { isError, isFetching, isSuccess} = useAccount({});
 
   const signIn = (access_token: string) => {
     localStorage.setItem(localStorageKeys.ACCESS_TOKEN, access_token);
-    Service.SetAccessToken(access_token);
-    loadAccount();
     setSignedIn(true);
   };
 
   const signOut = () => {
     localStorage.removeItem(localStorageKeys.ACCESS_TOKEN);
-    Service.RemoveAccessToken();
     setSignedIn(false);
   };
 
