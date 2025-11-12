@@ -26,10 +26,11 @@ function ProductsActionComponent({ product }: ProductsActionComponentProps) {
       <ConfirmModal 
         open={isOpenConfirmModal}
         title="Excluir produto"
-        description={`Tem certeza que deseja excluir o produto ? ${product.name}. `}
         onConfirm={() => {}}
         onCancel={onCloseConfirmModal}
-      />
+      >
+        <p>Tem certeza que deseja excluir o produto ? ${product.name}.</p>
+      </ConfirmModal>
       <Button
         onClick={() => setIsOpenEditModal(true)}
         size="icon"
