@@ -65,7 +65,7 @@ const produtos: Product[] = [
     description: "Lasanha tradicional com molho bolonhesa e queijo gratinado",
     image_url: "https://images.unsplash.com/photo-1574894709920-11b28e7367e3",
     price: 42.50,
-    ingredients: [],
+    ingredients: ["2", "1"],
     category: {
       id: "4",
       org_id: "org-123",
@@ -82,7 +82,7 @@ const produtos: Product[] = [
     description: "Salada com alface romana, croutons, parmesão e molho caesar",
     image_url: "https://images.unsplash.com/photo-1546793665-c74683f339c1",
     price: 28.00,
-    ingredients: [],
+    ingredients: ["10", "4", "3"],
     category: {
       id: "5",
       org_id: "org-123",

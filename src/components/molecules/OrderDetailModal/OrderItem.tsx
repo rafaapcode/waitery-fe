@@ -13,7 +13,7 @@ interface OrderItemProps {
 function OrderItem({ order }: OrderItemProps) {
   const { name, quantity, price, image } = order;
   return (
-    <div className="flex gap-2 items-center">
+    <div className="flex gap-2 items-center" key={name}>
       <Image
         size="xs"
         src={image}

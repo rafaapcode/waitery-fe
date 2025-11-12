@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, FormProvider, useForm } from "react-hook-form";
 import type { Product } from "../../../../../app/entities/Product";
 import Button from "../../../../../components/atoms/Button";
 import Input from "../../../../../components/atoms/Input";
@@ -27,13 +27,7 @@ interface EditProductModalProps {
 
 function EditProductModal({ open, onClose, product }: EditProductModalProps) {
   const [category, setCategory] = useState<string>(product.category.name);
-  const {
-    handleSubmit,
-    register,
-    reset,
-    control,
-    formState: { errors, isSubmitting, isValid, isDirty },
-  } = useForm<EditProductFormData>({
+  const form = useForm<EditProductFormData>({
     resolver: zodResolver(editProductFormSchema),
     mode: "onChange",
     defaultValues: {
@@ -41,9 +35,17 @@ function EditProductModal({ open, onClose, product }: EditProductModalProps) {
       description: product.description,
       name: product.name,
       price: product.price,
-      ingredients: product.ingredients.map((ing) => ing),
+      ingredients: product.ingredients,
     },
   });
+
+  const {
+     handleSubmit,
+    register,
+    reset,
+    control,
+    formState: { errors, isSubmitting, isValid, isDirty },
+  } = form;
 
   const onSubmit = handleSubmit((data) => {
     console.log("dados", data);
@@ -142,9 +144,11 @@ function EditProductModal({ open, onClose, product }: EditProductModalProps) {
           </div>
 
           {/* Segunda Coluna */}
-          <div className="w-full max-h-[350px]">
-            <IngredientsList />
-          </div>
+          <FormProvider {...form} >
+            <div className="w-full max-h-[350px]">
+              <IngredientsList ingredientsSelected={product.ingredients}/>
+            </div>
+          </FormProvider>
         </div>
       </ModalContent>
 

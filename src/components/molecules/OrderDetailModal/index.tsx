@@ -70,7 +70,7 @@ function OrderDetailModal({
             <p className="text-sm text-gray-500">Itens</p>
             <div className="space-y-4 overflow-y-auto max-h-[270px]">
               {products.map((order) => (
-                <OrderItem order={order} />
+                <OrderItem order={order} key={order.name}/>
               ))}
             </div>
           </div>
