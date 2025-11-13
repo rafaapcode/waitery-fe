@@ -11,7 +11,7 @@ import Sidebar from "./components/sidebar";
 
 function Layout() {
   const { user } = useAuth();
-  console.log("User:", user); 
+
   if(!user) {
     return null;
   }
