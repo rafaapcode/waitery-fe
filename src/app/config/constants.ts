@@ -1,3 +1,4 @@
 export const localStorageKeys = {
-  ACCESS_TOKEN: 'waitery:accessToken'
+  ACCESS_TOKEN: 'waitery:accessToken',
+  STORAGE_USER: 'storage:user'
 };

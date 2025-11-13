@@ -11,13 +11,13 @@ import Sidebar from "./components/sidebar";
 
 function Layout() {
   const { user } = useAuth();
-
+  console.log("User:", user); 
   if(!user) {
     return null;
   }
 
   const role = user.role;
-
+  
   return (
     <main className="bg-[#FAFAFA] w-full flex h-screen">
         {(role === UserRole.OWNER || role === UserRole.ADMIN) && <Sidebar />}
@@ -25,11 +25,11 @@ function Layout() {
           {(role === UserRole.WAITER || role === UserRole.CLIENT) && <Unpermissionless />}
           {/* {!user.org.id && <NotFoundOrgPage />} */}
           {/*
-        {!user.orgId && <NotFoundOrg />}
-        {user.orgId && <Outlet />} */}
+          {!user.orgId && <NotFoundOrg />}
+          {user.orgId && <Outlet />} */}
           <Outlet />
         </section>
-      </main>
+    </main>
   );
 }
 
