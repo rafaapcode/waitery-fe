@@ -1,5 +1,4 @@
 import { SquareMenu } from "lucide-react";
-import { useState } from "react";
 import Button from "../../../components/atoms/Button";
 import PageHeader from "../../../components/molecules/PageHeader";
 import Tabs, {
@@ -10,18 +9,15 @@ import CategoryTable from "./components/category/CategoryTable";
 import CreateCategoryModal from "./components/category/CreateCategoryModal";
 import CreateProductModal from "./components/product/CreateProductModal";
 import ProductsTable from "./components/product/ProductsTable";
+import { useMenuController } from "./useMenuController";
 
 function Menu() {
-  const [newCategoryModalOpen, setNewCategoryModalOpen] = useState(false);
-  const [newProductModalOpen, setNewProductModalOpen] = useState(false);
-
-  const toggleNewCategoryModal = () => {
-    setNewCategoryModalOpen((prev) => !prev);
-  };
-
-  const toggleNewProductModal = () => {
-    setNewProductModalOpen((prev) => !prev);
-  };
+  const {
+    newCategoryModalOpen,
+    toggleNewCategoryModal,
+    newProductModalOpen,
+    toggleNewProductModal,
+  } = useMenuController();
 
   return (
     <main className="w-full h-full">
