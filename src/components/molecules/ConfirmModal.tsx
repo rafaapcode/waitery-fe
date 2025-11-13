@@ -25,7 +25,7 @@ function ConfirmModal({
 }: ConfirmModalProps) {
 
   return (
-    <Modal open={open}>
+    <Modal open={open} priority="medium" >
       <ModalHeader title={title} icon={icon} onClose={onCancel} />
 
       <ModalContent>
