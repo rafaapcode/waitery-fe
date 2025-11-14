@@ -7,15 +7,13 @@ import Button from "../../../../../components/atoms/Button";
 import { Image } from "../../../../../components/atoms/Image";
 import Input from "../../../../../components/atoms/Input";
 import ConfirmModal from "../../../../../components/molecules/ConfirmModal";
-import DropDownMenu, {
-  type OptionsType,
-} from "../../../../../components/molecules/DropdownMenu";
 import ImageInput from "../../../../../components/molecules/ImageInput";
 import Modal, {
   ModalContent,
   ModalFooter,
   ModalHeader,
 } from "../../../../../components/molecules/Modal";
+import Select, { SelectContent, SelectTrigger } from "../../../../../components/molecules/Select";
 import {
   editProductFormSchema,
   type EditProductFormData,
@@ -30,7 +28,6 @@ interface EditProductModalProps {
 
 function EditProductModal({ open, onClose, product }: EditProductModalProps) {
   const [deleteProductModal, setDeleteProductModal] = useState(false);
-  const [category, setCategory] = useState<string>(product.category.name);
   const form = useForm<EditProductFormData>({
     resolver: zodResolver(editProductFormSchema),
     mode: "onChange",
@@ -58,30 +55,22 @@ function EditProductModal({ open, onClose, product }: EditProductModalProps) {
 
   const toggleDeleteProductModal = () => setDeleteProductModal((prev) => !prev);
 
-  const categoriesOptions: OptionsType[] = [
+  const categoriesOptions: {label:string; value: string}[] = [
     {
-      icon: "🍔",
-      label: "Comidas",
-      value: "comida_id",
-      type: "option",
+      label: "🍔 Comidas",
+      value: "comida_id1",
     },
     {
-      icon: "🍔",
-      label: "Comidas",
-      value: "comida_id",
-      type: "option",
+      label: "🍔 Comidas",
+      value: "comida_id2",
     },
     {
-      icon: "🍔",
-      label: "Comidas",
-      value: "comida_id",
-      type: "option",
+      label: "🍔 Comidas",
+      value: "comida_id3",
     },
     {
-      icon: "🍔",
-      label: "Comidas",
-      value: "comida_id",
-      type: "option",
+      label: "🍔 Comidas",
+      value: "comida_id4",
     },
   ];
 
@@ -163,17 +152,14 @@ function EditProductModal({ open, onClose, product }: EditProductModalProps) {
                 control={control}
                 name="category"
                 render={({ field }) => (
-                  <DropDownMenu
-                    options={categoriesOptions}
-                    onSelect={(e) => {
-                      setCategory(e?.label || "");
-                      field.onChange(e?.value);
+                  <Select
+                    onValueChange={(e) => {
+                      field.onChange(e);
                     }}
                   >
-                    <span className="w-full border border-red-500 px-2 py-3 text-sm rounded-md hover:bg-red-50 cursor-pointer transition-colors duration-200">
-                      {!category ? "Selecionar Categoria" : category}
-                    </span>
-                  </DropDownMenu>
+                    <SelectTrigger placeholder="Selecionar Categoria"/>
+                    <SelectContent options={categoriesOptions} />
+                  </Select>
                 )}
               />
             </div>

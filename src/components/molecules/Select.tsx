@@ -10,9 +10,15 @@ import { cn } from "../../app/lib/utils";
 
 interface SelectProps extends ComponentProps<typeof SelectRDX.Root> {
   children: ReactNode;
+  isLoading?: boolean;
 }
 
-function Select({ children, ...props }: SelectProps) {
+function Select({ children, isLoading = false, ...props }: SelectProps) {
+
+  if (isLoading) {
+    return <div className="rounded-md p-3 border border-gray-300 min-w-full h-11 bg-gray-200 animate-pulse" />
+  }
+
   return <SelectRDX.Root {...props}>{children}</SelectRDX.Root>;
 }
 
@@ -20,16 +26,18 @@ export default Select;
 
 interface SelectTriggerProps extends ComponentProps<typeof SelectRDX.Trigger> {
   placeholder: string;
-  Icon: ElementType;
+  Icon?: ElementType;
 }
 
 export function SelectTrigger({ className, placeholder, Icon, ...props }: SelectTriggerProps) {
   return (
-    <SelectRDX.Trigger {...props} className={cn("rounded-md text-sm flex gap-2 items-center p-2 border border-gray-300 min-w-full justify-between", className)}>
+    <SelectRDX.Trigger {...props} className={cn("rounded-md text-sm flex gap-2 items-center p-3 border border-gray-300 min-w-full justify-between", className)}>
       <SelectRDX.Value placeholder={placeholder} />
-      <SelectRDX.Icon>
-        <Icon size={18} />
-      </SelectRDX.Icon>
+      {Icon && (
+        <SelectRDX.Icon>
+          <Icon size={18} />
+        </SelectRDX.Icon>
+      )}
     </SelectRDX.Trigger>
   );
 }
@@ -72,7 +80,7 @@ export function SelectItem({
   ...props
 }: SelectItemProps) {
   return (
-    <SelectRDX.Item className={cn("flex gap-4 min-w-full items-center p-2 border border-gray-300 hover:bg-gray-200 transition-all duration-150 rounded my-1 outline-none justify-between",className)} {...props} ref={ref} value={value}>
+    <SelectRDX.Item className={cn("cursor-pointer flex gap-4 min-w-full items-center p-2 border border-gray-300 hover:bg-gray-200 transition-all duration-150 rounded my-1 outline-none justify-between",className)} {...props} ref={ref} value={value}>
       <SelectRDX.ItemText>{label}</SelectRDX.ItemText>
       <SelectRDX.ItemIndicator>
         <CheckIcon size={16}/>
