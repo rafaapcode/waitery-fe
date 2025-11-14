@@ -1,10 +1,9 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 export const useNotFoundOrgController = () => {
   // const {user, setOrg} = useAuth();
-  const navigate = useNavigate();
   const [selectedOrganization, setSelectedOrganization] = useState<string>("");
+  const [createNewOrg, setCreateNewOrg] = useState(false);
 
   // const {
   //   fetchingOrgs,
@@ -12,8 +11,8 @@ export const useNotFoundOrgController = () => {
   //   orgs
   // } = useListOrgs(user.id);
 
-  const handleCreateNew = () => {
-    navigate("/org/register");
+  const toggleHandleCreateNew = () => {
+    setCreateNewOrg(p => !p);
   };
 
   const handleSelectOrganization = (e: string) => {
@@ -33,7 +32,8 @@ export const useNotFoundOrgController = () => {
     // orgs,
     // gettingOrgs,
     // fetchingOrgs,
-    handleCreateNew,
+    toggleHandleCreateNew,
+    createNewOrg,
     handleSelectOrganization,
     continueWithOrg,
     selectedOrganization
