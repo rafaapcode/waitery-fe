@@ -45,11 +45,12 @@ export function SelectTrigger({ className, placeholder, Icon, ...props }: Select
 interface SelectContentProps {
   children?: ReactNode;
   options?: {label: string; value: string}[];
+  className?: string;
 }
 
-export function SelectContent({ children, options }: SelectContentProps) {
+export function SelectContent({ children, options, className }: SelectContentProps) {
  return  <SelectRDX.Portal>
-    <SelectRDX.Content position="popper" sideOffset={6}  className="min-w-full p-2 bg-gray-50 rounded-md">
+    <SelectRDX.Content position="popper" sideOffset={6}  className={cn("min-w-full p-2 bg-gray-50 rounded-md", className)}>
       <SelectRDX.ScrollUpButton>
         <ChevronUpIcon size={18} />
       </SelectRDX.ScrollUpButton>

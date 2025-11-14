@@ -5,6 +5,7 @@ import Home from "../view/page/home";
 import LoginPage from "../view/page/login";
 import Menu from "../view/page/menu";
 import NotFoundPage from "../view/page/notFound";
+import Org from "../view/page/org";
 import RegisterPage from "../view/page/register";
 import Users from "../view/page/users";
 import AuthGuard from "./AuthGuard";
@@ -24,7 +25,7 @@ function Router() {
             <Route path="/cardapio" element={<Menu />} />
             <Route path="/usuarios" element={<Users />} />
             <Route path="/profile" element={<p>Profile !</p>} />
-            <Route path="/org" element={<p>Orgs !</p>} />
+            <Route path="/org" element={<Org />} />
           </Route>
         </Route>
         <Route path="*" element={<NotFoundPage />} /> 
