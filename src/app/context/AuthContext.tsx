@@ -1,15 +1,17 @@
-import { createContext, useEffect, useState, type ReactNode } from "react";
+import { createContext, useCallback, useEffect, useLayoutEffect, useState, type ReactNode } from "react";
 import toast from "react-hot-toast";
 import SplashScreen from "../../components/SplashScreen";
 import { localStorageKeys } from "../config/constants";
 import type { User } from "../entities/User";
 import { useAccount } from "../hooks/queries/useAccount";
+import { StorageManager } from "../lib/StorageManager";
+import { Service } from "../service/service";
 
 interface AuthProviderProps {
   children: ReactNode;
 }
 
-type UserDataContext = User & {
+export type UserDataContext = User & {
   org: { id: string; image_url: string; name: string };
 };
 
@@ -26,32 +28,49 @@ export const AuthContext = createContext<AuthStorage>({} as AuthStorage);
 
 export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<UserDataContext | undefined>(() => {
-    const storedAccessToken = localStorage.getItem(
-      localStorageKeys.STORAGE_USER
-    );
-    if (storedAccessToken) {
-      return JSON.parse(storedAccessToken) as UserDataContext;
-    }
-    return undefined;
+    return StorageManager.loadUser();
   });
 
   const [signedIn, setSignedIn] = useState<boolean>(() => {
-    const storedAccessToken = localStorage.getItem(
-      localStorageKeys.ACCESS_TOKEN
-    );
+    const storedAccessToken = StorageManager.loadToken();
     return !!storedAccessToken;
   });
 
-  const { isError, isFetching, isSuccess } = useAccount({});
+  const { isError, isFetching, isSuccess, loadAccount } = useAccount({ enabled: false });
+
+  const setupAuth = useCallback(
+    async (token: string) => {
+      Service.setAccessToken(token);
+
+      await loadAccount();
+    },
+    [],
+  );
+
+  useLayoutEffect(() => {
+    function loadTokens() {
+      const token = StorageManager.loadToken();
+      if (!token) {
+        StorageManager.clearStorage();
+        Service.setRemoveToken();
+        signOut();
+        return;
+      }
+
+      setupAuth(token);
+    }
+    loadTokens();
+  }, [loadAccount])
 
   const signIn = (access_token: string) => {
-    localStorage.setItem(localStorageKeys.ACCESS_TOKEN, access_token);
+    StorageManager.saveToken(access_token);
+    setupAuth(access_token);
     setSignedIn(true);
   };
 
   const signOut = () => {
-    localStorage.removeItem(localStorageKeys.ACCESS_TOKEN);
-    localStorage.removeItem(localStorageKeys.STORAGE_USER);
+    StorageManager.clearStorage();
+    Service.setRemoveToken();
     setSignedIn(false);
   };
 
@@ -85,10 +104,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       },
     };
 
-    localStorage.setItem(
-      localStorageKeys.STORAGE_USER,
-      JSON.stringify(user_data)
-    );
+    StorageManager.saveUser(user_data);
     
     setUser(user_data);
   };
