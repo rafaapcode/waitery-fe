@@ -48,7 +48,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   );
 
   useLayoutEffect(() => {
-    function loadTokens() {
+    async function loadTokens() {
       const token = StorageManager.loadToken();
       if (!token) {
         StorageManager.clearStorage();
@@ -57,7 +57,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         return;
       }
 
-      setupAuth(token);
+      await setupAuth(token);
     }
     loadTokens();
   }, [loadAccount])
