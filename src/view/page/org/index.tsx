@@ -11,7 +11,7 @@ import Select, {
 import {
   createOrgFormSchema,
   type CreateOrgFormData,
-} from "./schemas/CreateOrgSchema";
+} from "./schemas/createOrgSchema";
 
 const openHours = [
   { label: "10:00", value: "10" },
