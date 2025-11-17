@@ -8,10 +8,7 @@ import Select, {
   SelectContent,
   SelectTrigger,
 } from "../../../components/molecules/Select";
-import {
-  createOrgFormSchema,
-  type CreateOrgFormData,
-} from "./schemas/createOrgSchema";
+import { editOrgFormSchema, type EditOrgFormData } from "./schemas/editOrgSchema";
 
 const openHours = [
   { label: "10:00", value: "10" },
@@ -35,16 +32,19 @@ const closeHours = [
 ];
 
 function Org() {
-  const form = useForm<CreateOrgFormData>({
-    resolver: zodResolver(createOrgFormSchema),
-    defaultValues: {},
+  const form = useForm<EditOrgFormData>({
+    resolver: zodResolver(editOrgFormSchema),
+    defaultValues: {
+      close_hour: 0,
+      open_hour: 18,
+    },
   });
 
   const {
     handleSubmit,
     register,
     control,
-    formState: { errors, isSubmitting, isDirty },
+    formState: { errors, isSubmitting, isDirty, isValid },
   } = form;
 
   const onSubmit = handleSubmit(async (data) => {
@@ -59,6 +59,7 @@ function Org() {
           name="image"
           render={({ field }) => (
             <ImageInput
+              label=""
               onChange={field.onChange}
               url={field.value}
               className="h-40"
@@ -83,7 +84,7 @@ function Org() {
         </div>
 
         <div className="w-full">
-          <TextArea placeholder="Descrição" {...register("description")} />
+          <TextArea placeholder="Descrição" {...register("description")} error={errors.description?.message} />
         </div>
 
         <div className="w-full flex gap-4">
@@ -134,7 +135,7 @@ function Org() {
                     field.onChange(Number(e));
                   }}
                 >
-                  <SelectTrigger placeholder="Selecionar horário de fechamento" />
+                  <SelectTrigger placeholder="Selecione um horario de fechamento"/>
                   <SelectContent options={closeHours} className="p-1" />
                 </Select>
               )}
@@ -144,7 +145,7 @@ function Org() {
 
         <div className="w-full flex justify-end items-center">
           <Button
-            disabled={!isDirty || isSubmitting}
+            disabled={!isDirty || isSubmitting || !isValid}
             isLoading={isSubmitting}
             size="sm"
             onClick={onSubmit}

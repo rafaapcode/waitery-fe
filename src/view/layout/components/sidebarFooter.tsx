@@ -13,7 +13,7 @@ interface SidebarFooterProps {
 
 function SidebarFooter({ isOpen }: SidebarFooterProps) {
   const { pathname } = useLocation();
-  const { signOut } = useAuth();
+  const { signOut, user } = useAuth();
   const navigate = useNavigate();
 
   const isSelected = pathname === "/profile" || pathname === "/org";
@@ -64,7 +64,7 @@ function SidebarFooter({ isOpen }: SidebarFooterProps) {
           {/* Foto usuário */}
           <User size={22} />
           <Activity mode={isOpen ? "visible" : "hidden"}>
-            <p className="sm:sr-only md:not-sr-only">Nome do usuário</p>
+            <p className="sm:sr-only md:not-sr-only">{user?.name}</p>
           </Activity>
         </button>
       </DropDownMenu>
