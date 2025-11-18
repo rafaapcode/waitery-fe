@@ -1,7 +1,7 @@
 import z from "zod";
 
 export const createOrgFormSchema = z.object({
-  image: z.file("A imagem da organização é obrigatória").optional(),
+  image: z.file().optional(),
   name: z.string().min(1, "O nome da organização é obrigatório"),
   email: z.email("O email da organização é obrigatório"),
   description: z.string().min(1, "A descrição da organização é obrigatória"),
