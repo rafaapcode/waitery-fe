@@ -6,6 +6,7 @@ import Select, {
 } from "../../../components/molecules/Select";
 
 interface SelectOrgProps {
+  isLoading?: boolean;
   orgId?: string;
   isOpen?: boolean;
   orgImageUrl?: string;
@@ -24,9 +25,10 @@ function SelectOrg({
   selectOrg,
   orgImageUrl,
   organizations,
+  isLoading,
 }: SelectOrgProps) {
   return (
-    <Select defaultValue={orgId} onValueChange={selectOrg}>
+    <Select defaultValue={orgId} onValueChange={selectOrg} isLoading={isLoading}>
       {!isOpen && (
         <SelectTrigger>
           <div className=" w-full flex justify-center items-center cursor-pointer">

@@ -1,15 +1,16 @@
 import { useState } from "react";
+import { useOrgs } from "../../../../app/hooks/queries/useOrgs";
+import { useAuth } from "../../../../app/hooks/useAuth";
 
 export const useNotFoundOrgController = () => {
-  // const {user, setOrg} = useAuth();
+  const { setOrg } = useAuth();
   const [selectedOrganization, setSelectedOrganization] = useState<string>("");
   const [createNewOrg, setCreateNewOrg] = useState(false);
 
-  // const {
-  //   fetchingOrgs,
-  //   gettingOrgs,
-  //   orgs
-  // } = useListOrgs(user.id);
+  const {
+    orgs,
+    isFetching: fetchingOrgs,
+  } = useOrgs({});
 
   const toggleHandleCreateNew = () => {
     setCreateNewOrg(p => !p);
@@ -20,18 +21,17 @@ export const useNotFoundOrgController = () => {
   };
 
   const continueWithOrg = () => {
-    // const orgSelected = orgs?.find(d => d._id === selectedOrganization);
-    // setOrg({
-    //   orgId: selectedOrganization,
-    //   imgUrl: orgSelected?.imageUrl || '',
-    //   name: orgSelected?.name || ''
-    // })
+    const orgSelected = orgs?.find(d => d.id === selectedOrganization);
+    setOrg({
+      orgId: selectedOrganization,
+      imgUrl: orgSelected?.image_url || '',
+      name: orgSelected?.name || ''
+    })
   };
 
   return {
-    // orgs,
-    // gettingOrgs,
-    // fetchingOrgs,
+    orgs,
+    fetchingOrgs,
     toggleHandleCreateNew,
     createNewOrg,
     handleSelectOrganization,

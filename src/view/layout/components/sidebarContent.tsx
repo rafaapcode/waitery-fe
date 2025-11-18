@@ -1,6 +1,8 @@
 import { HistoryIcon, Home, SquareMenu, UsersIcon } from "lucide-react";
 import { Activity, type ElementType } from "react";
 import { NavLink, useLocation } from "react-router-dom";
+import { toListOrg } from "../../../app/entities/Org";
+import { useOrgs } from "../../../app/hooks/queries/useOrgs";
 import { useAuth } from "../../../app/hooks/useAuth";
 import { cn } from "../../../app/lib/utils";
 import SelectOrg from "./selectOrg";
@@ -77,6 +79,7 @@ const sidebarOptions: MenuOption[] = [
 function SidebarContent({ isOpen }: SidebarContentProps) {
   const { pathname } = useLocation();
   const { setOrg, user } = useAuth();
+  const { orgs, isFetching } = useOrgs({});
 
   const handleSetOrg = (id: string) => {
     const org = organizations.find((org) => org.id === id);
@@ -97,14 +100,12 @@ function SidebarContent({ isOpen }: SidebarContentProps) {
       )}
     >
       <SelectOrg
+        isLoading={isFetching}
         orgId={user?.org.id}
         orgImageUrl={user?.org.image_url}
         isOpen={isOpen}
         selectOrg={handleSetOrg}
-        organizations={organizations.map((org) => ({
-          label: org.name,
-          value: org.id,
-        }))}
+        organizations={toListOrg(orgs || [])}
       />
       {sidebarOptions.map((opt, idx) => (
         <NavLink

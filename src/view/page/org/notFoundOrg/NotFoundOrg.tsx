@@ -9,7 +9,7 @@ import CreateOrgModal from "./CreateOrgModal";
 import { useNotFoundOrgController } from "./useNotFoundOrgController";
 
 function NotFoundOrgPage() {
-  const { selectedOrganization, handleSelectOrganization, toggleHandleCreateNew, createNewOrg} = useNotFoundOrgController();
+  const { continueWithOrg, selectedOrganization, handleSelectOrganization, toggleHandleCreateNew, createNewOrg, fetchingOrgs, orgs} = useNotFoundOrgController();
 
   return (
     <div className="w-1/2 h-full mx-auto flex flex-col justify-center items-center">
@@ -38,20 +38,16 @@ function NotFoundOrgPage() {
           >
             Organizações Disponíveis
           </label>
-          <Select onValueChange={handleSelectOrganization}>
+          <Select onValueChange={handleSelectOrganization} isLoading={fetchingOrgs}>
             <SelectTrigger
               placeholder="Selecione uma organização"
               Icon={Building2}
             />
             <SelectContent>
               <div>
-                <SelectItem value="teste123" label="labellll" />
-                <SelectItem value="tes131te123" label="labellll2" />
-                <SelectItem
-                  value="tes31te113123"
-                  label="testando label novov123"
-                />
-                <SelectItem value="teste121313" label="labellll4" />
+                {orgs?.map((org) => (
+                  <SelectItem key={org.id} value={org.id} label={org.name} />
+                ))}
               </div>
             </SelectContent>
           </Select>
@@ -77,7 +73,7 @@ function NotFoundOrgPage() {
             <p>Criar Organização</p>
           </Button>}
           {selectedOrganization && <Button
-            onClick={() => {}}
+            onClick={continueWithOrg}
             size="sm"
             className="flex-1"
           >
