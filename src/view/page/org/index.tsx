@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
+import { useOrg } from "../../../app/hooks/queries/useOrg";
 import Button from "../../../components/atoms/Button";
 import Input from "../../../components/atoms/Input";
 import TextArea from "../../../components/atoms/TextArea";
@@ -32,11 +33,18 @@ const closeHours = [
 ];
 
 function Org() {
+  const { org, isFetching} = useOrg({});
+
   const form = useForm<EditOrgFormData>({
     resolver: zodResolver(editOrgFormSchema),
     defaultValues: {
-      close_hour: 0,
-      open_hour: 18,
+      cep: org?.cep || "",
+      description: org?.description || "",
+      email: org?.email || "",
+      location_code: org?.location_code || undefined,
+      name: org?.name || "",
+      close_hour: org?.close_hour || 23,
+      open_hour: org?.open_hour || 18,
     },
   });
 
@@ -61,7 +69,7 @@ function Org() {
             <ImageInput
               label=""
               onChange={field.onChange}
-              url={field.value}
+              url={field.value || org?.image_url}
               className="h-40"
             />
           )}
@@ -73,6 +81,7 @@ function Org() {
             placeholder="Nome"
             placeholderText="Nome da Organização"
             error={errors.name?.message}
+            isLoading={isFetching}
           />
           <Input
             {...register("email")}
@@ -80,6 +89,7 @@ function Org() {
             placeholder="Email"
             placeholderText="Email da Organização"
             error={errors.email?.message}
+            isLoading={isFetching}
           />
         </div>
 
@@ -94,12 +104,14 @@ function Org() {
             placeholder="Número"
             placeholderText="1298"
             error={errors.location_code?.message}
+            isLoading={isFetching}
           />
           <Input
             {...register("cep")}
             placeholder="CEP"
             placeholderText="CEP da Organização"
             error={errors.cep?.message}
+            isLoading={isFetching}
           />
         </div>
         <div className="w-full flex gap-4">
@@ -110,6 +122,7 @@ function Org() {
               name="open_hour"
               render={({ field }) => (
                 <Select
+                  isLoading={isFetching}
                   value={String(field.value)}
                   onValueChange={(e) => {
                     field.onChange(Number(e));
@@ -130,6 +143,7 @@ function Org() {
               name="close_hour"
               render={({ field }) => (
                 <Select
+                  isLoading={isFetching}
                   value={String(field.value)}
                   onValueChange={(e) => {
                     field.onChange(Number(e));
