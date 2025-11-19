@@ -10,8 +10,16 @@ export abstract class Service {
     this.client.defaults.headers.common.Authorization = `Bearer ${token}`;
   }
 
-  static setRemoveToken() {
+  static removeAccessToken() {
     this.client.defaults.headers.common.Authorization = undefined;
+  }
+
+  static setOrgId(orgId: string) {
+    this.client.defaults.headers.common["X-Org-Id"] = orgId;
+  }
+
+  static removeOrgId() {
+    this.client.defaults.headers.common["X-Org-Id"] = undefined;
   }
 }
 

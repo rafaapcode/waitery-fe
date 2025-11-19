@@ -41,10 +41,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const setupAuth = useCallback(
     async (token: string) => {
       Service.setAccessToken(token);
-
+      if(user?.org.id) {
+        Service.setOrgId(user.org.id);
+      }
       await loadAccount();
     },
-    [],
+    [loadAccount, user],
   );
 
   useLayoutEffect(() => {
@@ -52,7 +54,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
       const token = StorageManager.loadToken();
       if (!token) {
         StorageManager.clearStorage();
-        Service.setRemoveToken();
+        Service.removeAccessToken();
+        Service.removeOrgId();
         signOut();
         return;
       }
@@ -70,7 +73,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const signOut = () => {
     StorageManager.clearStorage();
-    Service.setRemoveToken();
+    Service.removeAccessToken();
+    Service.removeOrgId();
     setSignedIn(false);
   };
 
