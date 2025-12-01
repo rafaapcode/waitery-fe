@@ -11,58 +11,7 @@ import {
 } from "../../../../../components/molecules/Table";
 import CategoryActionComponent from "./CategoryActionTable";
 
-const categories: Category[] = [
-  {
-    id: "1",
-    org_id: "org-123",
-    name: "Carnes",
-    icon: "🥩",
-  },
-  {
-    id: "2",
-    org_id: "org-123",
-    name: "Pizza",
-    icon: "🍕",
-  },
-  {
-    id: "3",
-    org_id: "org-123",
-    name: "Lanches",
-    icon: "🍔",
-  },
-  {
-    id: "4",
-    org_id: "org-123",
-    name: "Massas",
-    icon: "🍝",
-  },
-  {
-    id: "5",
-    org_id: "org-123",
-    name: "Saladas",
-    icon: "🥗",
-  },
-  {
-    id: "6",
-    org_id: "org-123",
-    name: "Bebidas",
-    icon: "🥤",
-  },
-  {
-    id: "7",
-    org_id: "org-123",
-    name: "Sobremesas",
-    icon: "🍰",
-  },
-  {
-    id: "8",
-    org_id: "org-123",
-    name: "Japonesa",
-    icon: "🍱",
-  },
-];
-
-function CategoryTable() {
+function CategoryTable({categories}: {categories: Category[]}) {
   const table = useCreateTable(categories, [
     { accessorKey: "icon", header: "Emoji" },
     { accessorKey: "name", header: "Nome" },

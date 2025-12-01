@@ -1,5 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
+import { CategoryService } from "../../../../../app/service/category/categoryService";
 import Button from "../../../../../components/atoms/Button";
 import Input from "../../../../../components/atoms/Input";
 import Modal, {
@@ -29,9 +32,21 @@ function CreateCategoryModal({ open, onClose }: CreateCategoryModalProps) {
     },
   });
 
+  const createCategoryMutation = useMutation({
+    mutationFn: (data: CategoryService.CreateCategoryInput) => CategoryService.createCategory(data),
+    onSuccess: () => {
+      reset();
+      onClose();
+      toast.success("Categoria criada com sucesso");
+    },
+    onError: (error) => {
+      console.log(error);
+      toast.error("Erro ao criar categoria");
+    }
+  })
+
   const onSubmit = handleSubmit((data) => {
-    console.log(data);
-    onClose();
+    createCategoryMutation.mutate(data);
   });
 
   return (

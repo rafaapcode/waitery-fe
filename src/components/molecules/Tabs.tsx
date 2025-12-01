@@ -6,10 +6,11 @@ interface TabsProps {
   children: ReactNode;
   className?: string;
   deafultValue?: string;
+  onValueChange?: (value: string) => void;
 }
 
-const Tabs = ({ children, className, deafultValue }: TabsProps) => (
-  <TabsRDX.Root className={cn(className)} defaultValue={deafultValue}>
+const Tabs = ({ children, className, deafultValue, onValueChange }: TabsProps) => (
+  <TabsRDX.Root className={cn(className)} defaultValue={deafultValue} onValueChange={onValueChange}>
     {children}
   </TabsRDX.Root>
 );

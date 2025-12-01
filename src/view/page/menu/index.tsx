@@ -1,4 +1,4 @@
-import { SquareMenu } from "lucide-react";
+import { LoaderCircleIcon, SquareMenu } from "lucide-react";
 import Button from "../../../components/atoms/Button";
 import PageHeader from "../../../components/molecules/PageHeader";
 import Tabs, {
@@ -17,6 +17,8 @@ function Menu() {
     toggleNewCategoryModal,
     newProductModalOpen,
     toggleNewProductModal,
+    categories,
+    setSelectedTab,
   } = useMenuController();
 
   return (
@@ -26,7 +28,7 @@ function Menu() {
         onClose={toggleNewCategoryModal}
       />
 
-      <CreateProductModal 
+      <CreateProductModal
         onClose={toggleNewProductModal}
         open={newProductModalOpen}
       />
@@ -37,7 +39,11 @@ function Menu() {
         subtitle="Gerencie os produtos do seu estabelecimento"
       />
 
-      <Tabs deafultValue="PRODUTOS" className="mt-4 flex-1">
+      <Tabs
+        deafultValue="PRODUTOS"
+        className="mt-4 flex-1"
+        onValueChange={(v) => setSelectedTab(v as "PRODUTOS" | "CATEGORIA")}
+      >
         <TabsOptions
           options={[
             { label: "Produtos", value: "PRODUTOS" },
@@ -65,14 +71,24 @@ function Menu() {
             <div className="flex items-center gap-2">
               <h2 className="font-semibold">Categorias</h2>
               <span className="px-1 py-0.5 bg-gray-300 rounded-md text-xs font-semibold">
-                3
+                {categories.categories?.length || 0}
               </span>
             </div>
             <Button variant="secondary" onClick={toggleNewCategoryModal}>
               Nova Categoria
             </Button>
           </div>
-          <CategoryTable />
+          {categories.isFetching && (
+            <div className="flex-1 flex justify-center items-center p-10">
+              <LoaderCircleIcon
+                size={28}
+                className="text-red-700 animate-spin"
+              />
+            </div>
+          )}
+          {!categories.isFetching && (
+            <CategoryTable categories={categories.categories || []} />
+          )}
         </TabsContent>
       </Tabs>
     </main>

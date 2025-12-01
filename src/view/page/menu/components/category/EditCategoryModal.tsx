@@ -1,6 +1,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import type { Category } from "../../../../../app/entities/Category";
+import { CategoryService } from "../../../../../app/service/category/categoryService";
 import Button from "../../../../../components/atoms/Button";
 import Input from "../../../../../components/atoms/Input";
 import Modal, {
@@ -31,9 +34,33 @@ function EditCategoryModal({ open, onClose, category }: EditCategoryModalProps) 
     },
   });
 
+  const deleteCategoryMutation = useMutation({
+    mutationFn: () => CategoryService.deleteCategory(category.id),
+    onSuccess: () => {
+      onClose()
+      toast.success("Categoria excluída com sucesso");
+    },
+    onError: (error) => {
+      console.log(error);
+      toast.error("Erro ao excluir categoria");
+    }
+  })
+
+  const editCategoryMutation = useMutation({
+    mutationFn: (data: CategoryService.EditCategoryInput) => CategoryService.editCategory(category.id, data),
+    onSuccess: (data) => {
+      reset(data);
+      onClose();
+      toast.success("Categoria editada com sucesso");
+    },
+    onError: (error) => {
+      console.log(error);
+      toast.error("Erro ao editar categoria");
+    }
+  })
+
   const onSubmit = handleSubmit((data) => {
-    console.log(data);
-    onClose();
+    editCategoryMutation.mutate(data);
   });
 
   return (
@@ -62,7 +89,7 @@ function EditCategoryModal({ open, onClose, category }: EditCategoryModalProps) 
       </ModalContent>
 
       <ModalFooter className="w-full flex justify-between items-center">
-        <Button size="md" variant="secondary">
+        <Button size="md" variant="secondary" onClick={() => deleteCategoryMutation.mutateAsync()} isLoading={deleteCategoryMutation.isPending}>
           Excluir Categoria
         </Button>
         <Button
