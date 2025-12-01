@@ -3,7 +3,6 @@ import { Toaster } from "react-hot-toast";
 import { AuthProvider } from "./app/context/AuthContext";
 import Router from "./router";
 
-
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {

@@ -3,7 +3,7 @@ import { PencilIcon, Trash } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import type { Category } from "../../../../../app/entities/Category";
-import { useCategories } from "../../../../../app/hooks/queries/useCategories";
+import { useRevalidateCategory } from "../../../../../app/hooks/revalidates/useRevalidateCategory";
 import { CategoryService } from "../../../../../app/service/category/categoryService";
 import Button from "../../../../../components/atoms/Button";
 import ConfirmModal from "../../../../../components/molecules/ConfirmModal";
@@ -20,19 +20,19 @@ function CategoryActionComponent({ category }: CategoryActionComponentProps) {
   const onCloseEditModal = () => setIsOpenEditModal(false);
   const onCloseConfirmModal = () => setIsOpenConfirmModal(false);
 
-  const { loadCategories } = useCategories({});
+  const { revalidateCategories } = useRevalidateCategory();
 
   const { mutateAsync, isPending } = useMutation({
     mutationFn: () => CategoryService.deleteCategory(category.id),
     onSuccess: () => {
-      loadCategories();
+      revalidateCategories();
       onCloseConfirmModal();
       toast.success("Categoria excluída com sucesso");
     },
     onError: (error) => {
       console.log(error);
       toast.error("Erro ao excluir categoria");
-    }
+    },
   })
 
 

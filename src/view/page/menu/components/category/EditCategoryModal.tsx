@@ -3,7 +3,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import type { Category } from "../../../../../app/entities/Category";
-import { useCategories } from "../../../../../app/hooks/queries/useCategories";
+import { useRevalidateCategory } from "../../../../../app/hooks/revalidates/useRevalidateCategory";
 import { CategoryService } from "../../../../../app/service/category/categoryService";
 import Button from "../../../../../components/atoms/Button";
 import Input from "../../../../../components/atoms/Input";
@@ -34,12 +34,13 @@ function EditCategoryModal({ open, onClose, category }: EditCategoryModalProps) 
       icon: category.icon,
     },
   });
-  const { loadCategories } = useCategories({});
+  
+  const { revalidateCategories } = useRevalidateCategory();
 
   const deleteCategoryMutation = useMutation({
     mutationFn: () => CategoryService.deleteCategory(category.id),
     onSuccess: () => {
-      loadCategories();
+      revalidateCategories();
       onClose()
       toast.success("Categoria excluída com sucesso");
     },
@@ -52,14 +53,14 @@ function EditCategoryModal({ open, onClose, category }: EditCategoryModalProps) 
   const editCategoryMutation = useMutation({
     mutationFn: (data: CategoryService.EditCategoryInput) => CategoryService.editCategory(category.id, data),
     onSuccess: () => {
-      loadCategories();
+      revalidateCategories();
       onClose();
       toast.success("Categoria editada com sucesso");
     },
     onError: (error) => {
       console.log(error);
       toast.error("Erro ao editar categoria");
-    }
+    },
   })
 
   const onSubmit = handleSubmit((data) => {

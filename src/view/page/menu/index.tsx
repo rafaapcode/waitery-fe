@@ -18,7 +18,6 @@ function Menu() {
     newProductModalOpen,
     toggleNewProductModal,
     categories,
-    setSelectedTab,
   } = useMenuController();
 
   return (
@@ -42,7 +41,6 @@ function Menu() {
       <Tabs
         deafultValue="PRODUTOS"
         className="mt-4 flex-1"
-        onValueChange={(v) => setSelectedTab(v as "PRODUTOS" | "CATEGORIA")}
       >
         <TabsOptions
           options={[

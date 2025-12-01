@@ -13,6 +13,7 @@ export function useCategories({ enabled }: UseCategoriesProps) {
       const categories = await CategoryService.getAllCategories();
       return categories;
     },
+    staleTime: 1000 * 60 * 60, // 1 hour
   });
 
   return { categories: data, isError, isFetching, isSuccess, loadCategories: refetch };

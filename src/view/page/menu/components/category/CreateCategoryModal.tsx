@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { useCategories } from "../../../../../app/hooks/queries/useCategories";
+import { useRevalidateCategory } from "../../../../../app/hooks/revalidates/useRevalidateCategory";
 import { CategoryService } from "../../../../../app/service/category/categoryService";
 import Button from "../../../../../components/atoms/Button";
 import Input from "../../../../../components/atoms/Input";
@@ -33,12 +33,12 @@ function CreateCategoryModal({ open, onClose }: CreateCategoryModalProps) {
     },
   });
 
-  const { loadCategories } = useCategories({});
+  const { revalidateCategories } = useRevalidateCategory();
 
   const createCategoryMutation = useMutation({
     mutationFn: (data: CategoryService.CreateCategoryInput) => CategoryService.createCategory(data),
     onSuccess: () => {
-      loadCategories();
+      revalidateCategories();
       reset();
       onClose();
       toast.success("Categoria criada com sucesso");
