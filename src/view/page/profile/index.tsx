@@ -16,7 +16,7 @@ function Profile() {
       name: user?.name || "",
       email: user?.email || "",
       password: "",
-      cpf: user?.cpf || "",
+      new_password: "",
     },
   });
 
@@ -64,11 +64,11 @@ function Profile() {
         </div>
         <div className="w-full flex gap-4">
           <Input
-            {...register("cpf")}
-            type="text"
-            placeholder="CPF"
-            placeholderText="12312312312"
-            error={errors.cpf?.message}
+            {...register("new_password")}
+            type="password"
+            placeholder="Nova Senha"
+            placeholderText="Digite a nova senha"
+            error={errors.new_password?.message}
           />
         </div>
 

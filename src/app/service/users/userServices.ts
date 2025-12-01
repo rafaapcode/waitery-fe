@@ -5,6 +5,11 @@ export class UsersService extends Service {
     const info = await this.client.get<UsersService.GetMeResponse>("/user/me");
     return info.data as UsersService.GetMeResponse;
   }
+
+  static async updateMe() {
+    const info = await this.client.get<UsersService.GetMeResponse>("/user/me");
+    return info.data as UsersService.GetMeResponse;
+  }
 }
 
 export namespace UsersService {
