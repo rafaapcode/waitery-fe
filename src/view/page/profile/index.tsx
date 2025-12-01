@@ -4,12 +4,15 @@ import { useAuth } from "../../../app/hooks/useAuth";
 import Button from "../../../components/atoms/Button";
 import Input from "../../../components/atoms/Input";
 import ImageInput from "../../../components/molecules/ImageInput";
-import { editProfileFormSchema, type EditProfileFormData } from "./schemas/editProfileSchema";
+import {
+  editProfileFormSchema,
+  type EditProfileFormData,
+} from "./schemas/editProfileSchema";
 
 function Profile() {
   const { user } = useAuth();
 
- const form = useForm<EditProfileFormData>({
+  const form = useForm<EditProfileFormData>({
     resolver: zodResolver(editProfileFormSchema),
     defaultValues: {
       image: undefined,
@@ -64,6 +67,15 @@ function Profile() {
         </div>
         <div className="w-full flex gap-4">
           <Input
+            {...register("password")}
+            type="password"
+            placeholder="Senha Atual"
+            placeholderText="Digite a senha atual"
+            error={errors.password?.message}
+          />
+        </div>
+        <div className="w-full flex gap-4">
+          <Input
             {...register("new_password")}
             type="password"
             placeholder="Nova Senha"
@@ -87,4 +99,4 @@ function Profile() {
   );
 }
 
-export default Profile
+export default Profile;
