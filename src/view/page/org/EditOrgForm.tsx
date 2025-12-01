@@ -1,6 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import type { Org } from "../../../app/entities/Org";
+import { OrgService } from "../../../app/service/org/orgService";
 import Button from "../../../components/atoms/Button";
 import Input from "../../../components/atoms/Input";
 import TextArea from "../../../components/atoms/TextArea";
@@ -58,11 +60,19 @@ function EditOrgForm({ org, isFetching }: EditOrgFormProps) {
     handleSubmit,
     register,
     control,
-    formState: { errors, isSubmitting, isDirty, isValid },
+    reset,
+    formState: { errors, isSubmitting, isDirty, isValid, dirtyFields},
   } = form;
 
   const onSubmit = handleSubmit(async (data) => {
-    console.log(data);
+    try {
+      const orgUpdated = await OrgService.updateOrg({org: data, dirtiedFields: dirtyFields});
+      reset(orgUpdated.org);
+      toast.success('Organização atualizada com sucesso');
+    } catch (error) {
+      console.log(error);
+      toast.error('Erro ao atualizar a organização');
+    }
   });
 
   return (
