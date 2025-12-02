@@ -25,7 +25,7 @@ const DropDownMenu = ({ children, options, onSelect }: DropDownMenuProps) => {
   const handleOpen = () => setIsOpen((prev) => !prev);
 
   return (
-    <DropdownMenu.Root open={open} onOpenChange={setIsOpen}>
+    <DropdownMenu.Root open={open} onOpenChange={setIsOpen}> 
       <DropdownMenu.Trigger asChild>{children}</DropdownMenu.Trigger>
 
       <DropdownMenu.Portal>
@@ -35,6 +35,7 @@ const DropDownMenu = ({ children, options, onSelect }: DropDownMenuProps) => {
           alignOffset={10}
           className="bg-gray-100 shadow border border-gray-300 rounded-lg p-4 space-y-4"
         >
+          {!options.length && <p>Nenhuma opção disponível</p>}
           {options.map((opt, idx) => (
             <DropdownMenu.Item
               key={idx}

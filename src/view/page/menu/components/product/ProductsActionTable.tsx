@@ -1,11 +1,8 @@
-import { useMutation } from "@tanstack/react-query";
 import { PencilIcon, Trash } from "lucide-react";
 import { useState } from "react";
-import toast from "react-hot-toast";
 import type { Product } from "../../../../../app/entities/Product";
-import { useRevalidateProducts } from "../../../../../app/hooks/revalidates/useRevalidateProducts";
+import { useDeleteProductMutation } from "../../../../../app/hooks/mutations/useProductMutation";
 import { formatCurrency } from "../../../../../app/lib/formatCurrency";
-import { ProductService } from "../../../../../app/service/product/productService";
 import Button from "../../../../../components/atoms/Button";
 import { Image } from "../../../../../components/atoms/Image";
 import ConfirmModal from "../../../../../components/molecules/ConfirmModal";
@@ -22,20 +19,10 @@ function ProductsActionComponent({ product }: ProductsActionComponentProps) {
   const onCloseEditModal = () => setIsOpenEditModal(false);
   const onCloseConfirmModal = () => setIsOpenConfirmModal(false);
 
-  const { revalidateProducts } = useRevalidateProducts();
-
-  const { mutateAsync, isPending } = useMutation({
-    mutationFn: () => ProductService.deleteProduct(product.id),
-    onSuccess: () => {
-      revalidateProducts();
-      onCloseConfirmModal();
-      toast.success("Produto excluído com sucesso");
-    },
-    onError: (error) => {
-      console.log(error);
-      toast.error("Erro ao excluir produto");
-    },
-  })
+  const { deleteProduct, isPending } = useDeleteProductMutation({
+    id: product.id,
+    onClose: onCloseConfirmModal,
+  });
   
   return (
     <div className="flex gap-1.5 items-center justify-end">
@@ -47,7 +34,7 @@ function ProductsActionComponent({ product }: ProductsActionComponentProps) {
       <ConfirmModal 
         open={isOpenConfirmModal}
         title="Excluir produto"
-        onConfirm={() => mutateAsync()}
+        onConfirm={() => deleteProduct()}
         onCancel={onCloseConfirmModal}
         isLoading={isPending}
       >

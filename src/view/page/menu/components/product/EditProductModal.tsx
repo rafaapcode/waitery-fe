@@ -1,7 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { Controller, FormProvider, useForm } from "react-hook-form";
+import { categoryToSelectOptions } from "../../../../../app/entities/Category";
 import type { Product } from "../../../../../app/entities/Product";
+import { useDeleteProductMutation } from "../../../../../app/hooks/mutations/useProductMutation";
+import { useCategories } from "../../../../../app/hooks/queries/useCategories";
 import { formatCurrency } from "../../../../../app/lib/formatCurrency";
 import Button from "../../../../../components/atoms/Button";
 import { Image } from "../../../../../components/atoms/Image";
@@ -28,6 +31,7 @@ interface EditProductModalProps {
 
 function EditProductModal({ open, onClose, product }: EditProductModalProps) {
   const [deleteProductModal, setDeleteProductModal] = useState(false);
+  const { categories } = useCategories({});
   const form = useForm<EditProductFormData>({
     resolver: zodResolver(editProductFormSchema),
     mode: "onChange",
@@ -53,34 +57,18 @@ function EditProductModal({ open, onClose, product }: EditProductModalProps) {
     onClose();
   });
 
-  const toggleDeleteProductModal = () => setDeleteProductModal((prev) => !prev);
+  const deleteProductMutation = useDeleteProductMutation({ id: product.id, onClose });
 
-  const categoriesOptions: {label:string; value: string}[] = [
-    {
-      label: "🍔 Comidas",
-      value: "comida_id1",
-    },
-    {
-      label: "🍔 Comidas",
-      value: "comida_id2",
-    },
-    {
-      label: "🍔 Comidas",
-      value: "comida_id3",
-    },
-    {
-      label: "🍔 Comidas",
-      value: "comida_id4",
-    },
-  ];
+  const toggleDeleteProductModal = () => setDeleteProductModal((prev) => !prev);
 
   return (
     <Modal open={open} nativeHidden={false}>
       <ConfirmModal
         open={deleteProductModal}
         title="Excluir produto"
-        onConfirm={() => {}}
+        onConfirm={() => deleteProductMutation.deleteProduct()}
         onCancel={toggleDeleteProductModal}
+        isLoading={deleteProductMutation.isPending}
       >
         <div className="w-full">
           <p>Tem certeza que deseja excluir o produto ?</p>
@@ -158,7 +146,7 @@ function EditProductModal({ open, onClose, product }: EditProductModalProps) {
                     }}
                   >
                     <SelectTrigger placeholder="Selecionar Categoria"/>
-                    <SelectContent options={categoriesOptions} />
+                    <SelectContent options={categoryToSelectOptions(categories || [])} />
                   </Select>
                 )}
               />

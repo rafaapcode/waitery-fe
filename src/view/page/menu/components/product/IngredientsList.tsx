@@ -1,23 +1,12 @@
 import { Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
+import { useIngredients } from "../../../../../app/hooks/queries/useIngredients";
 import Button from "../../../../../components/atoms/Button";
 import Input from "../../../../../components/atoms/Input";
 import IngredientOption from "../../../../../components/molecules/IngredientOption";
 import CreateIngredientModal from "./CreateIngredientModal";
 
-const ingredients = [
-  { id: "1", name: "🧀 Mussarela" },
-  { id: "2", name: "🍅 Tomate" },
-  { id: "3", name: "🧄 Alho" },
-  { id: "4", name: "🧅 Cebola" },
-  { id: "5", name: "🌿 Manjericão" },
-  { id: "6", name: "🥓 Bacon" },
-  { id: "7", name: "🥚 Ovo" },
-  { id: "8", name: "🥬 Alface" },
-  { id: "9", name: "🫒 Azeitona" },
-  { id: "10", name: "🌶️ Pimenta" },
-];
 
 interface IngredientsListProps {
   ingredientsSelected?: string[];
@@ -34,6 +23,8 @@ function IngredientsList({ ingredientsSelected }: IngredientsListProps) {
     control,
     name: "ingredients",
   });
+
+  const { ingredients, isFetching } = useIngredients({});
 
   const toggleCreateIngredientModal = () =>
     setIsOpenCreateIngredientModal((prev) => !prev);
@@ -61,6 +52,8 @@ function IngredientsList({ ingredientsSelected }: IngredientsListProps) {
     setSelectedIngredients(new Set(ingredientsSelected || []));
     return () => setSelectedIngredients(new Set());
   }, [ingredientsSelected]);
+
+  console.log(ingredients);
 
   return (
     <div className="w-full h-full">
@@ -92,10 +85,12 @@ function IngredientsList({ ingredientsSelected }: IngredientsListProps) {
       </div>
 
       <div className="space-y-2 mt-2 max-h-full overflow-y-auto w-full">
-        {ingredients
+        {!ingredients  || ingredients.length === 0 && (<p>Nenhum ingrediente cadastrado.</p>)}
+        {!isFetching && ingredients && ingredients
           .filter((ing) => ing.name.includes(searchTerm))
           .map((ingredient) => (
             <IngredientOption
+              icon={ingredient.icon}
               key={ingredient.id}
               name={ingredient.name}
               id={ingredient.id}

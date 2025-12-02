@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { useCreateIngredientMutation } from "../../../../../app/hooks/mutations/useIngredientMutation";
 import Button from "../../../../../components/atoms/Button";
 import Input from "../../../../../components/atoms/Input";
 import Modal, {
@@ -29,9 +30,10 @@ function CreateIngredientModal({ open, onClose }: CreateIngredientModalProps) {
     },
   });
 
+  const {createIngredient, isPending} = useCreateIngredientMutation({ onClose });
+
   const onSubmit = handleSubmit((data) => {
-    console.log(data);
-    onClose();
+    createIngredient(data);
   });
 
   return (
@@ -61,8 +63,8 @@ function CreateIngredientModal({ open, onClose }: CreateIngredientModalProps) {
 
       <ModalFooter className="w-full flex justify-end items-center">
         <Button
-          disabled={!isValid || !isDirty || isSubmitting}
-          isLoading={isSubmitting}
+          disabled={!isValid || !isDirty || isSubmitting || isPending}
+          isLoading={isSubmitting || isPending}
           size="md"
           onClick={onSubmit}
         >

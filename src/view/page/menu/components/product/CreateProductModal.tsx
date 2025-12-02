@@ -1,11 +1,12 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { LoaderCircleIcon } from "lucide-react";
 import { useState } from "react";
 import { Controller, FormProvider, useForm } from "react-hook-form";
+import { categoryToOptionsType } from "../../../../../app/entities/Category";
+import { useCategories } from "../../../../../app/hooks/queries/useCategories";
 import Button from "../../../../../components/atoms/Button";
 import Input from "../../../../../components/atoms/Input";
-import DropDownMenu, {
-  type OptionsType,
-} from "../../../../../components/molecules/DropdownMenu";
+import DropDownMenu from "../../../../../components/molecules/DropdownMenu";
 import ImageInput from "../../../../../components/molecules/ImageInput";
 import Modal, {
   ModalContent,
@@ -25,7 +26,8 @@ interface CreateProductModalProps {
 
 function CreateProductModal({ open, onClose }: CreateProductModalProps) {
   const [category, setCategory] = useState<string>("");
-  
+  const { categories, isFetching} = useCategories({});
+
   const form = useForm<CreateProductFormData>({
     resolver: zodResolver(createProductFormSchema),
     mode: "onChange",
@@ -44,33 +46,6 @@ function CreateProductModal({ open, onClose }: CreateProductModalProps) {
     onClose();
   });
 
-  const categoriesOptions: OptionsType[] = [
-    {
-      icon: "🍔",
-      label: "Comidas",
-      value: "comida_id",
-      type: "option",
-    },
-    {
-      icon: "🍔",
-      label: "Comidas",
-      value: "comida_id",
-      type: "option",
-    },
-    {
-      icon: "🍔",
-      label: "Comidas",
-      value: "comida_id",
-      type: "option",
-    },
-    {
-      icon: "🍔",
-      label: "Comidas",
-      value: "comida_id",
-      type: "option",
-    },
-  ];
-
   return (
     <Modal open={open} nativeHidden={false}>
       <ModalHeader
@@ -82,7 +57,8 @@ function CreateProductModal({ open, onClose }: CreateProductModalProps) {
       />
 
       <ModalContent>
-        <div className="w-[800px] max-h-[600px] grid grid-cols-2 gap-2">
+        {isFetching && <div><LoaderCircleIcon className="text-red-700 animate-spin" size={28} /></div>}
+        {!isFetching && <div className="w-[800px] max-h-[600px] grid grid-cols-2 gap-2">
           {/* Primeira Coluna */}
           <div className="flex flex-col w-full h-full gap-2">
             <Controller
@@ -122,7 +98,8 @@ function CreateProductModal({ open, onClose }: CreateProductModalProps) {
                 name="category"
                 render={({ field }) => (
                   <DropDownMenu
-                    options={categoriesOptions}
+                    
+                    options={categoryToOptionsType(categories || [])}
                     onSelect={(e) => {
                       setCategory(e?.label || "");
                       field.onChange(e?.value);
@@ -143,7 +120,7 @@ function CreateProductModal({ open, onClose }: CreateProductModalProps) {
               <IngredientsList />
             </div>
           </FormProvider>
-        </div>
+        </div>}
       </ModalContent>
 
       <ModalFooter className="w-full flex justify-end items-center">

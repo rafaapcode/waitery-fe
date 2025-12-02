@@ -25,7 +25,7 @@ export class ProductService extends Service {
   static async createProduct(
     data: ProductService.CreateProductsInput
   ): Promise<void> {
-    await this.client.post<void>(`/product`, data);
+    await this.client.post<void>(`/product`, {...data, price: Number(data.price) } );
   }
 }
 
@@ -48,7 +48,7 @@ export namespace ProductService {
   export type CreateProductsInput = {
     name: string;
     description: string;
-    price: number;
+    price: string;
     category_id: string;
     ingredients: string[];
   };
