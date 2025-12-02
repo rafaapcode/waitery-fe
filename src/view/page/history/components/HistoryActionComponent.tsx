@@ -1,6 +1,10 @@
+import { useMutation } from "@tanstack/react-query";
 import { EyeIcon, Trash } from "lucide-react";
 import { useState } from "react";
+import toast from "react-hot-toast";
 import type { Order } from "../../../../app/entities/Order";
+import { useRevalidateOrders } from "../../../../app/hooks/revalidates/useRevalidateOrders";
+import { OrderService } from "../../../../app/service/order/orderService";
 import Button from "../../../../components/atoms/Button";
 import ConfirmModal from "../../../../components/molecules/ConfirmModal";
 import OrderDetailModal from "../../../../components/molecules/OrderDetailModal";
@@ -16,6 +20,21 @@ function HistoryActionComponent({ order }: HistoryActionComponentProps) {
   const onCloseViewerModal = () => setIsOpenViewerModal(false);
   const onCloseconfirmModal = () => setIsOpenConfirmModal(false);
 
+  const { revalidateOrders } = useRevalidateOrders();
+
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: () => OrderService.deleteOrder(order?.id || ""),
+    onSuccess: () => {
+      revalidateOrders();
+      onCloseconfirmModal();
+      toast.success("Pedido excluído com sucesso");
+    },
+    onError: (error) => {
+      console.log(error);
+      toast.error("Erro ao excluir pedido");
+    },
+  });
+
   return (
     <div className="flex gap-1.5 items-center justify-end">
       {order && (
@@ -25,8 +44,9 @@ function HistoryActionComponent({ order }: HistoryActionComponentProps) {
         open={isOpenConfirmModal}
         title="Excluir pedido"
         description={`Tem certeza que deseja excluir o pedido ${order?.id} da mesa ${order?.table} ?  Esta ação não pode ser desfeita.`}
-        onConfirm={() => {}}
+        onConfirm={() => mutateAsync()}
         onCancel={onCloseconfirmModal}
+        isLoading={isPending}
       />
       <Button
         onClick={() => setIsOpenViewerModal(true)}
