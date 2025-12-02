@@ -4,6 +4,7 @@ import { UserPen } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { UserRole } from "../../../../app/entities/User";
+import { useRevalidateUsers } from "../../../../app/hooks/revalidates/useRevalidateUsers";
 import { UsersService } from "../../../../app/service/users/userServices";
 import Button from "../../../../components/atoms/Button";
 import Input from "../../../../components/atoms/Input";
@@ -26,6 +27,7 @@ interface CreateUserModalProps {
 }
 
 function CreateUserModal({ open, onClose }: CreateUserModalProps) {
+  const { revalidateUsers } = useRevalidateUsers();
   const {
     handleSubmit,
     register,
@@ -48,6 +50,8 @@ function CreateUserModal({ open, onClose }: CreateUserModalProps) {
     mutationFn: (data: UsersService.CreateUserInput) =>
       UsersService.createUser(data),
     onSuccess: () => {
+      revalidateUsers();
+      reset();
       onClose();
       toast.success("Usuário criado com sucesso");
     },

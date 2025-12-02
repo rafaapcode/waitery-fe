@@ -30,11 +30,28 @@ export class UsersService extends Service {
   }
 
   static async updateUser(params: UsersService.UpdateUserInput): Promise<void> {
-    await this.client.patch(`/user/${params.id}`, params.data);
+    const dirtiedFields = this.getOnlyDirtiedFields(
+      params.data,
+      params.dirtiedFields
+    );
+    await this.client.patch(`/user/${params.id}`, dirtiedFields);
   }
 
   static async createUser(params: UsersService.CreateUserInput): Promise<void> {
-    await this.client.post('/user', params);
+    await this.client.post("/user", params);
+  }
+
+  private static getOnlyDirtiedFields<T>(
+    obj: T,
+    dirtiedFields: Partial<Record<keyof T, boolean>>
+  ): Partial<T> {
+    const result: Partial<T> = {};
+    for (const key in dirtiedFields) {
+      if (dirtiedFields[key]) {
+        result[key] = obj[key];
+      }
+    }
+    return result;
   }
 }
 
@@ -63,6 +80,14 @@ export namespace UsersService {
       cpf?: string;
       role?: UserRole;
     };
+    dirtiedFields: Partial<
+      Readonly<{
+        name?: boolean | undefined;
+        email?: boolean | undefined;
+        password?: boolean | undefined;
+        role?: boolean | undefined;
+      }>
+    >;
   };
 
   export type CreateUserInput = {

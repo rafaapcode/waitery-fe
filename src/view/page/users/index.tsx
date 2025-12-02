@@ -1,5 +1,6 @@
 import { LoaderCircleIcon, UsersIcon } from "lucide-react";
 import TableProvider from "../../../app/context/TableContext";
+import { useUsers } from "../../../app/hooks/queries/useUsers";
 import useCreateTable from "../../../app/hooks/useCreateTable";
 import { cn } from "../../../app/lib/utils";
 import Button from "../../../components/atoms/Button";
@@ -21,9 +22,9 @@ function Users() {
     createUserModalOpen,
     onCloseCreateUserModal,
     onOpenCreateUserModal,
-    isFetching,
-    users
   } = useUsersController();
+
+  const { users, isFetching } = useUsers({});
 
   const table = useCreateTable(users?.users || [], [
     { accessorKey: "name", header: "Nome" },

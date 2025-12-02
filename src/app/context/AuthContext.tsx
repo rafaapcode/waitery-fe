@@ -2,7 +2,7 @@ import { createContext, useCallback, useEffect, useLayoutEffect, useState, type 
 import toast from "react-hot-toast";
 import SplashScreen from "../../components/SplashScreen";
 import { localStorageKeys } from "../config/constants";
-import type { User } from "../entities/User";
+import { UserRole, type User } from "../entities/User";
 import { useAccount } from "../hooks/queries/useAccount";
 import { StorageManager } from "../lib/StorageManager";
 import { Service } from "../service/service";
@@ -22,6 +22,10 @@ interface AuthStorage {
   user?: UserDataContext;
   setUser: (user: User & { org_id?: string }) => void;
   setOrg: (props: { imgUrl: string; orgId: string; name: string }) => void;
+  isOwner: (role?: UserRole) => boolean;
+  isAdmin: (role?: UserRole) => boolean;
+  isWaiter: (role?: UserRole) => boolean;
+  isMe: (id: string) => boolean;
 }
 
 export const AuthContext = createContext<AuthStorage>({} as AuthStorage);
@@ -113,6 +117,24 @@ export function AuthProvider({ children }: AuthProviderProps) {
     setUser(user_data);
   };
 
+  const isOwner = (role?: UserRole) => {
+    return role === UserRole.OWNER;
+  }
+
+  const isAdmin = (role?: UserRole) => {
+    return role === UserRole.ADMIN;
+  }
+
+
+  const isWaiter = (role?: UserRole) => {
+    return role === UserRole.WAITER;
+  }
+
+
+  const isMe = (id: string) => {
+    return user?.id === id;
+  }
+
   useEffect(() => {
     if (isError && signedIn) {
       toast.error("Sua sessão expirou.");
@@ -127,6 +149,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
     setOrg,
     setUser: setUserFn,
     user,
+    isMe, 
+    isOwner,
+    isAdmin,
+    isWaiter,
   };
 
   return (

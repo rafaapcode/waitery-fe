@@ -3,7 +3,9 @@ import { useMutation } from "@tanstack/react-query";
 import { UserPen } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import type { User } from "../../../../app/entities/User";
+import { UserRole, type User } from "../../../../app/entities/User";
+import { useRevalidateUsers } from "../../../../app/hooks/revalidates/useRevalidateUsers";
+import { useAuth } from "../../../../app/hooks/useAuth";
 import { UsersService } from "../../../../app/service/users/userServices";
 import Button from "../../../../components/atoms/Button";
 import Input from "../../../../components/atoms/Input";
@@ -15,7 +17,10 @@ import Modal, {
 import RadioGroup, {
   RadioGroupItem,
 } from "../../../../components/molecules/RadioGroup";
-import { editUserFormSchema, type EditUserFormData } from "../schemas/editUserSchema";
+import {
+  editUserFormSchema,
+  type EditUserFormData,
+} from "../schemas/editUserSchema";
 
 interface EditUserModalProps {
   open: boolean;
@@ -24,11 +29,13 @@ interface EditUserModalProps {
 }
 
 function EditUserModal({ open, onClose, user }: EditUserModalProps) {
+  const { isOwner } = useAuth();
+  const { revalidateUsers } = useRevalidateUsers();
   const {
     handleSubmit,
     register,
     reset,
-    formState: { errors, isSubmitting, isValid, isDirty },
+    formState: { errors, isSubmitting, isValid, isDirty, dirtyFields },
     control,
   } = useForm<EditUserFormData>({
     resolver: zodResolver(editUserFormSchema),
@@ -37,34 +44,54 @@ function EditUserModal({ open, onClose, user }: EditUserModalProps) {
       name: user?.name || "",
       email: user?.email || "",
       role:
-        user?.role === "ADMIN" || user?.role === "WAITER"
+        user?.role === UserRole.ADMIN || user?.role === UserRole.WAITER
           ? user.role
-          : "WAITER",
+          : UserRole.WAITER,
     },
   });
 
-  const {mutateAsync, isPending} = useMutation({
-    mutationFn: (data: UsersService.UpdateUserInput['data']) => UsersService.updateUser({id: user?.id || '', data }),
+  const editUser = useMutation({
+    mutationFn: (data: UsersService.UpdateUserInput["data"]) =>
+      UsersService.updateUser({ id: user?.id || "", data, dirtiedFields: dirtyFields }),
     onSuccess: () => {
+      revalidateUsers();
+      reset();
       onClose();
       toast.success("Usuário atualizado com sucesso");
     },
     onError: (error) => {
       console.log(error);
       toast.error("Erro ao atualizar usuário");
-    }
+    },
+  });
+
+  const deleteUser = useMutation({
+    mutationFn: () => UsersService.deleteUser(user?.id || ""),
+    onSuccess: () => {
+      revalidateUsers();
+      onClose();
+      toast.success("Usuário deletado com sucesso");
+    },
+    onError: (error) => {
+      console.log(error);
+      toast.error("Erro ao deletar usuário");
+    },
   });
 
   const onSubmit = handleSubmit((data) => {
-    mutateAsync(data);
+    editUser.mutateAsync(data);
   });
 
   return (
     <Modal open={open}>
-      <ModalHeader title="Editar Usuário" icon={UserPen} onClose={() => {
-        onClose();
-        reset();
-      }} />
+      <ModalHeader
+        title="Editar Usuário"
+        icon={UserPen}
+        onClose={() => {
+          onClose();
+          reset();
+        }}
+      />
 
       <ModalContent>
         <div className="w-[416px] space-y-6">
@@ -87,34 +114,43 @@ function EditUserModal({ open, onClose, user }: EditUserModalProps) {
             error={errors.password?.message}
           />
 
-          <Controller
-            control={control}
-            name="role"
-            render={({ field }) => (
-              <RadioGroup
-                className="gap-6"
-                onValueChange={field.onChange}
-                value={field.value}
-              >
-                <RadioGroupItem value="ADMIN">
-                  <p>Admin</p>
-                </RadioGroupItem>
-                <RadioGroupItem value="WAITER">
-                  <p>Waiter</p>
-                </RadioGroupItem>
-              </RadioGroup>
-            )}
-          />
+          {!isOwner(user.role) && (
+            <Controller
+              control={control}
+              name="role"
+              render={({ field }) => (
+                <RadioGroup
+                  className="gap-6"
+                  onValueChange={field.onChange}
+                  value={field.value}
+                >
+                  <RadioGroupItem value="ADMIN">
+                    <p>Admin</p>
+                  </RadioGroupItem>
+                  <RadioGroupItem value="WAITER">
+                    <p>Waiter</p>
+                  </RadioGroupItem>
+                </RadioGroup>
+              )}
+            />
+          )}
         </div>
       </ModalContent>
 
       <ModalFooter className="w-full flex justify-between items-center">
-        <Button size="md" variant="secondary">
-          Excluir Usuário
-        </Button>
+        {!isOwner(user.role) && (
+          <Button
+            size="md"
+            variant="secondary"
+            onClick={() => deleteUser.mutateAsync()}
+            isLoading={deleteUser.isPending}
+          >
+            Excluir Usuário
+          </Button>
+        )}
         <Button
-          disabled={!isValid || !isDirty || isSubmitting || isPending}
-          isLoading={isSubmitting || isPending}
+          disabled={!isValid || !isDirty || isSubmitting || editUser.isPending}
+          isLoading={isSubmitting || editUser.isPending}
           size="md"
           onClick={onSubmit}
         >
