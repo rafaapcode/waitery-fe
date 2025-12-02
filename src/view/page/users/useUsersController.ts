@@ -1,7 +1,8 @@
 import { useState } from "react";
 import type { User } from "../../../app/entities/User";
+import { useUsers } from "../../../app/hooks/queries/useUsers";
 
-export function useUsersController(user?: User) {
+export function useUsersController(userparams?: User) {
   // Create User Modal State
   const [createUserModalOpen, setCreateUserModalOpen] = useState(false);
   
@@ -10,6 +11,8 @@ export function useUsersController(user?: User) {
   
   // Confirm Delete Modal State
   const [isOpenConfirmModal, setIsOpenConfirmModal] = useState(false);
+
+  const { users, isFetching } = useUsers({});
 
   // Create User Modal Handlers
   const onOpenCreateUserModal = () => setCreateUserModalOpen(true);
@@ -42,5 +45,8 @@ export function useUsersController(user?: User) {
     isOpenConfirmModal,
     onOpenConfirmModal,
     onCloseconfirmModal,
+
+    users,
+    isFetching
   };
 }

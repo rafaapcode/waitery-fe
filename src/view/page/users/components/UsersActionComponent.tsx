@@ -1,5 +1,8 @@
+import { useMutation } from "@tanstack/react-query";
 import { PencilIcon, Trash } from "lucide-react";
+import toast from "react-hot-toast";
 import type { User } from "../../../../app/entities/User";
+import { UsersService } from "../../../../app/service/users/userServices";
 import Button from "../../../../components/atoms/Button";
 import ConfirmModal from "../../../../components/molecules/ConfirmModal";
 import { useUsersController } from "../useUsersController";
@@ -19,6 +22,18 @@ function UsersActionComponent({ user }: UsersActionComponentProps) {
     onOpenEditUserModal
   } = useUsersController(user);
 
+  const {mutateAsync, isPending} = useMutation({
+    mutationFn: () => UsersService.deleteUser(user?.id || ''),
+    onSuccess: () => {
+      onCloseconfirmModal()
+      toast.success("Usuário excluído com sucesso");
+    },
+    onError: (error) => {
+      console.log(error);
+      toast.error("Erro ao excluir usuário");
+    }
+  })
+
   return (
      <div className="flex gap-1.5 items-center justify-end">
         {user  && (
@@ -32,8 +47,9 @@ function UsersActionComponent({ user }: UsersActionComponentProps) {
           open={isOpenConfirmModal}
           title="Excluir usuário"
           description={`Tem certeza que deseja excluir o usuário ${user?.name} ?  Esta ação não pode ser desfeita.`}
-          onConfirm={() => {}}
+          onConfirm={() => mutateAsync()}
           onCancel={onCloseconfirmModal}
+          isLoading={isPending}
         />
         <Button
           onClick={onOpenEditUserModal}

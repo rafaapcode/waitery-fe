@@ -1,6 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
 import { UserPen } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
+import toast from "react-hot-toast";
+import { UserRole } from "../../../../app/entities/User";
+import { UsersService } from "../../../../app/service/users/userServices";
 import Button from "../../../../components/atoms/Button";
 import Input from "../../../../components/atoms/Input";
 import Modal, {
@@ -34,13 +38,27 @@ function CreateUserModal({ open, onClose }: CreateUserModalProps) {
     defaultValues: {
       name: "",
       email: "",
+      role: UserRole.WAITER,
+      cpf: "",
       password: "",
     },
   });
 
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: (data: UsersService.CreateUserInput) =>
+      UsersService.createUser(data),
+    onSuccess: () => {
+      onClose();
+      toast.success("Usuário criado com sucesso");
+    },
+    onError: (error) => {
+      console.log(error);
+      toast.error("Erro ao criar usuário");
+    },
+  });
+
   const onSubmit = handleSubmit((data) => {
-    console.log(data);
-    onClose();
+    mutateAsync(data);
   });
 
   return (
@@ -67,6 +85,12 @@ function CreateUserModal({ open, onClose }: CreateUserModalProps) {
             placeholder="Email"
             {...register("email")}
             error={errors.email?.message}
+          />
+          <Input
+            type="string"
+            placeholder="Cpf"
+            {...register("cpf")}
+            error={errors.cpf?.message}
           />
           <Input
             type="password"
@@ -100,8 +124,8 @@ function CreateUserModal({ open, onClose }: CreateUserModalProps) {
         <Button
           className="w-full"
           onClick={onSubmit}
-          disabled={!isValid || !isDirty || isSubmitting}
-          isLoading={isSubmitting}
+          disabled={!isValid || !isDirty || isSubmitting || isPending}
+          isLoading={isSubmitting || isPending}
         >
           Cadastrar usuário
         </Button>

@@ -1,7 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
 import { UserPen } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import type { User } from "../../../../app/entities/User";
+import { UsersService } from "../../../../app/service/users/userServices";
 import Button from "../../../../components/atoms/Button";
 import Input from "../../../../components/atoms/Input";
 import Modal, {
@@ -40,9 +43,20 @@ function EditUserModal({ open, onClose, user }: EditUserModalProps) {
     },
   });
 
+  const {mutateAsync, isPending} = useMutation({
+    mutationFn: (data: UsersService.UpdateUserInput['data']) => UsersService.updateUser({id: user?.id || '', data }),
+    onSuccess: () => {
+      onClose();
+      toast.success("Usuário atualizado com sucesso");
+    },
+    onError: (error) => {
+      console.log(error);
+      toast.error("Erro ao atualizar usuário");
+    }
+  });
+
   const onSubmit = handleSubmit((data) => {
-    console.log(data);
-    onClose();
+    mutateAsync(data);
   });
 
   return (
@@ -99,8 +113,8 @@ function EditUserModal({ open, onClose, user }: EditUserModalProps) {
           Excluir Usuário
         </Button>
         <Button
-          disabled={!isValid || !isDirty || isSubmitting}
-          isLoading={isSubmitting}
+          disabled={!isValid || !isDirty || isSubmitting || isPending}
+          isLoading={isSubmitting || isPending}
           size="md"
           onClick={onSubmit}
         >
