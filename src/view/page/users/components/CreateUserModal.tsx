@@ -1,11 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
 import { UserPen } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
-import toast from "react-hot-toast";
 import { UserRole } from "../../../../app/entities/User";
-import { useRevalidateUsers } from "../../../../app/hooks/revalidates/useRevalidateUsers";
-import { UsersService } from "../../../../app/service/users/userServices";
+import { useCreateUserMutation } from "../../../../app/hooks/mutations/useUserMutation";
 import Button from "../../../../components/atoms/Button";
 import Input from "../../../../components/atoms/Input";
 import Modal, {
@@ -27,7 +24,6 @@ interface CreateUserModalProps {
 }
 
 function CreateUserModal({ open, onClose }: CreateUserModalProps) {
-  const { revalidateUsers } = useRevalidateUsers();
   const {
     handleSubmit,
     register,
@@ -46,23 +42,10 @@ function CreateUserModal({ open, onClose }: CreateUserModalProps) {
     },
   });
 
-  const { mutateAsync, isPending } = useMutation({
-    mutationFn: (data: UsersService.CreateUserInput) =>
-      UsersService.createUser(data),
-    onSuccess: () => {
-      revalidateUsers();
-      reset();
-      onClose();
-      toast.success("Usuário criado com sucesso");
-    },
-    onError: (error) => {
-      console.log(error);
-      toast.error("Erro ao criar usuário");
-    },
-  });
+  const createUser = useCreateUserMutation(onClose);
 
   const onSubmit = handleSubmit((data) => {
-    mutateAsync(data);
+    createUser.createUser(data);
   });
 
   return (
@@ -128,8 +111,8 @@ function CreateUserModal({ open, onClose }: CreateUserModalProps) {
         <Button
           className="w-full"
           onClick={onSubmit}
-          disabled={!isValid || !isDirty || isSubmitting || isPending}
-          isLoading={isSubmitting || isPending}
+          disabled={!isValid || !isDirty || isSubmitting || createUser.isPending}
+          isLoading={isSubmitting || createUser.isPending}
         >
           Cadastrar usuário
         </Button>

@@ -1,10 +1,7 @@
-import { useMutation } from "@tanstack/react-query";
 import { PencilIcon, Trash } from "lucide-react";
-import toast from "react-hot-toast";
 import type { User } from "../../../../app/entities/User";
-import { useRevalidateUsers } from "../../../../app/hooks/revalidates/useRevalidateUsers";
+import { useDeleteUserMutation } from "../../../../app/hooks/mutations/useUserMutation";
 import { useAuth } from "../../../../app/hooks/useAuth";
-import { UsersService } from "../../../../app/service/users/userServices";
 import Button from "../../../../components/atoms/Button";
 import ConfirmModal from "../../../../components/molecules/ConfirmModal";
 import { useUsersController } from "../useUsersController";
@@ -16,7 +13,6 @@ interface UsersActionComponentProps {
 
 function UsersActionComponent({ user }: UsersActionComponentProps) {
   const { isOwner } = useAuth();
-  const { revalidateUsers } = useRevalidateUsers();
   const {
     isOpenEditUserModal,
     onCloseEditUserModal,
@@ -26,18 +22,7 @@ function UsersActionComponent({ user }: UsersActionComponentProps) {
     onOpenEditUserModal,
   } = useUsersController(user);
 
-  const { mutateAsync, isPending } = useMutation({
-    mutationFn: () => UsersService.deleteUser(user?.id || ""),
-    onSuccess: () => {
-      revalidateUsers();
-      onCloseconfirmModal();
-      toast.success("Usuário excluído com sucesso");
-    },
-    onError: (error) => {
-      console.log(error);
-      toast.error("Erro ao excluir usuário");
-    },
-  });
+ const { deleteUser, isPending } = useDeleteUserMutation({ id: user?.id || "", onClose: onCloseconfirmModal })
 
   return (
     <div className="flex gap-1.5 items-center justify-end">
@@ -52,7 +37,7 @@ function UsersActionComponent({ user }: UsersActionComponentProps) {
         open={isOpenConfirmModal}
         title="Excluir usuário"
         description={`Tem certeza que deseja excluir o usuário ${user?.name} ?  Esta ação não pode ser desfeita.`}
-        onConfirm={() => mutateAsync()}
+        onConfirm={() => deleteUser()}
         onCancel={onCloseconfirmModal}
         isLoading={isPending}
       />

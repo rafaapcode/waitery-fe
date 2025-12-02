@@ -1,12 +1,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
 import { UserPen } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
-import toast from "react-hot-toast";
 import { UserRole, type User } from "../../../../app/entities/User";
-import { useRevalidateUsers } from "../../../../app/hooks/revalidates/useRevalidateUsers";
+import { useDeleteUserMutation, useEditUserMutation } from "../../../../app/hooks/mutations/useUserMutation";
 import { useAuth } from "../../../../app/hooks/useAuth";
-import { UsersService } from "../../../../app/service/users/userServices";
 import Button from "../../../../components/atoms/Button";
 import Input from "../../../../components/atoms/Input";
 import Modal, {
@@ -30,7 +27,6 @@ interface EditUserModalProps {
 
 function EditUserModal({ open, onClose, user }: EditUserModalProps) {
   const { isOwner } = useAuth();
-  const { revalidateUsers } = useRevalidateUsers();
   const {
     handleSubmit,
     register,
@@ -50,36 +46,16 @@ function EditUserModal({ open, onClose, user }: EditUserModalProps) {
     },
   });
 
-  const editUser = useMutation({
-    mutationFn: (data: UsersService.UpdateUserInput["data"]) =>
-      UsersService.updateUser({ id: user?.id || "", data, dirtiedFields: dirtyFields }),
-    onSuccess: () => {
-      revalidateUsers();
-      reset();
-      onClose();
-      toast.success("Usuário atualizado com sucesso");
-    },
-    onError: (error) => {
-      console.log(error);
-      toast.error("Erro ao atualizar usuário");
-    },
-  });
+  const deleteUserMutation = useDeleteUserMutation({ id: user.id, onClose });
 
-  const deleteUser = useMutation({
-    mutationFn: () => UsersService.deleteUser(user?.id || ""),
-    onSuccess: () => {
-      revalidateUsers();
-      onClose();
-      toast.success("Usuário deletado com sucesso");
-    },
-    onError: (error) => {
-      console.log(error);
-      toast.error("Erro ao deletar usuário");
-    },
+  const editUser = useEditUserMutation({
+    id: user.id,
+    onClose,
+    dirtiedFields: dirtyFields,
   });
 
   const onSubmit = handleSubmit((data) => {
-    editUser.mutateAsync(data);
+    editUser.editUser(data);
   });
 
   return (
@@ -142,8 +118,8 @@ function EditUserModal({ open, onClose, user }: EditUserModalProps) {
           <Button
             size="md"
             variant="secondary"
-            onClick={() => deleteUser.mutateAsync()}
-            isLoading={deleteUser.isPending}
+            onClick={() => deleteUserMutation.deleteUser()}
+            isLoading={deleteUserMutation.isPending}
           >
             Excluir Usuário
           </Button>
