@@ -42,27 +42,35 @@ export interface Order {
 }
 
 export const fromHistoryOrder = (historyOrder: HistoryOrder[] | HistoryOrder): Order[] | Order => {
-
+  console.log('historyOrder', historyOrder);
   if (!Array.isArray(historyOrder)) {
+    const formattedDate = historyOrder.date.split('/');
+    const day = Number(formattedDate[0]);
+    const month = Number(formattedDate[1]) - 1;
+    const year = Number(formattedDate[2]) + 2000;
     return {
       id: historyOrder.id,
       org_id: historyOrder.org_id,
       quantity: historyOrder.quantity,
       status: historyOrder.status,
-      created_at: new Date(historyOrder.date),
+      created_at: new Date(year, month, day),
       total_price: historyOrder.total,
       table: historyOrder.table,
       products: historyOrder.products,
     }
   }
-
+  console.log('historyOrder', historyOrder);
   return historyOrder.map((order) => {
+    const formattedDate = order.date.split('/');
+    const day = Number(formattedDate[0]);
+    const month = Number(formattedDate[1]) - 1;
+    const year = Number(formattedDate[2]) + 2000;
     return {
       id: order.id,
       org_id: order.org_id,
       quantity: order.quantity,
       status: order.status,
-      created_at: new Date(order.date),
+      created_at: new Date(year, month, day),
       total_price: order.total,
       table: order.table,
       products: order.products,
@@ -77,7 +85,7 @@ export const toHistoryOrder = (order: Order[]): HistoryOrder[] => {
       org_id: order.org_id,
       quantity: order.quantity,
       status: order.status,
-      date: formatDate(order.created_at),
+      date: formatDate(new Date(order.created_at)),
       total: order.total_price,
       table: order.table,
       category: order.products[0]?.category || '',

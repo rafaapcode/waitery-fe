@@ -43,7 +43,7 @@ function HistoryActionComponent({ order }: HistoryActionComponentProps) {
       <ConfirmModal 
         open={isOpenConfirmModal}
         title="Excluir pedido"
-        description={`Tem certeza que deseja excluir o pedido ${order?.id} da mesa ${order?.table} ?  Esta ação não pode ser desfeita.`}
+        description={`Tem certeza que deseja excluir o pedido da mesa ${order?.table} ?  Esta ação não pode ser desfeita.`}
         onConfirm={() => mutateAsync()}
         onCancel={onCloseconfirmModal}
         isLoading={isPending}

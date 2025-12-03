@@ -6,7 +6,7 @@ export class OrderService extends Service {
     page: number = 0
   ): Promise<OrderService.GetAllOrderOutput> {
     const { data } = await this.client.get<OrderService.GetAllOrderOutput>(
-      `/order/pages/${page}`
+      `/order/get-all/page/${page}`
     );
     return data;
   }

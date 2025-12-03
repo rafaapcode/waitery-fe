@@ -18,7 +18,7 @@ import HistoryActionComponent from "./components/HistoryActionComponent";
 
 function History() {
   const { orders } = useOrders({});
-
+  
   const table = useCreateTable(toHistoryOrder(orders?.orders || []), [
     { accessorKey: "table", header: "Mesa" },
     { accessorKey: "date", header: "Data" },
