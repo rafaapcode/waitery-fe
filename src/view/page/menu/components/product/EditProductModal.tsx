@@ -141,6 +141,7 @@ function EditProductModal({ open, onClose, product }: EditProductModalProps) {
                 name="category"
                 render={({ field }) => (
                   <Select
+                    defaultValue={product.category.id}
                     onValueChange={(e) => {
                       field.onChange(e);
                     }}

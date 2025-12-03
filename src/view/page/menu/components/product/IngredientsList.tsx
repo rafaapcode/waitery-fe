@@ -53,8 +53,6 @@ function IngredientsList({ ingredientsSelected }: IngredientsListProps) {
     return () => setSelectedIngredients(new Set());
   }, [ingredientsSelected]);
 
-  console.log(ingredients);
-
   return (
     <div className="w-full h-full">
       <CreateIngredientModal

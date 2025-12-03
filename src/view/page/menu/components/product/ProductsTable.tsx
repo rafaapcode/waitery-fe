@@ -10,7 +10,7 @@ function ProductsTable({ produtos }: { produtos: Product[] }) {
    const table = useCreateTable(produtos, [
     { accessorKey: "image_url", header: "Imagem", cell: ({ row }) => <Image src={row.original.image_url} alt={row.original.name} size="xs" /> },
     { accessorKey: "name", header: "Nome" },
-    { accessorKey: "category", header: "Categoria", cell: ({ row }) => row.original.category.name },
+    { accessorKey: "category", header: "Categoria", cell: ({ row }) => `${row.original.category.icon} ${row.original.category.name}` },
     { accessorKey: "price", header: "Preço", cell: ({ row }) => formatCurrency(row.original.price) },
     {
       accessorKey: "actions",
