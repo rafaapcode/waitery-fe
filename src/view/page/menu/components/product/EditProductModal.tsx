@@ -6,7 +6,6 @@ import {
   useDeleteProductMutation,
   useUpdateProductMutation,
 } from "../../../../../app/hooks/mutations/useProductMutation";
-import { useCategories } from "../../../../../app/hooks/queries/useCategories";
 import { formatCurrency } from "../../../../../app/lib/formatCurrency";
 import Button from "../../../../../components/atoms/Button";
 import { Image } from "../../../../../components/atoms/Image";
@@ -32,7 +31,6 @@ interface EditProductModalProps {
 
 function EditProductModal({ open, onClose, product }: EditProductModalProps) {
   const [deleteProductModal, setDeleteProductModal] = useState(false);
-  const { categories } = useCategories({});
   const form = useForm<EditProductFormData>({
     resolver: zodResolver(editProductFormSchema),
     mode: "onChange",
