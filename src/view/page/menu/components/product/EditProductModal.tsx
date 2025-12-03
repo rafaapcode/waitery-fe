@@ -1,9 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { Controller, FormProvider, useForm } from "react-hook-form";
-import { categoryToSelectOptions } from "../../../../../app/entities/Category";
 import type { Product } from "../../../../../app/entities/Product";
-import { useDeleteProductMutation } from "../../../../../app/hooks/mutations/useProductMutation";
+import {
+  useDeleteProductMutation,
+  useUpdateProductMutation,
+} from "../../../../../app/hooks/mutations/useProductMutation";
 import { useCategories } from "../../../../../app/hooks/queries/useCategories";
 import { formatCurrency } from "../../../../../app/lib/formatCurrency";
 import Button from "../../../../../components/atoms/Button";
@@ -16,7 +18,6 @@ import Modal, {
   ModalFooter,
   ModalHeader,
 } from "../../../../../components/molecules/Modal";
-import Select, { SelectContent, SelectTrigger } from "../../../../../components/molecules/Select";
 import {
   editProductFormSchema,
   type EditProductFormData,
@@ -40,7 +41,7 @@ function EditProductModal({ open, onClose, product }: EditProductModalProps) {
       description: product.description,
       name: product.name,
       price: product.price,
-      ingredients: product.ingredients,
+      ingredients: product.ingredients.map((ingredient) => ingredient.value),
     },
   });
 
@@ -49,17 +50,24 @@ function EditProductModal({ open, onClose, product }: EditProductModalProps) {
     register,
     reset,
     control,
-    formState: { errors, isSubmitting, isValid, isDirty },
+    formState: { errors, isSubmitting, isValid, isDirty, dirtyFields },
   } = form;
 
-  const onSubmit = handleSubmit((data) => {
-    console.log("dados", data);
-    onClose();
+  const updateProductMutation = useUpdateProductMutation({
+    id: product.id,
+    onClose,
   });
 
-  const deleteProductMutation = useDeleteProductMutation({ id: product.id, onClose });
+  const deleteProductMutation = useDeleteProductMutation({
+    id: product.id,
+    onClose,
+  });
 
   const toggleDeleteProductModal = () => setDeleteProductModal((prev) => !prev);
+
+  const onSubmit = handleSubmit((data) => {
+    updateProductMutation.updateProduct({ data, dirtiesFieds: dirtyFields });
+  });
 
   return (
     <Modal open={open} nativeHidden={false}>
@@ -133,38 +141,27 @@ function EditProductModal({ open, onClose, product }: EditProductModalProps) {
               {...register("price")}
               error={errors.price?.message}
             />
-
-            <div className="flex flex-col gap-2">
-              <span className="text-gray-600 text-sm">Categoria</span>
-              <Controller
-                control={control}
-                name="category"
-                render={({ field }) => (
-                  <Select
-                    defaultValue={product.category.id}
-                    onValueChange={(e) => {
-                      field.onChange(e);
-                    }}
-                  >
-                    <SelectTrigger placeholder="Selecionar Categoria"/>
-                    <SelectContent options={categoryToSelectOptions(categories || [])} />
-                  </Select>
-                )}
-              />
-            </div>
           </div>
 
           {/* Segunda Coluna */}
           <FormProvider {...form}>
             <div className="w-full max-h-[350px]">
-              <IngredientsList ingredientsSelected={product.ingredients} />
+              <IngredientsList
+                ingredientsSelected={product.ingredients.map(
+                  (ingredient) => ingredient.value
+                )}
+              />
             </div>
           </FormProvider>
         </div>
       </ModalContent>
 
       <ModalFooter className="w-full flex justify-between items-center">
-        <Button size="md" variant="secondary" onClick={toggleDeleteProductModal}>
+        <Button
+          size="md"
+          variant="secondary"
+          onClick={toggleDeleteProductModal}
+        >
           Excluir Produto
         </Button>
         <Button

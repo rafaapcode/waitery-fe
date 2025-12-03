@@ -7,7 +7,7 @@ export interface Product {
   description: string;
   image_url: string;
   price: number;
-  ingredients: string[];
+  ingredients: {value: string; label: string;}[];
   category: Category;
   discounted_price: number;
   discount: boolean;

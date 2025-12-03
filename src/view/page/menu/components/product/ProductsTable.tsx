@@ -18,7 +18,6 @@ function ProductsTable({ produtos }: { produtos: Product[] }) {
       cell: ({ row }) => <ProductsActionComponent product={row.original} />,
     },
   ]);
-
   return (
     <div className="w-full h-[400px] overflow-y-auto">
       <Table className="w-full border border-gray-300">

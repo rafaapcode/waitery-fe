@@ -8,9 +8,12 @@ interface UseDeleteProductMutationProps {
   onClose: () => void;
 }
 
-export function useDeleteProductMutation({ id, onClose }: UseDeleteProductMutationProps) {
+export function useDeleteProductMutation({
+  id,
+  onClose,
+}: UseDeleteProductMutationProps) {
   const { revalidateProducts } = useRevalidateProducts();
-  
+
   const { mutateAsync, isPending } = useMutation({
     mutationFn: () => ProductService.deleteProduct(id),
     onSuccess: () => {
@@ -22,7 +25,7 @@ export function useDeleteProductMutation({ id, onClose }: UseDeleteProductMutati
       console.log(error);
       toast.error("Erro ao excluir produto");
     },
-  })
+  });
 
   return { deleteProduct: mutateAsync, isPending };
 }
@@ -31,11 +34,14 @@ interface UseCreateProductMutationProps {
   onClose: () => void;
 }
 
-export function useCreateProductMutation({ onClose }: UseCreateProductMutationProps) {
+export function useCreateProductMutation({
+  onClose,
+}: UseCreateProductMutationProps) {
   const { revalidateProducts } = useRevalidateProducts();
-  
+
   const { mutateAsync, isPending } = useMutation({
-    mutationFn: (data: ProductService.CreateProductsInput) => ProductService.createProduct(data),
+    mutationFn: (data: ProductService.CreateProductsInput) =>
+      ProductService.createProduct(data),
     onSuccess: () => {
       revalidateProducts();
       onClose();
@@ -45,7 +51,35 @@ export function useCreateProductMutation({ onClose }: UseCreateProductMutationPr
       console.log(error);
       toast.error("Erro ao criar produto");
     },
-  })
+  });
 
   return { createProduct: mutateAsync, isPending };
+}
+
+interface UseUpdateProductMutationProps {
+  id: string;
+  onClose: () => void;
+}
+
+export function useUpdateProductMutation({
+  id,
+  onClose,
+}: UseUpdateProductMutationProps) {
+  const { revalidateProducts } = useRevalidateProducts();
+
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: ({data, dirtiesFieds}: {data: ProductService.UpdateProductsInput["data"], dirtiesFieds: ProductService.UpdateProductsInput["dirtiesFieds"]}) =>
+      ProductService.updateProduct({ id, data, dirtiesFieds }),
+    onSuccess: () => {
+      revalidateProducts();
+      onClose();
+      toast.success("Produto atualizado com sucesso");
+    },
+    onError: (error) => {
+      console.log(error);
+      toast.error("Erro ao atualizar produto");
+    },
+  });
+
+  return { updateProduct: mutateAsync, isPending };
 }
