@@ -27,22 +27,25 @@ export function useDeleteProductMutation({ id, onClose }: UseDeleteProductMutati
   return { deleteProduct: mutateAsync, isPending };
 }
 
+interface UseCreateProductMutationProps {
+  onClose: () => void;
+}
 
-export function useCreateProductMutation({ id, onClose }: UseDeleteProductMutationProps) {
+export function useCreateProductMutation({ onClose }: UseCreateProductMutationProps) {
   const { revalidateProducts } = useRevalidateProducts();
   
   const { mutateAsync, isPending } = useMutation({
-    mutationFn: () => ProductService.deleteProduct(id),
+    mutationFn: (data: ProductService.CreateProductsInput) => ProductService.createProduct(data),
     onSuccess: () => {
       revalidateProducts();
       onClose();
-      toast.success("Produto excluído com sucesso");
+      toast.success("Produto criado com sucesso");
     },
     onError: (error) => {
       console.log(error);
-      toast.error("Erro ao excluir produto");
+      toast.error("Erro ao criar produto");
     },
   })
 
-  return { deleteProduct: mutateAsync, isPending };
+  return { createProduct: mutateAsync, isPending };
 }

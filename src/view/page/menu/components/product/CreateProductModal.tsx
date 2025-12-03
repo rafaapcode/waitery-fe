@@ -2,7 +2,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { LoaderCircleIcon } from "lucide-react";
 import { useState } from "react";
 import { Controller, FormProvider, useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { categoryToOptionsType } from "../../../../../app/entities/Category";
+import { useCreateProductMutation } from "../../../../../app/hooks/mutations/useProductMutation";
 import { useCategories } from "../../../../../app/hooks/queries/useCategories";
 import Button from "../../../../../components/atoms/Button";
 import Input from "../../../../../components/atoms/Input";
@@ -41,9 +43,22 @@ function CreateProductModal({ open, onClose }: CreateProductModalProps) {
     formState: { errors, isSubmitting, isValid, isDirty },
   } = form;
 
+  const { createProduct, isPending } = useCreateProductMutation({ onClose });
+
   const onSubmit = handleSubmit((data) => {
-    console.log(data);
-    onClose();
+
+    if(data.ingredients.length === 0) {
+      toast.error("Adicione ao menos um ingrediente ao produto.");
+      return;
+    }
+
+    createProduct({
+      category_id: data.category,
+      description: data.description,
+      ingredients: data.ingredients,
+      name: data.name,
+      price: data.price,
+    });
   });
 
   return (
@@ -125,8 +140,8 @@ function CreateProductModal({ open, onClose }: CreateProductModalProps) {
 
       <ModalFooter className="w-full flex justify-end items-center">
         <Button
-          disabled={!isValid || !isDirty || isSubmitting}
-          isLoading={isSubmitting}
+          disabled={!isValid || !isDirty || isSubmitting || isPending}
+          isLoading={isSubmitting || isPending}
           size="md"
           onClick={onSubmit}
         >
