@@ -26,6 +26,7 @@ export class ProductService extends Service {
     await this.client.put<void>(`/product/${data.id}`, {
       ...dirtiesFieds,
       ingredients: data.data.ingredients,
+      price: Number(data.data.price),
     });
   }
 
@@ -63,7 +64,7 @@ export namespace ProductService {
     data: {
       name?: string;
       description?: string;
-      price?: number;
+      price?: string;
       ingredients?: string[];
     };
     dirtiesFieds: Partial<

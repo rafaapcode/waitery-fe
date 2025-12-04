@@ -38,7 +38,7 @@ function EditProductModal({ open, onClose, product }: EditProductModalProps) {
       category: product.category.name,
       description: product.description,
       name: product.name,
-      price: product.price,
+      price: product.price.toString(),
       ingredients: product.ingredients.map((ingredient) => ingredient.value),
     },
   });
