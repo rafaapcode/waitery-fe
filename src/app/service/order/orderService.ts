@@ -33,6 +33,10 @@ export class OrderService extends Service {
   static async cancelOrder(orderId: string): Promise<void> {
     await this.client.patch(`/order/cancel/${orderId}`);
   }
+
+  static async restartOrdersOfDay(): Promise<void> {
+    await this.client.patch('/order/restart');
+  }
 }
 
 export namespace OrderService {

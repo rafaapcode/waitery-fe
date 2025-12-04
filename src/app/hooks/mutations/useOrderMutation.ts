@@ -30,15 +30,20 @@ export function useUpdateOrderMutation({ id,  onClose }: UseUpdateOrderMutationP
 interface UseDeleteOrderMutationProps {
   id: string;
   onClose: () => void;
+  revalidate?: () => void;
 }
 
-export function useDeleteOrderMutation({ id,  onClose }: UseDeleteOrderMutationProps) {
+export function useDeleteOrderMutation({ id,  onClose, revalidate }: UseDeleteOrderMutationProps) {
   const { revalidateOrders } = useRevalidateTodayOrders();
   
   const { mutateAsync, isPending } = useMutation({
     mutationFn: () => OrderService.deleteOrder(id),
     onSuccess: () => {
-      revalidateOrders();
+      if (revalidate) {
+        revalidate();
+      } else {
+        revalidateOrders();
+      }
       onClose();
       toast.success("Pedido excluído com sucesso");
     },
@@ -74,4 +79,27 @@ export function useCancelOrderMutation({ id,  onClose }: UseCancelOrderMutationP
   })
 
   return { cancelOrder: mutateAsync, isPending };
+}
+
+interface UseRestartOrderMutationProps {
+  onClose: () => void;
+}
+
+export function useRestartOrderMutation({ onClose }: UseRestartOrderMutationProps) {
+  const { revalidateOrders } = useRevalidateTodayOrders();
+  
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: () => OrderService.restartOrdersOfDay(),
+    onSuccess: () => {
+      revalidateOrders();
+      onClose();
+      toast.success("Dia reinicializado com sucesso");
+    },
+    onError: (error) => {
+      console.log(error);
+      toast.error("Erro ao reinicializar o dia");
+    },
+  })
+
+  return { restartOrders: mutateAsync, isPending };
 }

@@ -1,52 +1,38 @@
-import { useMutation } from "@tanstack/react-query";
 import { EyeIcon, Trash } from "lucide-react";
-import { useState } from "react";
-import toast from "react-hot-toast";
 import type { Order } from "../../../../app/entities/Order";
-import { useRevalidateOrders } from "../../../../app/hooks/revalidates/useRevalidateOrders";
-import { OrderService } from "../../../../app/service/order/orderService";
 import Button from "../../../../components/atoms/Button";
 import ConfirmModal from "../../../../components/molecules/ConfirmModal";
 import OrderDetailModal from "../../../../components/molecules/OrderDetailModal";
+import { useHistoryController } from "../useHistoryController";
 
 interface HistoryActionComponentProps {
   order?: Order;
 }
 
 function HistoryActionComponent({ order }: HistoryActionComponentProps) {
-  const [isOpenViewerModal, setIsOpenViewerModal] = useState(false);
-  const [isOpenConfirmModal, setIsOpenConfirmModal] = useState(false);
-
-  const onCloseViewerModal = () => setIsOpenViewerModal(false);
-  const onCloseconfirmModal = () => setIsOpenConfirmModal(false);
-
-  const { revalidateOrders } = useRevalidateOrders();
-
-  const { mutateAsync, isPending } = useMutation({
-    mutationFn: () => OrderService.deleteOrder(order?.id || ""),
-    onSuccess: () => {
-      revalidateOrders();
-      onCloseconfirmModal();
-      toast.success("Pedido excluído com sucesso");
-    },
-    onError: (error) => {
-      console.log(error);
-      toast.error("Erro ao excluir pedido");
-    },
-  });
+  const {
+    isOpenViewerModal,
+    setIsOpenViewerModal,
+    isOpenConfirmModal,
+    setIsOpenConfirmModal,
+    onCloseViewerModal,
+    onCloseconfirmModal,
+    deleteOrderMutationConfirmModal,
+    deleteOrderMutationViewerModal
+  } = useHistoryController(order?.id ?? "");
 
   return (
     <div className="flex gap-1.5 items-center justify-end">
       {order && (
-        <OrderDetailModal open={isOpenViewerModal} onClose={onCloseViewerModal} order={order} variant="HISTORY" onDelete={() => {}}/>
+        <OrderDetailModal isDeleting={deleteOrderMutationViewerModal.isPending} open={isOpenViewerModal} onClose={onCloseViewerModal} order={order} variant="HISTORY" onDelete={deleteOrderMutationViewerModal.deleteOrder}/>
       )}
       <ConfirmModal 
         open={isOpenConfirmModal}
         title="Excluir pedido"
         description={`Tem certeza que deseja excluir o pedido da mesa ${order?.table} ?  Esta ação não pode ser desfeita.`}
-        onConfirm={() => mutateAsync()}
+        onConfirm={deleteOrderMutationConfirmModal.deleteOrder}
         onCancel={onCloseconfirmModal}
-        isLoading={isPending}
+        isLoading={deleteOrderMutationConfirmModal.isPending}
       />
       <Button
         onClick={() => setIsOpenViewerModal(true)}

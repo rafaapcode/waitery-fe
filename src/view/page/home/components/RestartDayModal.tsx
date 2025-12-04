@@ -11,9 +11,10 @@ interface RestartDayModalProps {
   onClose: () => void;
   onRestart: () => void;
   disable?: boolean;
+  isLoading?: boolean;
 }
 
-function RestartDayModal({ open, onClose, onRestart, disable}: RestartDayModalProps) {
+function RestartDayModal({ open, onClose, onRestart, disable, isLoading }: RestartDayModalProps) {
   return (
     <Modal open={open}>
       <ModalHeader
@@ -37,7 +38,7 @@ function RestartDayModal({ open, onClose, onRestart, disable}: RestartDayModalPr
       <ModalFooter>
         <div className="w-full flex  justify-between items-center">
           <Button variant="secondary" size="md" onClick={onClose}>Não, continuar pedidos</Button>
-          <Button onClick={onRestart} size="md" disabled={disable}>Sim, reiniciar o dia</Button>
+          <Button isLoading={isLoading} onClick={onRestart} size="md" disabled={disable}>Sim, reiniciar o dia</Button>
         </div>
       </ModalFooter>
     </Modal>

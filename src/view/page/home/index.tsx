@@ -1,6 +1,4 @@
 import { HomeIcon, RotateCcwIcon } from "lucide-react";
-import type { Order } from "../../../app/entities/Order";
-import { OrderStatus } from "../../../app/entities/Order";
 import PageHeader from "../../../components/molecules/PageHeader";
 import Column from "./components/Column";
 import RestartDayModal from "./components/RestartDayModal";
@@ -11,24 +9,16 @@ function Home() {
     isRestartModalOpen,
     onCloseRestartModal,
     onOpenRestartModal,
-    orders
+    orders,
+    doneOrders,
+    inProductionOrders,
+    waitingOrders,
+    restartOrdersMutation
   } = useHomeController();
-
-  const waitingOrders: Order[] = orders?.filter(
-    (order) => order.status === OrderStatus.WAITING
-  ) || [];
-
-  const inProductionOrders: Order[] = orders?.filter(
-    (order) => order.status === OrderStatus.IN_PRODUCTION
-  ) || [];
-
-  const doneOrders: Order[] = orders?.filter(
-    (order) => order.status === OrderStatus.DONE
-  ) || [];
  
   return (
     <main className="w-full h-full">
-      <RestartDayModal open={isRestartModalOpen} onClose={onCloseRestartModal} disable={orders?.length === 0 || true} onRestart={() => {}}/>
+      <RestartDayModal isLoading={restartOrdersMutation.isPending} open={isRestartModalOpen} onClose={onCloseRestartModal} disable={orders?.length === 0} onRestart={restartOrdersMutation.restartOrders}/>
       <PageHeader  
         icon={HomeIcon}
         title="Home"
