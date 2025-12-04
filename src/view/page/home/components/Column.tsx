@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { Order } from "../../../../app/entities/Order";
+import { useCancelOrderMutation, useDeleteOrderMutation, useUpdateOrderMutation } from "../../../../app/hooks/mutations/useOrderMutation";
 import OrderDetailModal from "../../../../components/molecules/OrderDetailModal";
 import ColumnItem from "./ColumnItem";
 
@@ -16,12 +17,34 @@ function Column({ icon, name, orders }: ColumnProps) {
     setSelectOrder(selectedOrder);
   };
 
+  const deleteOrderMutation = useDeleteOrderMutation({
+    id: order?.id || "",
+    onClose: () => setSelectOrder(null),
+  });
+
+  const updateOrderMutation = useUpdateOrderMutation({
+    id: order?.id || "",
+    onClose: () => setSelectOrder(null),
+  });
+
+  const cancelOrderMutation = useCancelOrderMutation({
+    id: order?.id || "",
+    onClose: () => setSelectOrder(null),
+  });
+
+
   return (
     <div className="flex flex-col p-4 border border-gray-300 bg-gray-50 rounded-lg flex-1 h-full">
       <OrderDetailModal
         columnName={`${icon} ${name}`}
         open={order !== null}
         onClose={() => setSelectOrder(null)}
+        onDelete={deleteOrderMutation.deleteOrder}
+        onUpdate={(status) => updateOrderMutation.updateOrder(status)}
+        onCancel={cancelOrderMutation.cancelOrder}
+        isDeleting={deleteOrderMutation.isPending}
+        isUpdating={updateOrderMutation.isPending}
+        isCanceling={cancelOrderMutation.isPending}
         order={order}
       />
 

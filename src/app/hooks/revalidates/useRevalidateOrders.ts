@@ -9,3 +9,13 @@ export function useRevalidateOrders() {
 
   return { revalidateOrders };
 }
+
+export function useRevalidateTodayOrders() {
+  const queryClient = useQueryClient();
+
+  const revalidateOrders = () => {
+    queryClient.invalidateQueries({ queryKey:  ["orders","today",] });
+  };
+
+  return { revalidateOrders };
+}

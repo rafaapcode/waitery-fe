@@ -1,5 +1,5 @@
 import { Activity } from "react";
-import type { Order } from "../../../app/entities/Order";
+import { OrderStatus, type Order } from "../../../app/entities/Order";
 import { formatCurrency } from "../../../app/lib/formatCurrency";
 import Button from "../../atoms/Button";
 
@@ -15,9 +15,14 @@ interface OrderDetailModalProps {
   open: boolean;
   onClose: () => void;
   onDelete?: () => void;
+  onCancel?: () => void;
+  onUpdate?: (newStatus: OrderStatus) => void;
   columnName?: string;
   order: Order | null;
   variant?: "ORDER" | "HISTORY";
+  isDeleting?: boolean;
+  isUpdating?: boolean;
+  isCanceling?: boolean;
 }
 
 function OrderDetailModal({
@@ -26,11 +31,18 @@ function OrderDetailModal({
   order,
   columnName = "",
   variant = "ORDER",
-  onDelete
+  onDelete,
+  onUpdate,
+  onCancel,
+  isDeleting,
+  isUpdating,
+  isCanceling
 }: OrderDetailModalProps) {
   if (!order) {
     return null;
   }
+
+  const nextStatus = order.status === OrderStatus.WAITING ? OrderStatus.IN_PRODUCTION : OrderStatus.DONE;
 
   const products = order.products.map((product) => ({
     name: product.name,
@@ -91,15 +103,15 @@ function OrderDetailModal({
           }
         >
           <div className="w-full flex  justify-between items-center">
-            <Button variant="secondary" onClick={onClose}>
+            <Button isLoading={isCanceling} variant="secondary" onClick={onCancel}>
               Cancelar Pedido
             </Button>
-            <Button onClick={() => {}}>{nextButtonTitle}</Button>
+            <Button isLoading={isUpdating} onClick={() => onUpdate && onUpdate(nextStatus)}>{nextButtonTitle}</Button>
           </div>
         </Activity>
 
         <Activity mode={isOrderVariant ? "hidden" : "visible"}>
-          <Button variant="secondary" onClick={onDelete}>
+          <Button isLoading={isDeleting} variant="secondary" onClick={onDelete}>
             Excluir Registro
           </Button>
         </Activity>

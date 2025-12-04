@@ -9,9 +9,11 @@ import Modal, {
 interface RestartDayModalProps {
   open: boolean;
   onClose: () => void;
+  onRestart: () => void;
+  disable?: boolean;
 }
 
-function RestartDayModal({ open, onClose }: RestartDayModalProps) {
+function RestartDayModal({ open, onClose, onRestart, disable}: RestartDayModalProps) {
   return (
     <Modal open={open}>
       <ModalHeader
@@ -35,7 +37,7 @@ function RestartDayModal({ open, onClose }: RestartDayModalProps) {
       <ModalFooter>
         <div className="w-full flex  justify-between items-center">
           <Button variant="secondary" size="md" onClick={onClose}>Não, continuar pedidos</Button>
-          <Button onClick={() => {}} size="md">Sim, reiniciar o dia</Button>
+          <Button onClick={onRestart} size="md" disabled={disable}>Sim, reiniciar o dia</Button>
         </div>
       </ModalFooter>
     </Modal>
