@@ -1,9 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import socketIo from "socket.io-client";
 import { OrderStatus, type Order } from "../../../app/entities/Order";
 import { useRestartOrderMutation } from "../../../app/hooks/mutations/useOrderMutation";
 import { useTodayOrders } from "../../../app/hooks/queries/useTodayOrders";
+import { useAuth } from "../../../app/hooks/useAuth";
 
 export const useHomeController = () => {
+  const { user } = useAuth();
   const [isRestartModalOpen, setIsRestartModalOpen] = useState(false);
 
   const onCloseRestartModal = () => setIsRestartModalOpen(false);
@@ -23,6 +26,20 @@ export const useHomeController = () => {
   const restartOrdersMutation = useRestartOrderMutation({
     onClose: onCloseRestartModal,
   });
+
+  useEffect(() => {
+    const socket = socketIo("http://localhost:3001", {
+      transports: ["websocket"],
+    });
+
+    socket.on(`order-org-${user?.org.id}`, (newOrder: Order) => {
+      console.log("New order received via socket:", newOrder);
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
 
   return {
     orders,
