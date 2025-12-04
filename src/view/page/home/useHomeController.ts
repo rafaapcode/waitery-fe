@@ -8,6 +8,7 @@ import { useAuth } from "../../../app/hooks/useAuth";
 export const useHomeController = () => {
   const { user } = useAuth();
   const [isRestartModalOpen, setIsRestartModalOpen] = useState(false);
+  const [ordersWs, setOrdersWs] = useState<Order[]>([]);
 
   const onCloseRestartModal = () => setIsRestartModalOpen(false);
   const onOpenRestartModal = () => setIsRestartModalOpen(true);
@@ -15,13 +16,13 @@ export const useHomeController = () => {
   const { orders } = useTodayOrders({});
 
   const waitingOrders: Order[] =
-    orders?.filter((order) => order.status === OrderStatus.WAITING) || [];
+    ordersWs?.filter((order) => order.status === OrderStatus.WAITING) || [];
 
   const inProductionOrders: Order[] =
-    orders?.filter((order) => order.status === OrderStatus.IN_PRODUCTION) || [];
+    ordersWs?.filter((order) => order.status === OrderStatus.IN_PRODUCTION) || [];
 
   const doneOrders: Order[] =
-    orders?.filter((order) => order.status === OrderStatus.DONE) || [];
+    ordersWs?.filter((order) => order.status === OrderStatus.DONE) || [];
 
   const restartOrdersMutation = useRestartOrderMutation({
     onClose: onCloseRestartModal,
@@ -32,17 +33,22 @@ export const useHomeController = () => {
       transports: ["websocket"],
     });
 
-    socket.on(`order-org-${user?.org.id}`, (newOrder: Order) => {
-      console.log("New order received via socket:", newOrder);
+    setOrdersWs(orders || []);
+
+    socket.on(`order-org-${user?.org.id}`, (newOrder: {action: string; order: Order}) => {
+      if(newOrder.action === 'new_order') {
+        setOrdersWs((prevOrders) => [newOrder.order, ...prevOrders]);
+      }
     });
 
     return () => {
       socket.disconnect();
+      setOrdersWs([]);
     };
-  }, []);
+  }, [orders, user?.org.id, restartOrdersMutation.restartOrders]);
 
   return {
-    orders,
+    orders: ordersWs,
     isRestartModalOpen,
     onCloseRestartModal,
     onOpenRestartModal,

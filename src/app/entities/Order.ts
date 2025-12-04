@@ -42,7 +42,6 @@ export interface Order {
 }
 
 export const fromHistoryOrder = (historyOrder: HistoryOrder[] | HistoryOrder): Order[] | Order => {
-  console.log('historyOrder', historyOrder);
   if (!Array.isArray(historyOrder)) {
     const formattedDate = historyOrder.date.split('/');
     const day = Number(formattedDate[0]);
@@ -59,7 +58,6 @@ export const fromHistoryOrder = (historyOrder: HistoryOrder[] | HistoryOrder): O
       products: historyOrder.products,
     }
   }
-  console.log('historyOrder', historyOrder);
   return historyOrder.map((order) => {
     const formattedDate = order.date.split('/');
     const day = Number(formattedDate[0]);
