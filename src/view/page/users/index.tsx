@@ -1,4 +1,4 @@
-import { LoaderCircleIcon, UsersIcon } from "lucide-react";
+import { UsersIcon } from "lucide-react";
 import TableProvider from "../../../app/context/TableContext";
 import { useUsers } from "../../../app/hooks/queries/useUsers";
 import useCreateTable from "../../../app/hooks/useCreateTable";
@@ -13,6 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from "../../../components/molecules/Table";
+import TableSkeleton from "../../../components/TableSkeleton";
 import CreateUserModal from "./components/CreateUserModal";
 import UsersActionComponent from "./components/UsersActionComponent";
 import { useUsersController } from "./useUsersController";
@@ -66,8 +67,7 @@ function Users() {
               Novo Usuário
             </Button>
           </div>
-          {isFetching && <div className="flex-1 flex justify-center items-center p-10">
-            <LoaderCircleIcon size={28} className="text-red-700 animate-spin"/></div>}
+          {isFetching &&  <TableSkeleton />}
           {!isFetching && <div className="w-full mt-4 h-[400px] overflow-y-auto">
             <Table className="w-full h-full border border-gray-300 shadow">
               <TableHeader className="bg-gray-100 rounded-md">

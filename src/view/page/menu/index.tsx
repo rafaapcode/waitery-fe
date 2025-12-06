@@ -1,10 +1,11 @@
-import { LoaderCircleIcon, SquareMenu } from "lucide-react";
+import { SquareMenu } from "lucide-react";
 import Button from "../../../components/atoms/Button";
 import PageHeader from "../../../components/molecules/PageHeader";
 import Tabs, {
   TabsContent,
   TabsOptions,
 } from "../../../components/molecules/Tabs";
+import TableSkeleton from "../../../components/TableSkeleton";
 import CategoryTable from "./components/category/CategoryTable";
 import CreateCategoryModal from "./components/category/CreateCategoryModal";
 import CreateProductModal from "./components/product/CreateProductModal";
@@ -59,14 +60,7 @@ function Menu() {
               Novo Produto
             </Button>
           </div>
-          {products.isFetching && (
-            <div className="flex-1 flex justify-center items-center p-10">
-              <LoaderCircleIcon
-                size={28}
-                className="text-red-700 animate-spin"
-              />
-            </div>
-          )}
+          {products.isFetching && <TableSkeleton />}
           {!products.isFetching && (
             <ProductsTable produtos={products.products?.products || []} />
           )}
@@ -84,14 +78,7 @@ function Menu() {
               Nova Categoria
             </Button>
           </div>
-          {categories.isFetching && (
-            <div className="flex-1 flex justify-center items-center p-10">
-              <LoaderCircleIcon
-                size={28}
-                className="text-red-700 animate-spin"
-              />
-            </div>
-          )}
+          {categories.isFetching && <TableSkeleton />}
           {!categories.isFetching && (
             <CategoryTable categories={categories.categories || []} />
           )}

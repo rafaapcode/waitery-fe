@@ -13,7 +13,7 @@ export const useHomeController = () => {
   const onCloseRestartModal = () => setIsRestartModalOpen(false);
   const onOpenRestartModal = () => setIsRestartModalOpen(true);
 
-  const { orders } = useTodayOrders({});
+  const { orders, isFetching } = useTodayOrders({});
 
   const waitingOrders: Order[] =
     ordersWs?.filter((order) => order.status === OrderStatus.WAITING) || [];
@@ -56,5 +56,6 @@ export const useHomeController = () => {
     inProductionOrders,
     doneOrders,
     restartOrdersMutation,
+    isFetching
   };
 };
