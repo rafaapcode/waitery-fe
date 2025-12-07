@@ -4,14 +4,14 @@ import { Service } from "../service";
 export class OrgService extends Service {
   static async getAllOrgs(): Promise<OrgService.GetAllOrgsOutput> {
     const { data } = await this.client.get<OrgService.GetAllOrgsOutput>(
-      "/organization/all"
+      "/organizations/all"
     );
     return data;
   }
 
   static async getOrg(): Promise<OrgService.GetOrgOutput> {
     const { data } = await this.client.get<OrgService.GetOrgOutput>(
-      "/organization"
+      "/organizations"
     );
     return data;
   }
@@ -22,7 +22,7 @@ export class OrgService extends Service {
     const dirtyFields = this.getOnlyDirtiedFields(params.org, params.dirtiedFields);
 
     const { data } = await this.client.patch<OrgService.UpdateOrgOutput>(
-      "/organization",
+      "/organizations",
       dirtyFields
     );
     

@@ -4,14 +4,14 @@ import { Service } from "../service";
 export class UsersService extends Service {
   static async getMe(): Promise<UsersService.GetMeResponse> {
     const { data } = await this.client.get<UsersService.GetMeResponse>(
-      "/user/me"
+      "/users/me"
     );
     return data;
   }
 
   static async updateMe(): Promise<UsersService.GetMeResponse> {
     const { data } = await this.client.get<UsersService.GetMeResponse>(
-      "/user/me"
+      "/users/me"
     );
     return data;
   }
@@ -20,13 +20,13 @@ export class UsersService extends Service {
     page: UsersService.GetAllUsersInput = 0
   ): Promise<UsersService.GetAllUsersOutput> {
     const { data } = await this.client.get<UsersService.GetAllUsersOutput>(
-      `/user/all?page=${page}`
+      `/users/all?page=${page}`
     );
     return data;
   }
 
   static async deleteUser(userId: UsersService.DeleteUserInput): Promise<void> {
-    await this.client.delete(`/user/${userId}`);
+    await this.client.delete(`/users/${userId}`);
   }
 
   static async updateUser(params: UsersService.UpdateUserInput): Promise<void> {
@@ -34,11 +34,11 @@ export class UsersService extends Service {
       params.data,
       params.dirtiedFields
     );
-    await this.client.patch(`/user/${params.id}`, dirtiedFields);
+    await this.client.patch(`/users/${params.id}`, dirtiedFields);
   }
 
   static async createUser(params: UsersService.CreateUserInput): Promise<void> {
-    await this.client.post("/user", params);
+    await this.client.post("/users", params);
   }
 
   private static getOnlyDirtiedFields<T>(

@@ -6,7 +6,7 @@ export class OrderService extends Service {
     page: number = 0
   ): Promise<OrderService.GetAllOrderOutput> {
     const { data } = await this.client.get<OrderService.GetAllOrderOutput>(
-      `/order/get-all/page/${page}`
+      `/orders/get-all/page/${page}`
     );
     return data;
   }
@@ -14,28 +14,28 @@ export class OrderService extends Service {
   static async getAllOrdersOfToday(): Promise<OrderService.GetAllOrdersOfTodayOutput> {
     const { data } =
       await this.client.get<OrderService.GetAllOrdersOfTodayOutput>(
-        `/order/get-all/today?canceled_orders=false`
+        `/orders/get-all/today?canceled_orders=false`
       );
     return data;
   }
 
   static async updateOrderStatus(params: OrderService.UpdateOrdersStatusOutput): Promise<void> {
       await this.client.patch<void>(
-        `/order/${params.id}`,
+        `/orders/${params.id}`,
         { status: params.status }
       );
   }
 
   static async deleteOrder(orderId: string): Promise<void> {
-    await this.client.delete(`/order/delete/${orderId}`);
+    await this.client.delete(`/orders/delete/${orderId}`);
   }
 
   static async cancelOrder(orderId: string): Promise<void> {
-    await this.client.patch(`/order/cancel/${orderId}`);
+    await this.client.patch(`/orders/cancel/${orderId}`);
   }
 
   static async restartOrdersOfDay(): Promise<void> {
-    await this.client.patch('/order/restart');
+    await this.client.patch('/orders/restart');
   }
 }
 

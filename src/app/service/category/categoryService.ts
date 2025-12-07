@@ -4,27 +4,27 @@ import { Service } from "../service";
 export class CategoryService extends Service {
   static async getAllCategories(): Promise<CategoryService.GetAllCategoriesOutput> {
     const { data } = await this.client.get<CategoryService.GetAllCategoriesOutput>(
-      "/category/all"
+      "/categories/all"
     );
     return data;
   }
 
   static async getCategory(categoryId: string): Promise<CategoryService.GetCategoryOutput> {
     const { data } = await this.client.get<CategoryService.GetCategoryOutput>(
-      `/category/${categoryId}`
+      `/categories/${categoryId}`
     );
     return data;
   }
 
   static async deleteCategory(categoryId: string): Promise<void> {
     await this.client.delete<void>(
-      `/category/${categoryId}`
+      `/categories/${categoryId}`
     );
   }
 
    static async editCategory(categoryId: string, data: CategoryService.EditCategoryInput): Promise<Category> {
     const { data: updatedCategory } = await this.client.patch<Category>(
-      `/category/${categoryId}`,
+      `/categories/${categoryId}`,
       data
     );
     return updatedCategory;
@@ -32,7 +32,7 @@ export class CategoryService extends Service {
 
   static async createCategory(data: CategoryService.CreateCategoryInput): Promise<Category> {
     const { data: newCategory } = await this.client.post<Category>(
-      `/category`,
+      `/categories`,
       data
     );
     return newCategory;

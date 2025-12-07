@@ -1,6 +1,9 @@
-import type { User } from "../../../../app/entities/User";
+import TableProvider from "../../../../app/context/TableContext";
+import type { User, UserRole } from "../../../../app/entities/User";
+import { useAuth } from "../../../../app/hooks/useAuth";
 import useCreateTable from "../../../../app/hooks/useCreateTable";
 import { cn } from "../../../../app/lib/utils";
+import Badget from "../../../../components/atoms/Badget";
 import {
   Table,
   TableBody,
@@ -16,10 +19,14 @@ interface UsersTableProps {
 }
 
 function UsersTable({ users }: UsersTableProps) {
+  const { isAdmin, isWaiter } = useAuth();
+
+  const badgetVariant = (role?: UserRole) => isAdmin(role) ? "primary" : isWaiter(role) ? "error" : "default";
+
   const table = useCreateTable(users || [], [
     { accessorKey: "name", header: "Nome" },
     { accessorKey: "email", header: "E-mail" },
-    { accessorKey: "role", header: "Cargo" },
+    { accessorKey: "role", header: "Cargo", cell: ({ row }) => <Badget variant={badgetVariant(row.original.role)}>{row.original.role}</Badget> },
     {
       accessorKey: "actions",
       header: "Ações",
@@ -28,6 +35,7 @@ function UsersTable({ users }: UsersTableProps) {
   ]);
 
   return (
+    <TableProvider table={table}>
     <div className="w-full mt-4 h-[400px] overflow-y-auto">
       <Table className="w-full h-full border border-gray-300 shadow">
         <TableHeader className="bg-gray-100 rounded-md">
@@ -63,6 +71,7 @@ function UsersTable({ users }: UsersTableProps) {
         </TableBody>
       </Table>
     </div>
+    </TableProvider>
   );
 }
 
