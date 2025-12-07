@@ -13,14 +13,14 @@ interface SidebarFooterProps {
 
 function SidebarFooter({ isOpen }: SidebarFooterProps) {
   const { pathname } = useLocation();
-  const { signOut, user } = useAuth();
+  const { signOut, user, isOwner } = useAuth();
   const navigate = useNavigate();
 
   const isSelected = pathname === "/profile" || pathname === "/org";
   const logout = () => {
     signOut();
     navigate("/signin");
-  }
+  };
 
   const opts: OptionsType[] = [
     {
@@ -28,23 +28,31 @@ function SidebarFooter({ isOpen }: SidebarFooterProps) {
       label: "Seu perfil",
       icon: User,
       to: "/profile",
-      isSelected: function(){ return pathname === this.to } ,
-    },
-    {
-      type: "link",
-      label: "Organização",
-      icon: Building,
-      to: "/org",
-      isSelected: function(){ return pathname === this.to } ,
+      isSelected: function () {
+        return pathname === this.to;
+      },
     },
     {
       type: "button",
       label: "Sair",
       icon: LogOutIcon,
-      isSelected: function(){ return pathname === this.to } ,
-      onClick: logout 
-    }
+      isSelected: function () {
+        return pathname === this.to;
+      },
+      onClick: logout,
+    },
   ];
+
+  if (isOwner(user?.role))
+    opts.unshift({
+      type: "link",
+      label: "Organização",
+      icon: Building,
+      to: "/org",
+      isSelected: function () {
+        return pathname === this.to;
+      },
+    });
 
   return (
     <div

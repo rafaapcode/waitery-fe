@@ -17,7 +17,7 @@ function History() {
         subtitle="Visualize pedidos anteriores"
       />
 
-      {isFetching && !orders?.orders && <TableSkeleton />}
+      {isFetching || !orders?.orders && <TableSkeleton />}
       {!isFetching && orders?.orders && <HistoryTable orders={orders?.orders || []}/>}
     </main>
   );

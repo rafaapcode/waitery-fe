@@ -18,29 +18,6 @@ type MenuOption = {
   isActive: (currentPath: string) => boolean;
 };
 
-const organizations = [
-  {
-    id: "1",
-    name: "Restaurante Sabor & Arte",
-    logo: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0",
-  },
-  {
-    id: "2",
-    name: "Pizzaria Bella Napoli",
-    logo: "https://images.unsplash.com/photo-1513104890138-7c749659a591",
-  },
-  {
-    id: "3",
-    name: "Burger House Premium",
-    logo: "https://images.unsplash.com/photo-1550547660-d9450f859349",
-  },
-  {
-    id: "4",
-    name: "Sushi Master",
-    logo: "https://images.unsplash.com/photo-1579584425555-c3ce17fd4351",
-  },
-];
-
 const sidebarOptions: MenuOption[] = [
   {
     path: "/",
@@ -82,12 +59,12 @@ function SidebarContent({ isOpen }: SidebarContentProps) {
   const { orgs, isFetching } = useOrgs({});
 
   const handleSetOrg = (id: string) => {
-    const org = organizations.find((org) => org.id === id);
+    const org = orgs?.find((org) => org.id === id);
     if (org) {
       setOrg({
         orgId: org.id,
         name: org.name,
-        imgUrl: org.logo,
+        imgUrl: org.image_url,
       });
     }
   };
