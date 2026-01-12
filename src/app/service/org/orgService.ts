@@ -39,6 +39,15 @@ export class OrgService extends Service {
     };
   }
 
+  static async createOrg(org: OrgService.CreateOrgParams): Promise<void> {
+    const { data } = await this.client.postForm(
+      "/organizations",
+      org
+    );
+    console.log(data);
+    // return data;
+  }
+
   private static getOnlyDirtiedFields<T>(
     obj: T,
     dirtiedFields: Partial<Record<keyof T, boolean>>
@@ -54,6 +63,21 @@ export class OrgService extends Service {
 }
 
 export namespace OrgService {
+  export type CreateOrgParams = {
+    image?: File | undefined;
+    name: string;
+    email: string;
+    description: string;
+    location_code: string;
+    open_hour: number;
+    close_hour: number;
+    cep: string;
+  };
+
+  export type CreateOrgOutput = {
+    orgs: Org;
+  };
+
   export type GetAllOrgsOutput = {
     orgs: Org[];
   };

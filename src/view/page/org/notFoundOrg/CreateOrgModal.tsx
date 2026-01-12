@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
+import { OrgService } from "../../../../app/service/org/orgService";
 import Button from "../../../../components/atoms/Button";
 import Input from "../../../../components/atoms/Input";
 import TextArea from "../../../../components/atoms/TextArea";
@@ -62,6 +63,7 @@ function CreateOrgModal({ open, onClose }: CreateOrgModalProps) {
   } = form;
 
   const onSubmit = handleSubmit(async (data) => {
+    await OrgService.createOrg(data);
     console.log(data);
   });
 

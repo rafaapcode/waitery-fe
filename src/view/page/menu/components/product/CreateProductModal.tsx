@@ -51,14 +51,14 @@ function CreateProductModal({ open, onClose }: CreateProductModalProps) {
       toast.error("Adicione ao menos um ingrediente ao produto.");
       return;
     }
-
-    createProduct({
-      category_id: data.category,
-      description: data.description,
-      ingredients: data.ingredients,
-      name: data.name,
-      price: data.price,
-    });
+    console.log(data);
+    // createProduct({
+    //   category_id: data.category,
+    //   description: data.description,
+    //   ingredients: data.ingredients,
+    //   name: data.name,
+    //   price: data.price,
+    // });
   });
 
   return (
