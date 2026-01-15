@@ -40,12 +40,10 @@ export class OrgService extends Service {
   }
 
   static async createOrg(org: OrgService.CreateOrgParams): Promise<void> {
-    const { data } = await this.client.postForm(
+    await this.client.postForm(
       "/organizations",
       {...org, cep: org.cep.replace(/\D/g, "")}
     );
-    console.log(data);
-    // return data;
   }
 
   private static getOnlyDirtiedFields<T>(

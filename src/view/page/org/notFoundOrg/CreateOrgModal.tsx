@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
-import { OrgService } from "../../../../app/service/org/orgService";
+import { useOrgMutation } from "../../../../app/hooks/mutations/useOrgMutation";
 import Button from "../../../../components/atoms/Button";
 import Input from "../../../../components/atoms/Input";
 import TextArea from "../../../../components/atoms/TextArea";
@@ -46,6 +46,7 @@ const closeHours = [
 ];
 
 function CreateOrgModal({ open, onClose }: CreateOrgModalProps) {
+  const { createOrg, isPending } = useOrgMutation({onClose});
   const form = useForm<CreateOrgFormData>({
     resolver: zodResolver(createOrgFormSchema),
     defaultValues: {
@@ -63,8 +64,7 @@ function CreateOrgModal({ open, onClose }: CreateOrgModalProps) {
   } = form;
 
   const onSubmit = handleSubmit(async (data) => {
-    await OrgService.createOrg(data);
-    console.log(data);
+    await createOrg(data);
   });
 
   return (
@@ -180,8 +180,8 @@ function CreateOrgModal({ open, onClose }: CreateOrgModalProps) {
 
       <ModalFooter className="w-full flex justify-end items-center">
         <Button
-          disabled={!isValid || !isDirty || isSubmitting}
-          isLoading={isSubmitting}
+          disabled={!isValid || !isDirty || isSubmitting || isPending}
+          isLoading={isSubmitting || isPending}
           size="md"
           onClick={onSubmit}
         >
