@@ -3,10 +3,10 @@ import { Service } from "../service";
 
 export class ProductService extends Service {
   static async getAllProducts(
-    page: number = 0
+    page: number = 0,
   ): Promise<ProductService.GetAllProductsOutput> {
     const { data } = await this.client.get<ProductService.GetAllProductsOutput>(
-      `/products/all/${page}`
+      `/products/all/${page}`,
     );
     return data;
   }
@@ -17,11 +17,11 @@ export class ProductService extends Service {
   }
 
   static async updateProduct(
-    data: ProductService.UpdateProductsInput
+    data: ProductService.UpdateProductsInput,
   ): Promise<void> {
     const dirtiesFieds = this.getOnlyDirtiedFields(
       data.data,
-      data.dirtiesFieds
+      data.dirtiesFieds,
     );
     await this.client.put<void>(`/products/${data.id}`, {
       ...dirtiesFieds,
@@ -31,9 +31,9 @@ export class ProductService extends Service {
   }
 
   static async createProduct(
-    data: ProductService.CreateProductsInput
+    data: ProductService.CreateProductsInput,
   ): Promise<void> {
-    await this.client.post<void>(`/products`, {
+    await this.client.postForm<void>(`/products`, {
       ...data,
       price: Number(data.price),
     });
@@ -41,7 +41,7 @@ export class ProductService extends Service {
 
   private static getOnlyDirtiedFields<T>(
     obj: T,
-    dirtiedFields: Partial<Record<keyof T, boolean>>
+    dirtiedFields: Partial<Record<keyof T, boolean>>,
   ): Partial<T> {
     const result: Partial<T> = {};
     for (const key in dirtiedFields) {
@@ -78,6 +78,7 @@ export namespace ProductService {
   };
 
   export type CreateProductsInput = {
+    image?: File;
     name: string;
     description: string;
     price: string;

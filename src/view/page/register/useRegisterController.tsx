@@ -8,10 +8,16 @@ import { useAuth } from "../../../app/hooks/useAuth";
 import { LoginService } from "../../../app/service/login/loginService";
 
 const registerSchema = z.object({
-  name: z.string().nonempty({error:  'O nome é obrigatório'}).min(4, 'O nome deve ter no mínimo 4 caracteres'),
-  cpf: z.string().nonempty({error: 'O CPF é obrigatório'}).length(11, 'O CPF deve ter 11 dígitos'),
-  email: z.email({error: 'E-mail inválido'}),
-  password: z.string().min(8, 'A senha deve ter ao menos 8 caracteres')
+  name: z
+    .string()
+    .nonempty({ error: "O nome é obrigatório" })
+    .min(8, "O nome deve ter no mínimo 8 caracteres"),
+  cpf: z
+    .string()
+    .nonempty({ error: "O CPF é obrigatório" })
+    .length(11, "O CPF deve ter 11 dígitos"),
+  email: z.email({ error: "E-mail inválido" }),
+  password: z.string().min(8, "A senha deve ter ao menos 8 caracteres"),
 });
 
 type RegisterBody = z.infer<typeof registerSchema>;
@@ -23,20 +29,24 @@ export function useRegisterController() {
     "password" | "text"
   >("password");
 
-
-  const { handleSubmit: hookHandleSubmit, register, formState: {errors, isValid, isSubmitting} } = useForm<RegisterBody>({
-    resolver: zodResolver(registerSchema)
+  const {
+    handleSubmit: hookHandleSubmit,
+    register,
+    formState: { errors, isValid, isSubmitting },
+  } = useForm<RegisterBody>({
+    resolver: zodResolver(registerSchema),
   });
 
   const handleSubmit = hookHandleSubmit(async (data) => {
     try {
-      const {access_token,  ...userdata} = await LoginService.registerUser(data);
+      const { access_token, ...userdata } =
+        await LoginService.registerUser(data);
       signIn(access_token);
       setUser(userdata);
-      navigate('/');
+      navigate("/");
     } catch (error) {
       console.log(error);
-      toast.error('Erro ao registrar usuário');
+      toast.error("Erro ao registrar usuário");
     }
   });
 
