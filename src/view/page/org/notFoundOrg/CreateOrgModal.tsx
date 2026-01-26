@@ -46,7 +46,7 @@ const closeHours = [
 ];
 
 function CreateOrgModal({ open, onClose }: CreateOrgModalProps) {
-  const { createOrg, isPending } = useOrgMutation({onClose});
+  const { createOrg, isPending } = useOrgMutation({ onClose });
   const form = useForm<CreateOrgFormData>({
     resolver: zodResolver(createOrgFormSchema),
     defaultValues: {
@@ -70,7 +70,7 @@ function CreateOrgModal({ open, onClose }: CreateOrgModalProps) {
   return (
     <Modal open={open}>
       <ModalHeader
-        title="Editar Produto"
+        title="Criar Organização"
         onClose={() => {
           onClose();
           reset();

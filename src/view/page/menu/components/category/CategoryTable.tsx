@@ -11,7 +11,7 @@ import {
 } from "../../../../../components/molecules/Table";
 import CategoryActionComponent from "./CategoryActionTable";
 
-function CategoryTable({categories}: {categories: Category[]}) {
+function CategoryTable({ categories }: { categories: Category[] }) {
   const table = useCreateTable(categories, [
     { accessorKey: "icon", header: "Emoji" },
     { accessorKey: "name", header: "Nome" },
@@ -34,11 +34,14 @@ function CategoryTable({categories}: {categories: Category[]}) {
 
                 const headerStyle = cn(
                   isTableHeader && "w-[100px]",
-                  isActionHeader && "text-right"
+                  isActionHeader && "text-right",
                 );
 
                 return (
-                  <TableHead key={header.id} className={headerStyle}>
+                  <TableHead
+                    key={`HEADER-${header.id}`}
+                    className={headerStyle}
+                  >
                     {header.headerTitle}
                   </TableHead>
                 );
@@ -52,7 +55,9 @@ function CategoryTable({categories}: {categories: Category[]}) {
             <TableRow key={row.id} className="border-b border-gray-300">
               {row.cells.map((cell) => (
                 <>
-                  <TableCell className="p-3">{cell.value}</TableCell>
+                  <TableCell key={`CELL-${cell.id}`} className="p-3">
+                    {cell.value}
+                  </TableCell>
                 </>
               ))}
             </TableRow>

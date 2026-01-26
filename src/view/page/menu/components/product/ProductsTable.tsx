@@ -3,15 +3,37 @@ import useCreateTable from "../../../../../app/hooks/useCreateTable";
 import { formatCurrency } from "../../../../../app/lib/formatCurrency";
 import { cn } from "../../../../../app/lib/utils";
 import { Image } from "../../../../../components/atoms/Image";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../../../components/molecules/Table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "../../../../../components/molecules/Table";
 import ProductsActionComponent from "./ProductsActionTable";
 
 function ProductsTable({ produtos }: { produtos: Product[] }) {
-   const table = useCreateTable(produtos, [
-    { accessorKey: "image_url", header: "Imagem", cell: ({ row }) => <Image src={row.original.image_url} alt={row.original.name} size="xs" /> },
+  const table = useCreateTable(produtos, [
+    {
+      accessorKey: "image_url",
+      header: "Imagem",
+      cell: ({ row }) => (
+        <Image src={row.original.image_url} alt={row.original.name} size="xs" />
+      ),
+    },
     { accessorKey: "name", header: "Nome" },
-    { accessorKey: "category", header: "Categoria", cell: ({ row }) => `${row.original.category.icon} ${row.original.category.name}` },
-    { accessorKey: "price", header: "Preço", cell: ({ row }) => formatCurrency(row.original.price) },
+    {
+      accessorKey: "category",
+      header: "Categoria",
+      cell: ({ row }) =>
+        `${row.original.category.icon} ${row.original.category.name}`,
+    },
+    {
+      accessorKey: "price",
+      header: "Preço",
+      cell: ({ row }) => formatCurrency(row.original.price),
+    },
     {
       accessorKey: "actions",
       header: "Ações",
@@ -27,12 +49,13 @@ function ProductsTable({ produtos }: { produtos: Product[] }) {
               {headerGroup.headers.map((header) => {
                 const isActionHeader = header.isHeader("actions");
 
-                const headerStyle = cn(
-                  isActionHeader && "text-right"
-                );
+                const headerStyle = cn(isActionHeader && "text-right");
 
                 return (
-                  <TableHead key={header.id} className={headerStyle}>
+                  <TableHead
+                    key={`HEADER-${header.id}`}
+                    className={headerStyle}
+                  >
                     {header.headerTitle}
                   </TableHead>
                 );
@@ -46,7 +69,9 @@ function ProductsTable({ produtos }: { produtos: Product[] }) {
             <TableRow key={row.id} className="border-b border-gray-300">
               {row.cells.map((cell) => (
                 <>
-                  <TableCell key={cell.id} className="p-3">{cell.value}</TableCell>
+                  <TableCell key={`CELL-${cell.id}`} className="p-3">
+                    {cell.value}
+                  </TableCell>
                 </>
               ))}
             </TableRow>
@@ -57,4 +82,4 @@ function ProductsTable({ produtos }: { produtos: Product[] }) {
   );
 }
 
-export default ProductsTable
+export default ProductsTable;

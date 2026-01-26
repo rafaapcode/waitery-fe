@@ -23,7 +23,8 @@ export class ProductService extends Service {
       data.data,
       data.dirtiesFieds,
     );
-    await this.client.put<void>(`/products/${data.id}`, {
+
+    await this.client.putForm<void>(`/products/${data.id}`, {
       ...dirtiesFieds,
       ingredients: data.data.ingredients,
       price: Number(data.data.price),
@@ -62,6 +63,7 @@ export namespace ProductService {
   export type UpdateProductsInput = {
     id: string;
     data: {
+      image?: File;
       name?: string;
       description?: string;
       price?: string;

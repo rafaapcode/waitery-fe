@@ -146,7 +146,7 @@ function EditProductModal({ open, onClose, product }: EditProductModalProps) {
             <div className="w-full max-h-[350px]">
               <IngredientsList
                 ingredientsSelected={product.ingredients.map(
-                  (ingredient) => ingredient.value
+                  (ingredient) => ingredient.value,
                 )}
               />
             </div>
@@ -164,7 +164,7 @@ function EditProductModal({ open, onClose, product }: EditProductModalProps) {
         </Button>
         <Button
           disabled={!isValid || !isDirty || isSubmitting}
-          isLoading={isSubmitting}
+          isLoading={isSubmitting || updateProductMutation.isPending}
           size="md"
           onClick={onSubmit}
         >
