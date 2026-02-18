@@ -3,24 +3,22 @@ import { Service } from "../service";
 
 export class UsersService extends Service {
   static async getMe(): Promise<UsersService.GetMeResponse> {
-    const { data } = await this.client.get<UsersService.GetMeResponse>(
-      "/users/me"
-    );
+    const { data } =
+      await this.client.get<UsersService.GetMeResponse>("/users/me");
     return data;
   }
 
   static async updateMe(): Promise<UsersService.GetMeResponse> {
-    const { data } = await this.client.get<UsersService.GetMeResponse>(
-      "/users/me"
-    );
+    const { data } =
+      await this.client.get<UsersService.GetMeResponse>("/users/me");
     return data;
   }
 
   static async getAllUsers(
-    page: UsersService.GetAllUsersInput = 0
+    page: UsersService.GetAllUsersInput = 0,
   ): Promise<UsersService.GetAllUsersOutput> {
     const { data } = await this.client.get<UsersService.GetAllUsersOutput>(
-      `/users/all?page=${page}`
+      `/users/all?page=${page}`,
     );
     return data;
   }
@@ -32,7 +30,7 @@ export class UsersService extends Service {
   static async updateUser(params: UsersService.UpdateUserInput): Promise<void> {
     const dirtiedFields = this.getOnlyDirtiedFields(
       params.data,
-      params.dirtiedFields
+      params.dirtiedFields,
     );
     await this.client.patch(`/users/${params.id}`, dirtiedFields);
   }
@@ -43,7 +41,7 @@ export class UsersService extends Service {
 
   private static getOnlyDirtiedFields<T>(
     obj: T,
-    dirtiedFields: Partial<Record<keyof T, boolean>>
+    dirtiedFields: Partial<Record<keyof T, boolean>>,
   ): Partial<T> {
     const result: Partial<T> = {};
     for (const key in dirtiedFields) {
@@ -96,5 +94,6 @@ export namespace UsersService {
     password: string;
     cpf: string;
     role: UserRole;
+    org_ids?: string[];
   };
 }
