@@ -7,6 +7,7 @@ import { toListOrg } from "../../../../app/entities/Org";
 import { UserRole } from "../../../../app/entities/User";
 import { useCreateUserMutation } from "../../../../app/hooks/mutations/useUserMutation";
 import { useOrgs } from "../../../../app/hooks/queries/useOrgs";
+import { useAuth } from "../../../../app/hooks/useAuth";
 import Button from "../../../../components/atoms/Button";
 import Input from "../../../../components/atoms/Input";
 import Modal, {
@@ -28,6 +29,7 @@ interface CreateUserModalProps {
 }
 
 function CreateUserModal({ open, onClose }: CreateUserModalProps) {
+  const { user } = useAuth();
   const {
     handleSubmit,
     register,
@@ -91,7 +93,9 @@ function CreateUserModal({ open, onClose }: CreateUserModalProps) {
                   components={makeAnimated()}
                   isMulti
                   isLoading={isFetching}
-                  options={toListOrg(orgs ?? [])}
+                  options={toListOrg(
+                    orgs?.filter((org) => org.id !== user?.org.id) ?? [],
+                  )}
                   onChange={(e: any) =>
                     field.onChange(e.map((option: any) => option.value))
                   }
