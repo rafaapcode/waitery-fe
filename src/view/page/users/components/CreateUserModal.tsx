@@ -1,8 +1,12 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { UserPen } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
+import Select from "react-select";
+import makeAnimated from "react-select/animated";
+import { toListOrg } from "../../../../app/entities/Org";
 import { UserRole } from "../../../../app/entities/User";
 import { useCreateUserMutation } from "../../../../app/hooks/mutations/useUserMutation";
+import { useOrgs } from "../../../../app/hooks/queries/useOrgs";
 import Button from "../../../../components/atoms/Button";
 import Input from "../../../../components/atoms/Input";
 import Modal, {
@@ -36,16 +40,19 @@ function CreateUserModal({ open, onClose }: CreateUserModalProps) {
     defaultValues: {
       name: "",
       email: "",
+      org_ids: [],
       role: UserRole.WAITER,
       cpf: "",
       password: "",
     },
   });
+  const { orgs, isFetching } = useOrgs({});
 
   const createUser = useCreateUserMutation(onClose);
 
   const onSubmit = handleSubmit((data) => {
     createUser.createUser(data);
+    reset();
   });
 
   return (
@@ -72,6 +79,25 @@ function CreateUserModal({ open, onClose }: CreateUserModalProps) {
             placeholder="Email"
             {...register("email")}
             error={errors.email?.message}
+          />
+          <Controller
+            control={control}
+            name="org_ids"
+            render={({ field }) => (
+              <div className="flex flex-col gap-2">
+                <label htmlFor="">Organizações</label>
+                <Select
+                  closeMenuOnSelect={false}
+                  components={makeAnimated()}
+                  isMulti
+                  isLoading={isFetching}
+                  options={toListOrg(orgs ?? [])}
+                  onChange={(e: any) =>
+                    field.onChange(e.map((option: any) => option.value))
+                  }
+                />
+              </div>
+            )}
           />
           <Input
             type="string"
@@ -111,7 +137,9 @@ function CreateUserModal({ open, onClose }: CreateUserModalProps) {
         <Button
           className="w-full"
           onClick={onSubmit}
-          disabled={!isValid || !isDirty || isSubmitting || createUser.isPending}
+          disabled={
+            !isValid || !isDirty || isSubmitting || createUser.isPending
+          }
           isLoading={isSubmitting || createUser.isPending}
         >
           Cadastrar usuário
