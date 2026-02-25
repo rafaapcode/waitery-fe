@@ -1,38 +1,17 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, useForm } from "react-hook-form";
-import { useAuth } from "../../../app/hooks/useAuth";
+import { Controller } from "react-hook-form";
 import Button from "../../../components/atoms/Button";
 import Input from "../../../components/atoms/Input";
 import ImageInput from "../../../components/molecules/ImageInput";
-import {
-  editProfileFormSchema,
-  type EditProfileFormData,
-} from "./schemas/editProfileSchema";
+import { useProfileController } from "./useProfileController";
 
 function Profile() {
-  const { user } = useAuth();
-
-  const form = useForm<EditProfileFormData>({
-    resolver: zodResolver(editProfileFormSchema),
-    defaultValues: {
-      image: undefined,
-      name: user?.name || "",
-      email: user?.email || "",
-      password: "",
-      new_password: "",
-    },
-  });
+  const { form, onSubmit } = useProfileController();
 
   const {
-    handleSubmit,
     register,
     control,
     formState: { errors, isSubmitting, isDirty, isValid },
   } = form;
-
-  const onSubmit = handleSubmit(async (data) => {
-    console.log(data);
-  });
 
   return (
     <div className="w-full h-full overflow-hidden">
