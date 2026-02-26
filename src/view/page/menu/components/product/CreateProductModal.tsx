@@ -1,14 +1,15 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoaderCircleIcon } from "lucide-react";
-import { useState } from "react";
 import { Controller, FormProvider, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import makeAnimated from "react-select/animated";
+import Select from "react-select/creatable";
 import { categoryToOptionsType } from "../../../../../app/entities/Category";
+import { useCreateCategoryMutation } from "../../../../../app/hooks/mutations/useCategoryMutation";
 import { useCreateProductMutation } from "../../../../../app/hooks/mutations/useProductMutation";
 import { useCategories } from "../../../../../app/hooks/queries/useCategories";
 import Button from "../../../../../components/atoms/Button";
 import Input from "../../../../../components/atoms/Input";
-import DropDownMenu from "../../../../../components/molecules/DropdownMenu";
 import ImageInput from "../../../../../components/molecules/ImageInput";
 import Modal, {
   ModalContent,
@@ -27,7 +28,6 @@ interface CreateProductModalProps {
 }
 
 function CreateProductModal({ open, onClose }: CreateProductModalProps) {
-  const [category, setCategory] = useState<string>("");
   const { categories, isFetching } = useCategories({});
 
   const form = useForm<CreateProductFormData>({
@@ -44,6 +44,8 @@ function CreateProductModal({ open, onClose }: CreateProductModalProps) {
   } = form;
 
   const { createProduct, isPending } = useCreateProductMutation({ onClose });
+  const { createCategory, isPending: CreatingCategoryLoad } =
+    useCreateCategoryMutation({});
 
   const onSubmit = handleSubmit((data) => {
     if (data.ingredients.length === 0) {
@@ -112,21 +114,21 @@ function CreateProductModal({ open, onClose }: CreateProductModalProps) {
 
               <div className="flex flex-col gap-2">
                 <span className="text-gray-600 text-sm">Categoria</span>
+
                 <Controller
                   control={control}
                   name="category"
                   render={({ field }) => (
-                    <DropDownMenu
+                    <Select
+                      onCreateOption={(inputValue: string) =>
+                        createCategory({ name: inputValue, icon: "🍽️" })
+                      }
+                      closeMenuOnSelect={false}
+                      components={makeAnimated()}
+                      isLoading={isFetching || CreatingCategoryLoad}
                       options={categoryToOptionsType(categories || [])}
-                      onSelect={(e) => {
-                        setCategory(e?.label || "");
-                        field.onChange(e?.value);
-                      }}
-                    >
-                      <span className="w-full border border-red-500 px-2 py-3 text-sm rounded-md hover:bg-red-50 cursor-pointer transition-colors duration-200">
-                        {!category ? "Selecionar Categoria" : category}
-                      </span>
-                    </DropDownMenu>
+                      onChange={(e: any) => field.onChange(e)}
+                    />
                   )}
                 />
               </div>

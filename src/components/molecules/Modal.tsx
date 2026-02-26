@@ -32,19 +32,19 @@ const Modal = ({
   nativeHidden = true,
 }: ModalProps) => {
   if (!nativeHidden) {
-    if(!open) return null;
+    if (!open) return null;
     return createPortal(
       <div
         className={cn(
           "bg-black/70 absolute top-0 left-0 w-full h-full flex justify-center items-center",
-          priorityZIndex[priority]
+          priorityZIndex[priority],
         )}
       >
         <div className="flex flex-col gap-6 bg-white p-6 rounded-md max-w-[95%] max-h-[97%] min-w-1/6">
           {children}
         </div>
       </div>,
-      document.body
+      document.body,
     );
   }
 
@@ -53,7 +53,7 @@ const Modal = ({
       <div
         className={cn(
           "bg-black/70 absolute top-0 left-0 w-full h-full flex justify-center items-center",
-          priorityZIndex[priority]
+          priorityZIndex[priority],
         )}
       >
         <div className="flex flex-col gap-6 bg-white p-6 rounded-md max-w-[95%] max-h-[97%] min-w-1/6">
@@ -61,7 +61,7 @@ const Modal = ({
         </div>
       </div>
     </Activity>,
-    document.body
+    document.body,
   );
 };
 
@@ -94,7 +94,7 @@ export function ModalHeader({ title, icon: Icon, onClose }: ModalHeaderProps) {
 
 export function ModalContent({ children }: { children: ReactNode }) {
   return (
-    <section className="w-full max-h-full mt-6 overflow-y-auto">
+    <section className="w-full max-h-full mt-4 overflow-y-auto">
       {children}
     </section>
   );

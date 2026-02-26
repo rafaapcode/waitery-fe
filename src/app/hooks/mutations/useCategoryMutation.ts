@@ -28,3 +28,29 @@ export function useDeleteCategoryMutation({
 
   return { deleteCategory: mutateAsync, isPending };
 }
+
+interface UseCreateCategoryMutationProps {
+  onClose?: () => void;
+}
+
+export function useCreateCategoryMutation({
+  onClose,
+}: UseCreateCategoryMutationProps) {
+  const { revalidateCategories } = useRevalidateCategory();
+
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: (categoryData: CategoryService.CreateCategoryInput) =>
+      CategoryService.createCategory(categoryData),
+    onSuccess: () => {
+      revalidateCategories();
+      onClose?.();
+      toast.success("Categoria criada com sucesso");
+    },
+    onError: (error) => {
+      console.log(error);
+      toast.error("Erro ao criar categoria");
+    },
+  });
+
+  return { createCategory: mutateAsync, isPending };
+}
