@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import type { Product } from "../../../../../app/entities/Product";
+import { useAddDiscountMutation } from "../../../../../app/hooks/mutations/useProductMutation";
 import Button from "../../../../../components/atoms/Button";
 import Input from "../../../../../components/atoms/Input";
 import Modal, {
@@ -37,9 +38,10 @@ function CreateDiscountModal({
     },
   });
 
+  const { addDiscount, isPending } = useAddDiscountMutation({ onClose });
+
   const onSubmit = handleSubmit((data) => {
-    // createDiscount(data);
-    console.log(data);
+    addDiscount({ id: product.id, discounted_price: data.discountedPrice });
   });
 
   return (
@@ -66,9 +68,19 @@ function CreateDiscountModal({
       </ModalContent>
 
       <ModalFooter className="w-full flex justify-end items-center">
+        {product.discount && (
+          <Button
+            // disabled={!isValid || !isDirty || isSubmitting || isPending}
+            // isLoading={isSubmitting || isPending}
+            size="md"
+            onClick={onSubmit}
+          >
+            Remover Desconto
+          </Button>
+        )}
         <Button
-          disabled={!isValid || !isDirty || isSubmitting}
-          isLoading={isSubmitting}
+          disabled={!isValid || !isDirty || isSubmitting || isPending}
+          isLoading={isSubmitting || isPending}
           size="md"
           onClick={onSubmit}
         >

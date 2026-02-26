@@ -6,6 +6,7 @@ import { formatCurrency } from "../../../../../app/lib/formatCurrency";
 import Button from "../../../../../components/atoms/Button";
 import { Image } from "../../../../../components/atoms/Image";
 import ConfirmModal from "../../../../../components/molecules/ConfirmModal";
+import CreateDiscountModal from "./CreateDiscount";
 import EditProductModal from "./EditProductModal";
 
 interface ProductsActionComponentProps {
@@ -15,9 +16,11 @@ interface ProductsActionComponentProps {
 function ProductsActionComponent({ product }: ProductsActionComponentProps) {
   const [isOpenEditModal, setIsOpenEditModal] = useState(false);
   const [isOpenConfirmModal, setIsOpenConfirmModal] = useState(false);
+  const [isOpenDiscountModal, setIsOpenDiscountModal] = useState(false);
 
   const onCloseEditModal = () => setIsOpenEditModal(false);
   const onCloseConfirmModal = () => setIsOpenConfirmModal(false);
+  const onCloseDiscountModal = () => setIsOpenDiscountModal(false);
 
   const { deleteProduct, isPending } = useDeleteProductMutation({
     id: product.id,
@@ -29,6 +32,11 @@ function ProductsActionComponent({ product }: ProductsActionComponentProps) {
       <EditProductModal
         open={isOpenEditModal}
         onClose={onCloseEditModal}
+        product={product}
+      />
+      <CreateDiscountModal
+        open={isOpenDiscountModal}
+        onClose={onCloseDiscountModal}
         product={product}
       />
       <ConfirmModal
@@ -58,10 +66,10 @@ function ProductsActionComponent({ product }: ProductsActionComponentProps) {
       </ConfirmModal>
 
       <Button
-        onClick={() => setIsOpenEditModal(true)}
+        onClick={() => setIsOpenDiscountModal(true)}
         size="icon"
         variant="secondary"
-        className="text-gray-500 hover:text-gray-400"
+        className="text-green-800 hover:text-green-700"
       >
         <CirclePercentIcon size={18} />
       </Button>

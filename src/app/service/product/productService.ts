@@ -40,6 +40,14 @@ export class ProductService extends Service {
     });
   }
 
+  static async addDiscountToProduct(
+    data: ProductService.AddDiscountInput,
+  ): Promise<void> {
+    await this.client.patch(`/products/discount/add/${data.id}`, {
+      discounted_price: Number(data.discounted_price),
+    });
+  }
+
   private static getOnlyDirtiedFields<T>(
     obj: T,
     dirtiedFields: Partial<Record<keyof T, boolean>>,
@@ -86,5 +94,10 @@ export namespace ProductService {
     price: string;
     category_id: string;
     ingredients: string[];
+  };
+
+  export type AddDiscountInput = {
+    id: string;
+    discounted_price: number;
   };
 }

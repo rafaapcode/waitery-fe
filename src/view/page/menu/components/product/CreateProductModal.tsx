@@ -127,7 +127,7 @@ function CreateProductModal({ open, onClose }: CreateProductModalProps) {
                       components={makeAnimated()}
                       isLoading={isFetching || CreatingCategoryLoad}
                       options={categoryToOptionsType(categories || [])}
-                      onChange={(e: any) => field.onChange(e)}
+                      onChange={(e: any) => field.onChange(e.value)}
                     />
                   )}
                 />

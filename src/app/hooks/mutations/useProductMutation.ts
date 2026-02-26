@@ -68,8 +68,13 @@ export function useUpdateProductMutation({
   const { revalidateProducts } = useRevalidateProducts();
 
   const { mutateAsync, isPending } = useMutation({
-    mutationFn: ({data, dirtiesFieds}: {data: ProductService.UpdateProductsInput["data"], dirtiesFieds: ProductService.UpdateProductsInput["dirtiesFieds"]}) =>
-      ProductService.updateProduct({ id, data, dirtiesFieds }),
+    mutationFn: ({
+      data,
+      dirtiesFieds,
+    }: {
+      data: ProductService.UpdateProductsInput["data"];
+      dirtiesFieds: ProductService.UpdateProductsInput["dirtiesFieds"];
+    }) => ProductService.updateProduct({ id, data, dirtiesFieds }),
     onSuccess: () => {
       revalidateProducts();
       onClose();
@@ -82,4 +87,30 @@ export function useUpdateProductMutation({
   });
 
   return { updateProduct: mutateAsync, isPending };
+}
+
+interface UseAddDiscountMutationProps {
+  onClose: () => void;
+}
+
+export function useAddDiscountMutation({
+  onClose,
+}: UseAddDiscountMutationProps) {
+  const { revalidateProducts } = useRevalidateProducts();
+
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: (data: ProductService.AddDiscountInput) =>
+      ProductService.addDiscountToProduct(data),
+    onSuccess: () => {
+      revalidateProducts();
+      onClose();
+      toast.success("Desconto adicionado com sucesso");
+    },
+    onError: (error) => {
+      console.log(error);
+      toast.error("Erro ao adicionar desconto");
+    },
+  });
+
+  return { addDiscount: mutateAsync, isPending };
 }
