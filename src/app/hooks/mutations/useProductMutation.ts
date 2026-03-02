@@ -114,3 +114,28 @@ export function useAddDiscountMutation({
 
   return { addDiscount: mutateAsync, isPending };
 }
+
+interface UseRemoveDiscountMutationProps {
+  onClose: () => void;
+}
+
+export function useRemoveDiscountMutation({
+  onClose,
+}: UseRemoveDiscountMutationProps) {
+  const { revalidateProducts } = useRevalidateProducts();
+
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: (id: string) => ProductService.removeDiscountFromProduct(id),
+    onSuccess: () => {
+      revalidateProducts();
+      onClose();
+      toast.success("Desconto removido com sucesso");
+    },
+    onError: (error) => {
+      console.log(error);
+      toast.error("Erro ao remover desconto");
+    },
+  });
+
+  return { removeDiscount: mutateAsync, isPending };
+}

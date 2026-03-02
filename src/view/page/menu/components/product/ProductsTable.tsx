@@ -32,7 +32,12 @@ function ProductsTable({ produtos }: { produtos: Product[] }) {
     {
       accessorKey: "price",
       header: "Preço",
-      cell: ({ row }) => formatCurrency(row.original.price),
+      cell: ({ row }) =>
+        formatCurrency(
+          row.original.discount
+            ? row.original.discounted_price
+            : row.original.price,
+        ),
     },
     {
       accessorKey: "actions",
@@ -40,6 +45,7 @@ function ProductsTable({ produtos }: { produtos: Product[] }) {
       cell: ({ row }) => <ProductsActionComponent product={row.original} />,
     },
   ]);
+  console.log("produtos", produtos);
   return (
     <div className="w-full h-[400px] overflow-y-auto">
       <Table className="w-full border border-gray-300">

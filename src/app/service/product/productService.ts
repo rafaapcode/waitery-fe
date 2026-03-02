@@ -48,6 +48,10 @@ export class ProductService extends Service {
     });
   }
 
+  static async removeDiscountFromProduct(id: string): Promise<void> {
+    await this.client.patch(`/products/discount/remove/${id}`);
+  }
+
   private static getOnlyDirtiedFields<T>(
     obj: T,
     dirtiedFields: Partial<Record<keyof T, boolean>>,
