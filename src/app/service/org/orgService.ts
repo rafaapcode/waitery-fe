@@ -3,29 +3,30 @@ import { Service } from "../service";
 
 export class OrgService extends Service {
   static async getAllOrgs(): Promise<OrgService.GetAllOrgsOutput> {
-    const { data } = await this.client.get<OrgService.GetAllOrgsOutput>(
-      "/organizations/all"
-    );
+    const { data } =
+      await this.client.get<OrgService.GetAllOrgsOutput>("/organizations/all");
     return data;
   }
 
   static async getOrg(): Promise<OrgService.GetOrgOutput> {
-    const { data } = await this.client.get<OrgService.GetOrgOutput>(
-      "/organizations"
-    );
+    const { data } =
+      await this.client.get<OrgService.GetOrgOutput>("/organizations");
     return data;
   }
 
   static async updateOrg(
-    params: OrgService.UpdateOrgInput
+    params: OrgService.UpdateOrgInput,
   ): Promise<OrgService.UpdateOrgOutput> {
-    const dirtyFields = this.getOnlyDirtiedFields(params.org, params.dirtiedFields);
-
-    const { data } = await this.client.patch<OrgService.UpdateOrgOutput>(
-      "/organizations",
-      dirtyFields
+    const dirtyFields = this.getOnlyDirtiedFields(
+      params.org,
+      params.dirtiedFields,
     );
-    
+
+    const { data } = await this.client.patchForm<OrgService.UpdateOrgOutput>(
+      "/organizations",
+      dirtyFields,
+    );
+
     return {
       org: {
         cep: data.org.cep,
@@ -35,20 +36,20 @@ export class OrgService extends Service {
         name: data.org.name,
         close_hour: data.org.close_hour,
         open_hour: data.org.open_hour,
-      }
+      },
     };
   }
 
   static async createOrg(org: OrgService.CreateOrgParams): Promise<void> {
-    await this.client.postForm(
-      "/organizations",
-      {...org, cep: org.cep.replace(/\D/g, "")}
-    );
+    await this.client.postForm("/organizations", {
+      ...org,
+      cep: org.cep.replace(/\D/g, ""),
+    });
   }
 
   private static getOnlyDirtiedFields<T>(
     obj: T,
-    dirtiedFields: Partial<Record<keyof T, boolean>>
+    dirtiedFields: Partial<Record<keyof T, boolean>>,
   ): Partial<T> {
     const result: Partial<T> = {};
     for (const key in dirtiedFields) {
