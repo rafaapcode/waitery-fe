@@ -27,17 +27,7 @@ export class OrgService extends Service {
       dirtyFields,
     );
 
-    return {
-      org: {
-        cep: data.org.cep,
-        description: data.org.description,
-        email: data.org.email,
-        location_code: data.org.location_code,
-        name: data.org.name,
-        close_hour: data.org.close_hour,
-        open_hour: data.org.open_hour,
-      },
-    };
+    return data;
   }
 
   static async createOrg(org: OrgService.CreateOrgParams): Promise<void> {
@@ -112,14 +102,20 @@ export namespace OrgService {
 
   export type UpdateOrgOutput = {
     org: {
-      image?: File | undefined;
-      cep?: string;
-      description?: string;
-      email?: string;
-      location_code?: string;
-      name?: string;
-      close_hour?: number;
-      open_hour?: number;
+      cep: string;
+      city: string;
+      close_hour: number;
+      description: string;
+      email: string;
+      id: string;
+      image_url: string;
+      lat: number;
+      location_code: string;
+      long: number;
+      name: string;
+      neighborhood: string;
+      open_hour: number;
+      street: string;
     };
   };
 }

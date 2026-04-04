@@ -2,6 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import type { Org } from "../../../app/entities/Org";
+import { useAuth } from "../../../app/hooks/useAuth";
 import { OrgService } from "../../../app/service/org/orgService";
 import Button from "../../../components/atoms/Button";
 import Input from "../../../components/atoms/Input";
@@ -43,6 +44,7 @@ interface EditOrgFormProps {
 }
 
 function EditOrgForm({ org, isFetching }: EditOrgFormProps) {
+  const { setOrg } = useAuth();
   const form = useForm<EditOrgFormData>({
     resolver: zodResolver(editOrgFormSchema),
     defaultValues: {
@@ -61,17 +63,25 @@ function EditOrgForm({ org, isFetching }: EditOrgFormProps) {
     register,
     control,
     reset,
-    formState: { errors, isSubmitting, isDirty, isValid, dirtyFields},
+    formState: { errors, isSubmitting, isDirty, isValid, dirtyFields },
   } = form;
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      const orgUpdated = await OrgService.updateOrg({org: data, dirtiedFields: dirtyFields});
+      const orgUpdated = await OrgService.updateOrg({
+        org: data,
+        dirtiedFields: dirtyFields,
+      });
       reset(orgUpdated.org);
-      toast.success('Organização atualizada com sucesso');
+      setOrg({
+        imgUrl: orgUpdated.org.image_url,
+        name: orgUpdated.org.name,
+        orgId: orgUpdated.org.id,
+      });
+      toast.success("Organização atualizada com sucesso");
     } catch (error) {
       console.log(error);
-      toast.error('Erro ao atualizar a organização');
+      toast.error("Erro ao atualizar a organização");
     }
   });
 
