@@ -1,9 +1,20 @@
-import { Building } from "lucide-react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type Dispatch,
+  type SetStateAction,
+} from "react";
+import SelectComponent, {
+  type SelectInstance,
+  type SingleValue,
+} from "react-select";
 import { Image } from "../../../components/atoms/Image";
-import Select, {
-  SelectContent,
-  SelectTrigger,
-} from "../../../components/molecules/Select";
+
+type Option = {
+  label: string;
+  value: string;
+};
 
 interface SelectOrgProps {
   isLoading?: boolean;
@@ -11,12 +22,8 @@ interface SelectOrgProps {
   isOpen?: boolean;
   orgImageUrl?: string;
   selectOrg: (id: string) => void;
-  organizations?:
-    | {
-        label: string;
-        value: string;
-      }[]
-    | undefined;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
+  organizations?: Option[] | undefined;
 }
 
 function SelectOrg({
@@ -26,26 +33,79 @@ function SelectOrg({
   orgImageUrl,
   organizations,
   isLoading,
+  setIsOpen,
 }: SelectOrgProps) {
+  const [showClosedMenu, setShowClosedMenu] = useState(false);
+  const selectRef = useRef<SelectInstance<Option> | null>(null);
+
+  useEffect(() => {
+    if (!isOpen) {
+      setShowClosedMenu(false);
+    }
+    if (showClosedMenu) {
+      selectRef.current?.focus();
+    }
+
+    return () => {
+      setShowClosedMenu(false);
+    };
+  }, [showClosedMenu, isOpen]);
+
+  function handleSelectOption(option: SingleValue<Option>) {
+    selectOrg(option?.value || "");
+    setShowClosedMenu(false);
+  }
+
   return (
-    <Select defaultValue={orgId} onValueChange={selectOrg} isLoading={isLoading}>
-      {!isOpen && (
-        <SelectTrigger>
-          <div className=" w-full flex justify-center items-center cursor-pointer">
-            <Image src={orgImageUrl} className="size-full" shape="square" />
-          </div>
-        </SelectTrigger>
+    <>
+      {!isOpen && !showClosedMenu && (
+        <button
+          type="button"
+          className="w-full flex justify-center items-center cursor-pointer"
+          onClick={() => {
+            setShowClosedMenu(true);
+            setIsOpen(true);
+          }}
+        >
+          <Image src={orgImageUrl} className="size-full" shape="square" />
+        </button>
       )}
 
-      {isOpen && (
-        <SelectTrigger
-          placeholder="Mude de organização"
-          Icon={Building}
+      {!isOpen && showClosedMenu && (
+        <SelectComponent
+          ref={selectRef}
+          id="select-an-org"
+          placeholder="Selecione uma organização"
+          options={organizations}
+          isLoading={isLoading}
+          loadingMessage={() => "Carregando organizações..."}
+          onChange={handleSelectOption}
+          onMenuClose={() => setShowClosedMenu(false)}
+          menuIsOpen
+          value={
+            organizations?.find(
+              (organization) => organization.value === orgId,
+            ) ?? null
+          }
         />
       )}
 
-      <SelectContent options={organizations} />
-    </Select>
+      {isOpen && (
+        <SelectComponent
+          id="select-an-org"
+          placeholder="Selecione uma organização"
+          options={organizations}
+          isLoading={isLoading}
+          loadingMessage={() => "Carregando organizações..."}
+          onChange={handleSelectOption}
+          value={
+            organizations?.find(
+              (organization) => organization.value === orgId,
+            ) ?? null
+          }
+        />
+      )}
+    </>
   );
 }
 

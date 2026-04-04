@@ -1,5 +1,10 @@
 import { HistoryIcon, Home, SquareMenu, UsersIcon } from "lucide-react";
-import { Activity, type ElementType } from "react";
+import {
+  Activity,
+  type Dispatch,
+  type ElementType,
+  type SetStateAction,
+} from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { toListOrg } from "../../../app/entities/Org";
 import { useOrgs } from "../../../app/hooks/queries/useOrgs";
@@ -9,6 +14,7 @@ import SelectOrg from "./selectOrg";
 
 interface SidebarContentProps {
   isOpen: boolean;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
 }
 
 type MenuOption = {
@@ -53,7 +59,7 @@ const sidebarOptions: MenuOption[] = [
   },
 ];
 
-function SidebarContent({ isOpen }: SidebarContentProps) {
+function SidebarContent({ isOpen, setIsOpen }: SidebarContentProps) {
   const { pathname } = useLocation();
   const { setOrg, user } = useAuth();
   const { orgs, isFetching } = useOrgs({});
@@ -73,10 +79,11 @@ function SidebarContent({ isOpen }: SidebarContentProps) {
     <div
       className={cn(
         "h-full w-full px-2 py-4 flex flex-col items-center gap-4",
-        isOpen && "items-start"
+        isOpen && "items-start",
       )}
     >
       <SelectOrg
+        setIsOpen={setIsOpen}
         isLoading={isFetching}
         orgId={user?.org.id}
         orgImageUrl={user?.org.image_url}
@@ -93,7 +100,7 @@ function SidebarContent({ isOpen }: SidebarContentProps) {
             opt.isActive(pathname)
               ? "border-red-400 text-red-700"
               : "hover:bg-gray-100 hover:border-gray-200",
-            isOpen && "w-full"
+            isOpen && "w-full",
           )}
         >
           <opt.icon size={22} />

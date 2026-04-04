@@ -1,11 +1,7 @@
 import { Building2, CirclePlus } from "lucide-react";
 import { Activity } from "react";
+import SelectComponent from "react-select";
 import Button from "../../../../components/atoms/Button";
-import Select, {
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-} from "../../../../components/molecules/Select";
 import CreateOrgModal from "./CreateOrgModal";
 import { useNotFoundOrgController } from "./useNotFoundOrgController";
 
@@ -45,22 +41,16 @@ function NotFoundOrgPage() {
             >
               Organizações Disponíveis
             </label>
-            <Select
-              onValueChange={handleSelectOrganization}
+            <SelectComponent
+              id="select-an-org"
+              placeholder="Selecione uma organização"
+              options={orgs?.map((org) => ({ label: org.name, value: org.id }))}
               isLoading={fetchingOrgs}
-            >
-              <SelectTrigger
-                placeholder="Selecione uma organização"
-                Icon={Building2}
-              />
-              <SelectContent>
-                <div>
-                  {orgs?.map((org) => (
-                    <SelectItem key={org.id} value={org.id} label={org.name} />
-                  ))}
-                </div>
-              </SelectContent>
-            </Select>
+              loadingMessage={() => "Carregando organizações..."}
+              onChange={(option) =>
+                handleSelectOrganization(option?.value || "")
+              }
+            />
           </div>
         </Activity>
 

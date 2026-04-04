@@ -11,11 +11,11 @@ function Sidebar() {
     <div
       className={cn(
         "w-20 flex flex-col items-center pt-2 transition-all duration-500",
-        isOpen && "w-64"
+        isOpen && "w-64",
       )}
     >
       <SidebarHeader isOpen={isOpen} setIsOpen={setIsOpen} />
-      <SidebarContent isOpen={isOpen} />
+      <SidebarContent isOpen={isOpen} setIsOpen={setIsOpen} />
       <SidebarFooter isOpen={isOpen} />
     </div>
   );
