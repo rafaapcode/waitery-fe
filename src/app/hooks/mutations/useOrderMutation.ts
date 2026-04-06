@@ -3,41 +3,35 @@ import toast from "react-hot-toast";
 import { OrderService } from "../../service/order/orderService";
 import { useRevalidateTodayOrders } from "../revalidates/useRevalidateOrders";
 
-interface UseUpdateOrderMutationProps {
-  id: string;
-  onClose: () => void;
-}
-
-export function useUpdateOrderMutation({ id,  onClose }: UseUpdateOrderMutationProps) {
-  const { revalidateOrders } = useRevalidateTodayOrders();
-  
+export function useUpdateOrderMutation() {
   const { mutateAsync, isPending } = useMutation({
-    mutationFn: (data: OrderService.UpdateOrdersStatusOutput['status']) => OrderService.updateOrderStatus({ id, status: data }),
-    onSuccess: () => {
-      revalidateOrders();
-      onClose();
-      toast.success("Pedido atualizado com sucesso");
-    },
+    mutationFn: (data: {
+      status: OrderService.UpdateOrdersStatusOutput["status"];
+      orderId: string;
+    }) =>
+      OrderService.updateOrderStatus({ id: data.orderId, status: data.status }),
     onError: (error) => {
       console.log(error);
       toast.error("Erro ao atualizar pedido");
     },
-  })
+  });
 
   return { updateOrder: mutateAsync, isPending };
 }
 
 interface UseDeleteOrderMutationProps {
-  id: string;
   onClose: () => void;
   revalidate?: () => void;
 }
 
-export function useDeleteOrderMutation({ id,  onClose, revalidate }: UseDeleteOrderMutationProps) {
+export function useDeleteOrderMutation({
+  onClose,
+  revalidate,
+}: UseDeleteOrderMutationProps) {
   const { revalidateOrders } = useRevalidateTodayOrders();
-  
+
   const { mutateAsync, isPending } = useMutation({
-    mutationFn: () => OrderService.deleteOrder(id),
+    mutationFn: (id: string) => OrderService.deleteOrder(id),
     onSuccess: () => {
       if (revalidate) {
         revalidate();
@@ -51,22 +45,22 @@ export function useDeleteOrderMutation({ id,  onClose, revalidate }: UseDeleteOr
       console.log(error);
       toast.error("Erro ao excluir pedido");
     },
-  })
+  });
 
   return { deleteOrder: mutateAsync, isPending };
 }
 
-
 interface UseCancelOrderMutationProps {
-  id: string;
   onClose: () => void;
 }
 
-export function useCancelOrderMutation({ id,  onClose }: UseCancelOrderMutationProps) {
+export function useCancelOrderMutation({
+  onClose,
+}: UseCancelOrderMutationProps) {
   const { revalidateOrders } = useRevalidateTodayOrders();
-  
+
   const { mutateAsync, isPending } = useMutation({
-    mutationFn: () => OrderService.cancelOrder(id),
+    mutationFn: (id: string) => OrderService.cancelOrder(id),
     onSuccess: () => {
       revalidateOrders();
       onClose();
@@ -76,7 +70,7 @@ export function useCancelOrderMutation({ id,  onClose }: UseCancelOrderMutationP
       console.log(error);
       toast.error("Erro ao cancelar pedido");
     },
-  })
+  });
 
   return { cancelOrder: mutateAsync, isPending };
 }
@@ -85,9 +79,11 @@ interface UseRestartOrderMutationProps {
   onClose: () => void;
 }
 
-export function useRestartOrderMutation({ onClose }: UseRestartOrderMutationProps) {
+export function useRestartOrderMutation({
+  onClose,
+}: UseRestartOrderMutationProps) {
   const { revalidateOrders } = useRevalidateTodayOrders();
-  
+
   const { mutateAsync, isPending } = useMutation({
     mutationFn: () => OrderService.restartOrdersOfDay(),
     onSuccess: () => {
@@ -99,7 +95,7 @@ export function useRestartOrderMutation({ onClose }: UseRestartOrderMutationProp
       console.log(error);
       toast.error("Erro ao reinicializar o dia");
     },
-  })
+  });
 
   return { restartOrders: mutateAsync, isPending };
 }

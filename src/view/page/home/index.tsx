@@ -15,13 +15,20 @@ function Home() {
     inProductionOrders,
     waitingOrders,
     restartOrdersMutation,
-    isFetching
+    isFetching,
+    setOrders,
   } = useHomeController();
- 
-  return ( 
+
+  return (
     <main className="w-full h-full">
-      <RestartDayModal isLoading={restartOrdersMutation.isPending} open={isRestartModalOpen} onClose={onCloseRestartModal} disable={orders?.length === 0} onRestart={restartOrdersMutation.restartOrders}/>
-      <PageHeader  
+      <RestartDayModal
+        isLoading={restartOrdersMutation.isPending}
+        open={isRestartModalOpen}
+        onClose={onCloseRestartModal}
+        disable={orders?.length === 0}
+        onRestart={restartOrdersMutation.restartOrders}
+      />
+      <PageHeader
         icon={HomeIcon}
         title="Home"
         subtitle="Acompanhe os pedidos dos clientes"
@@ -35,11 +42,28 @@ function Home() {
       />
 
       {isFetching && <ColumnSkeleton />}
-      {!isFetching && <section className="flex w-full mt-6 h-[500px] gap-6">
-        <Column icon="🕛" name="Fila de Espera" orders={waitingOrders}/>
-        <Column icon="🧑‍🍳" name="Em Produção" orders={inProductionOrders}/>
-        <Column icon="✅" name="Pronto" orders={doneOrders}/>
-      </section>}
+      {!isFetching && (
+        <section className="flex w-full mt-6 h-[500px] gap-6">
+          <Column
+            setOrders={setOrders}
+            icon="🕛"
+            name="Fila de Espera"
+            orders={waitingOrders}
+          />
+          <Column
+            setOrders={setOrders}
+            icon="🧑‍🍳"
+            name="Em Produção"
+            orders={inProductionOrders}
+          />
+          <Column
+            setOrders={setOrders}
+            icon="✅"
+            name="Pronto"
+            orders={doneOrders}
+          />
+        </section>
+      )}
     </main>
   );
 }

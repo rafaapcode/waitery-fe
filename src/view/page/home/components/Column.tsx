@@ -1,6 +1,7 @@
-import { useState } from "react";
-import type { Order } from "../../../../app/entities/Order";
-import { useCancelOrderMutation, useDeleteOrderMutation, useUpdateOrderMutation } from "../../../../app/hooks/mutations/useOrderMutation";
+import { useState, type Dispatch, type SetStateAction } from "react";
+import toast from "react-hot-toast";
+import type { Order, OrderStatus } from "../../../../app/entities/Order";
+import { useUpdateOrderMutation } from "../../../../app/hooks/mutations/useOrderMutation";
 import OrderDetailModal from "../../../../components/molecules/OrderDetailModal";
 import ColumnItem from "./ColumnItem";
 
@@ -8,30 +9,38 @@ interface ColumnProps {
   icon: string;
   name: string;
   orders: Order[];
+  setOrders: Dispatch<SetStateAction<Order[]>>;
 }
 
-function Column({ icon, name, orders }: ColumnProps) {
+function Column({ icon, name, orders, setOrders }: ColumnProps) {
   const [order, setSelectOrder] = useState<Order | null>(null);
-
   const handleSelectOrder = (selectedOrder: Order) => {
     setSelectOrder(selectedOrder);
   };
+  const { updateOrder } = useUpdateOrderMutation();
 
-  const deleteOrderMutation = useDeleteOrderMutation({
-    id: order?.id || "",
-    onClose: () => setSelectOrder(null),
-  });
-
-  const updateOrderMutation = useUpdateOrderMutation({
-    id: order?.id || "",
-    onClose: () => setSelectOrder(null),
-  });
-
-  const cancelOrderMutation = useCancelOrderMutation({
-    id: order?.id || "",
-    onClose: () => setSelectOrder(null),
-  });
-
+  const onUpdateOrder = (status: OrderStatus) => {
+    try {
+      if (!order) {
+        toast.error("Pedido não encontrado");
+        return;
+      }
+      setOrders((prevOrders) =>
+        prevOrders.map((o) => (o.id === order?.id ? { ...o, status } : o)),
+      );
+      updateOrder({ status, orderId: order?.id || "" }).catch((error) => {
+        console.log("Error updating order:", error);
+        setOrders((prevOrders) =>
+          prevOrders.map((o) =>
+            o.id === order?.id ? { ...o, status: order.status } : o,
+          ),
+        );
+      });
+      setSelectOrder(null);
+    } catch (error) {
+      console.log("Error updating order:", error);
+    }
+  };
 
   return (
     <div className="flex flex-col p-4 border border-gray-300 bg-gray-50 rounded-lg flex-1 h-full">
@@ -39,12 +48,7 @@ function Column({ icon, name, orders }: ColumnProps) {
         columnName={`${icon} ${name}`}
         open={order !== null}
         onClose={() => setSelectOrder(null)}
-        onDelete={deleteOrderMutation.deleteOrder}
-        onUpdate={(status) => updateOrderMutation.updateOrder(status)}
-        onCancel={cancelOrderMutation.cancelOrder}
-        isDeleting={deleteOrderMutation.isPending}
-        isUpdating={updateOrderMutation.isPending}
-        isCanceling={cancelOrderMutation.isPending}
+        onUpdate={onUpdateOrder}
         order={order}
       />
 

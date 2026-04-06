@@ -19,7 +19,8 @@ export const useHomeController = () => {
     ordersWs?.filter((order) => order.status === OrderStatus.WAITING) || [];
 
   const inProductionOrders: Order[] =
-    ordersWs?.filter((order) => order.status === OrderStatus.IN_PRODUCTION) || [];
+    ordersWs?.filter((order) => order.status === OrderStatus.IN_PRODUCTION) ||
+    [];
 
   const doneOrders: Order[] =
     ordersWs?.filter((order) => order.status === OrderStatus.DONE) || [];
@@ -35,11 +36,14 @@ export const useHomeController = () => {
 
     setOrdersWs(orders || []);
 
-    socket.on(`order-org-${user?.org.id}`, (newOrder: {action: string; order: Order}) => {
-      if(newOrder.action === 'new_order') {
-        setOrdersWs((prevOrders) => [newOrder.order, ...prevOrders]);
-      }
-    });
+    socket.on(
+      `order-org-${user?.org.id}`,
+      (newOrder: { action: string; order: Order }) => {
+        if (newOrder.action === "new_order") {
+          setOrdersWs((prevOrders) => [newOrder.order, ...prevOrders]);
+        }
+      },
+    );
 
     return () => {
       socket.disconnect();
@@ -49,6 +53,7 @@ export const useHomeController = () => {
 
   return {
     orders: ordersWs,
+    setOrders: setOrdersWs,
     isRestartModalOpen,
     onCloseRestartModal,
     onOpenRestartModal,
@@ -56,6 +61,6 @@ export const useHomeController = () => {
     inProductionOrders,
     doneOrders,
     restartOrdersMutation,
-    isFetching
+    isFetching,
   };
 };

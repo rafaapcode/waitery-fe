@@ -3,6 +3,10 @@ import { OrderStatus, type Order } from "../../../app/entities/Order";
 import { formatCurrency } from "../../../app/lib/formatCurrency";
 import Button from "../../atoms/Button";
 
+import {
+  useCancelOrderMutation,
+  useDeleteOrderMutation,
+} from "../../../app/hooks/mutations/useOrderMutation";
 import { formatDate } from "../../../app/lib/formatDate";
 import Modal, {
   ModalContent,
@@ -14,15 +18,10 @@ import OrderItem from "./OrderItem";
 interface OrderDetailModalProps {
   open: boolean;
   onClose: () => void;
-  onDelete?: () => void;
-  onCancel?: () => void;
   onUpdate?: (newStatus: OrderStatus) => void;
   columnName?: string;
   order: Order | null;
   variant?: "ORDER" | "HISTORY";
-  isDeleting?: boolean;
-  isUpdating?: boolean;
-  isCanceling?: boolean;
 }
 
 function OrderDetailModal({
@@ -31,18 +30,23 @@ function OrderDetailModal({
   order,
   columnName = "",
   variant = "ORDER",
-  onDelete,
   onUpdate,
-  onCancel,
-  isDeleting,
-  isUpdating,
-  isCanceling
 }: OrderDetailModalProps) {
   if (!order) {
     return null;
   }
 
-  const nextStatus = order.status === OrderStatus.WAITING ? OrderStatus.IN_PRODUCTION : OrderStatus.DONE;
+  const deleteOrderMutation = useDeleteOrderMutation({
+    onClose,
+  });
+  const cancelOrderMutation = useCancelOrderMutation({
+    onClose,
+  });
+
+  const nextStatus =
+    order.status === OrderStatus.WAITING
+      ? OrderStatus.IN_PRODUCTION
+      : OrderStatus.DONE;
 
   const products = order.products.map((product) => ({
     name: product.name,
@@ -82,7 +86,7 @@ function OrderDetailModal({
             <p className="text-sm text-gray-500">Itens</p>
             <div className="space-y-4 overflow-y-auto max-h-[270px]">
               {products.map((order) => (
-                <OrderItem order={order} key={order.name}/>
+                <OrderItem order={order} key={order.name} />
               ))}
             </div>
           </div>
@@ -96,26 +100,34 @@ function OrderDetailModal({
       </ModalContent>
 
       <ModalFooter>
-
         <Activity
           mode={
             columnName !== "✅ Pronto" && isOrderVariant ? "visible" : "hidden"
           }
         >
           <div className="w-full flex  justify-between items-center">
-            <Button isLoading={isCanceling} variant="secondary" onClick={onCancel}>
+            <Button
+              isLoading={cancelOrderMutation.isPending}
+              variant="secondary"
+              onClick={() => cancelOrderMutation.cancelOrder(order.id)}
+            >
               Cancelar Pedido
             </Button>
-            <Button isLoading={isUpdating} onClick={() => onUpdate && onUpdate(nextStatus)}>{nextButtonTitle}</Button>
+            <Button onClick={() => onUpdate && onUpdate(nextStatus)}>
+              {nextButtonTitle}
+            </Button>
           </div>
         </Activity>
 
         <Activity mode={isOrderVariant ? "hidden" : "visible"}>
-          <Button isLoading={isDeleting} variant="secondary" onClick={onDelete}>
+          <Button
+            isLoading={deleteOrderMutation.isPending}
+            variant="secondary"
+            onClick={() => deleteOrderMutation.deleteOrder(order.id)}
+          >
             Excluir Registro
           </Button>
         </Activity>
-
       </ModalFooter>
     </Modal>
   );
