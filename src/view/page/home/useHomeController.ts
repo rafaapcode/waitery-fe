@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import socketIo from "socket.io-client";
+import { env } from "../../../app/config/env";
 import { OrderStatus, type Order } from "../../../app/entities/Order";
 import { useRestartOrderMutation } from "../../../app/hooks/mutations/useOrderMutation";
 import { useTodayOrders } from "../../../app/hooks/queries/useTodayOrders";
@@ -30,7 +31,7 @@ export const useHomeController = () => {
   });
 
   useEffect(() => {
-    const socket = socketIo("http://localhost:3001", {
+    const socket = socketIo(env.VITE_API_URL, {
       transports: ["websocket"],
     });
 
