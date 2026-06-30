@@ -129,7 +129,7 @@ function EditOrgForm({ org, isFetching }: EditOrgFormProps) {
       <div className="w-full flex gap-4">
         <Input
           {...register("location_code")}
-          type="string"
+          type="text"
           placeholder="Número"
           placeholderText="1298"
           error={errors.location_code?.message}

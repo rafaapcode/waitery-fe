@@ -13,7 +13,7 @@ const buttonVariants = cva(
       variant: {
         primary: "bg-[#D73035] hover:bg-[#ec4248] disabled:bg-[#CCCCCC]",
         secondary:
-          "bg-tranparent hover:tranparent text-[#D73035] disabled:text-[#c74e52] font-bold hover:text-red-400",
+          "bg-transparent hover:bg-transparent text-[#D73035] disabled:text-[#c74e52] font-bold hover:text-red-400",
       },
       size: {
         icon: "p-1 rounded-full",

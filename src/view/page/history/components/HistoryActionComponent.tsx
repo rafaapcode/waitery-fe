@@ -18,19 +18,18 @@ function HistoryActionComponent({ order }: HistoryActionComponentProps) {
     onCloseViewerModal,
     onCloseconfirmModal,
     deleteOrderMutationConfirmModal,
-    deleteOrderMutationViewerModal
-  } = useHistoryController(order?.id ?? "");
+  } = useHistoryController();
 
   return (
     <div className="flex gap-1.5 items-center justify-end">
       {order && (
-        <OrderDetailModal isDeleting={deleteOrderMutationViewerModal.isPending} open={isOpenViewerModal} onClose={onCloseViewerModal} order={order} variant="HISTORY" onDelete={deleteOrderMutationViewerModal.deleteOrder}/>
+        <OrderDetailModal open={isOpenViewerModal} onClose={onCloseViewerModal} order={order} variant="HISTORY"/>
       )}
       <ConfirmModal 
         open={isOpenConfirmModal}
         title="Excluir pedido"
         description={`Tem certeza que deseja excluir o pedido da mesa ${order?.table} ?  Esta ação não pode ser desfeita.`}
-        onConfirm={deleteOrderMutationConfirmModal.deleteOrder}
+        onConfirm={() => order && deleteOrderMutationConfirmModal.deleteOrder(order.id)}
         onCancel={onCloseconfirmModal}
         isLoading={deleteOrderMutationConfirmModal.isPending}
       />

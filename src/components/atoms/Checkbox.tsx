@@ -2,7 +2,7 @@ import * as CheckboxRDX from "@radix-ui/react-checkbox";
 import { CheckIcon } from "lucide-react";
 import type { ComponentProps } from "react";
 
-interface CheckboxProps extends ComponentProps<typeof CheckboxRDX.Root> {}
+type CheckboxProps = ComponentProps<typeof CheckboxRDX.Root>;
 
 function Checkbox(props: CheckboxProps) {
   return (

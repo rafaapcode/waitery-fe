@@ -4,12 +4,17 @@ import { OrderService } from "../../service/order/orderService";
 import { useRevalidateTodayOrders } from "../revalidates/useRevalidateOrders";
 
 export function useUpdateOrderMutation() {
+  const { revalidateOrders } = useRevalidateTodayOrders();
+
   const { mutateAsync, isPending } = useMutation({
     mutationFn: (data: {
       status: OrderService.UpdateOrdersStatusOutput["status"];
       orderId: string;
     }) =>
       OrderService.updateOrderStatus({ id: data.orderId, status: data.status }),
+    onSuccess: () => {
+      revalidateOrders();
+    },
     onError: (error) => {
       console.log(error);
       toast.error("Erro ao atualizar pedido");

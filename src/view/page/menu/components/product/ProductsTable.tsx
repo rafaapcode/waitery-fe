@@ -74,11 +74,9 @@ function ProductsTable({ produtos }: { produtos: Product[] }) {
           {table.rows.map((row) => (
             <TableRow key={row.id} className="border-b border-gray-300">
               {row.cells.map((cell) => (
-                <>
-                  <TableCell key={`CELL-${cell.id}`} className="p-3">
-                    {cell.value}
-                  </TableCell>
-                </>
+                <TableCell key={`CELL-${cell.id}`} className="p-3">
+                  {cell.value}
+                </TableCell>
               ))}
             </TableRow>
           ))}

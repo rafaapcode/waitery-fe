@@ -81,9 +81,9 @@ function HistoryTable({ orders }: HistoryTableProps) {
               {table.rows.map((row) => (
                 <TableRow key={row.id} className="border-b border-gray-300">
                   {row.cells.map((cell) => (
-                    <>
-                      <TableCell className="p-3">{cell.value}</TableCell>
-                    </>
+                    <TableCell key={cell.id} className="p-3">
+                      {cell.value}
+                    </TableCell>
                   ))}
                 </TableRow>
               ))}

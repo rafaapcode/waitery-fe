@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useDeleteOrderMutation } from "../../../app/hooks/mutations/useOrderMutation";
 import { useRevalidateOrders } from "../../../app/hooks/revalidates/useRevalidateOrders";
 
-export function useHistoryController(orderId: string) {
+export function useHistoryController() {
     const [isOpenViewerModal, setIsOpenViewerModal] = useState(false);
     const [isOpenConfirmModal, setIsOpenConfirmModal] = useState(false);
   
@@ -11,10 +11,8 @@ export function useHistoryController(orderId: string) {
   
     const { revalidateOrders } = useRevalidateOrders();
   
-    const deleteOrderMutationConfirmModal = useDeleteOrderMutation({ id: orderId ?? "", onClose: onCloseconfirmModal, revalidate: revalidateOrders });
+    const deleteOrderMutationConfirmModal = useDeleteOrderMutation({ onClose: onCloseconfirmModal, revalidate: revalidateOrders });
   
-    const deleteOrderMutationViewerModal = useDeleteOrderMutation({ id: orderId ?? "", onClose: onCloseViewerModal, revalidate: revalidateOrders });
-
     return {
       isOpenViewerModal,
       setIsOpenViewerModal,
@@ -23,6 +21,5 @@ export function useHistoryController(orderId: string) {
       onCloseViewerModal,
       onCloseconfirmModal,
       deleteOrderMutationConfirmModal,
-      deleteOrderMutationViewerModal
     }
 }

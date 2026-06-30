@@ -3,7 +3,7 @@ import type { User, UserRole } from "../../../../app/entities/User";
 import { useAuth } from "../../../../app/hooks/useAuth";
 import useCreateTable from "../../../../app/hooks/useCreateTable";
 import { cn } from "../../../../app/lib/utils";
-import Badget from "../../../../components/atoms/Badget";
+import Badge from "../../../../components/atoms/Badge";
 import {
   Table,
   TableBody,
@@ -21,12 +21,12 @@ interface UsersTableProps {
 function UsersTable({ users }: UsersTableProps) {
   const { isAdmin, isWaiter } = useAuth();
 
-  const badgetVariant = (role?: UserRole) => isAdmin(role) ? "primary" : isWaiter(role) ? "error" : "default";
+  const badgeVariant = (role?: UserRole) => isAdmin(role) ? "primary" : isWaiter(role) ? "error" : "default";
 
   const table = useCreateTable(users || [], [
     { accessorKey: "name", header: "Nome" },
     { accessorKey: "email", header: "E-mail" },
-    { accessorKey: "role", header: "Cargo", cell: ({ row }) => <Badget variant={badgetVariant(row.original.role)}>{row.original.role}</Badget> },
+    { accessorKey: "role", header: "Cargo", cell: ({ row }) => <Badge variant={badgeVariant(row.original.role)}>{row.original.role}</Badge> },
     {
       accessorKey: "actions",
       header: "Ações",
@@ -60,11 +60,9 @@ function UsersTable({ users }: UsersTableProps) {
           {table.rows.map((row) => (
             <TableRow key={row.id} className="border-b border-gray-300">
               {row.cells.map((cell) => (
-                <>
-                  <TableCell key={cell.id} className="p-3">
-                    {cell.value}
-                  </TableCell>
-                </>
+                <TableCell key={cell.id} className="p-3">
+                  {cell.value}
+                </TableCell>
               ))}
             </TableRow>
           ))}

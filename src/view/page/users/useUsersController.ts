@@ -1,7 +1,6 @@
 import { useState } from "react";
-import type { User } from "../../../app/entities/User";
 
-export function useUsersController(userparams?: User) {
+export function useUsersController() {
   // Create User Modal State
   const [createUserModalOpen, setCreateUserModalOpen] = useState(false);
   

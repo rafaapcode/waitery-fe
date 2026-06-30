@@ -104,7 +104,7 @@ function CreateUserModal({ open, onClose }: CreateUserModalProps) {
             )}
           />
           <Input
-            type="string"
+            type="text"
             placeholder="Cpf"
             {...register("cpf")}
             error={errors.cpf?.message}

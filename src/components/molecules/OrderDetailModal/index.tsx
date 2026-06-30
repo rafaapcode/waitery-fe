@@ -32,16 +32,16 @@ function OrderDetailModal({
   variant = "ORDER",
   onUpdate,
 }: OrderDetailModalProps) {
-  if (!order) {
-    return null;
-  }
-
   const deleteOrderMutation = useDeleteOrderMutation({
     onClose,
   });
   const cancelOrderMutation = useCancelOrderMutation({
     onClose,
   });
+
+  if (!order) {
+    return null;
+  }
 
   const nextStatus =
     order.status === OrderStatus.WAITING

@@ -20,7 +20,7 @@ function UsersActionComponent({ user }: UsersActionComponentProps) {
     onCloseconfirmModal,
     onOpenConfirmModal,
     onOpenEditUserModal,
-  } = useUsersController(user);
+  } = useUsersController();
 
  const { deleteUser, isPending } = useDeleteUserMutation({ id: user?.id || "", onClose: onCloseconfirmModal })
 

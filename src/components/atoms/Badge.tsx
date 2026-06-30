@@ -3,7 +3,7 @@ import type { ComponentProps, ReactNode } from "react";
 import { cn } from "../../app/lib/utils";
 
 
-const badgetVariants = cva(
+const badgeVariants = cva(
   [
     "rounded-md text-sm font-semibold",
   ],
@@ -29,18 +29,18 @@ const badgetVariants = cva(
   }
 );
 
-interface BadgetProps
+interface BadgeProps
   extends ComponentProps<"span">,
-    VariantProps<typeof badgetVariants> {
+    VariantProps<typeof badgeVariants> {
   isLoading?: boolean;
   children: ReactNode;
 }
 
 
-function Badget({ children, variant, size, className, ...props }: BadgetProps) {
+function Badge({ children, variant, size, className, ...props }: BadgeProps) {
   return (
-    <span {...props} className={cn(badgetVariants({variant, size}),className )}>{children}</span>
+    <span {...props} className={cn(badgeVariants({variant, size}),className )}>{children}</span>
   )
 }
 
-export default Badget
+export default Badge
